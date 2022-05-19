@@ -2,7 +2,7 @@ version: '3.3'
 services:
   front-docker:
     image: ghcr.io/artidsun/int371-frontend:latest
-    container_name: frontend
+    container_name: frontendDev
     ports:
       - "8080:8080"
 networks:
