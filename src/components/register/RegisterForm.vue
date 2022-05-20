@@ -1,27 +1,27 @@
 <template>
 
-  <div class="bg-white w-full md:w-2/3 lg:w-1/3 mx-4 md:mx-auto my-4 p-10 rounded-xl shadow-md">
+  <div class="font-primary bg-white w-4/5 md:w-2/3 lg:w-1/3 mx-auto my-4 p-10 rounded-xl shadow-md">
 
-    <div class="text-rangmod-purple text-3xl">สมัครสมาชิก</div>
+    <div class="text-rangmod-purple text-2xl">สมัครสมาชิก</div>
     <hr class="my-4">
 
     <div class="mb-4">
-      <div class="text-rangmod-black text-xl px-1">อีเมล์</div>
+      <div class="text-rangmod-black px-1">อีเมล์</div>
       <div class="border border-rangmod-gray rounded-xl px-3">
         <input 
           type="email" 
           placeholder="example@example.com"
-          class="w-full border-1 border-black text-rangmod-black text-xl rounded-xl outline-none leading-10 tracking-wider"
+          class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
         >
       </div>
     </div>
 
     <div class="mb-4">
-      <div class="text-rangmod-black text-xl px-1">รหัสผ่าน</div>
+      <div class="text-rangmod-black px-1">รหัสผ่าน</div>
       <div class="border border-rangmod-gray rounded-xl px-3 relative">
         <input 
           :type="textPassword" 
-          class="w-full border-1 border-black text-rangmod-black text-xl rounded-xl outline-none leading-10 tracking-wider"
+          class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
         >
 
         <div 
@@ -41,11 +41,11 @@
     </div>
 
     <div class="mb-4">
-      <div class="text-rangmod-black text-xl px-1">ยืนยันรหัสผ่าน</div>
+      <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
       <div class="border border-rangmod-gray rounded-xl px-3 relative">
         <input 
           :type="textPasswordConfirm" 
-          class="w-full border-1 border-black text-rangmod-black text-xl rounded-xl outline-none leading-10 tracking-wider"
+          class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
         >
         <div 
           @click="
@@ -65,13 +65,13 @@
     <div class="my-10">
 
       <RouterLink to="/register/select">
-        <div class="w-full my-4 py-2 text-xl rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
+        <div class="w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
           สมัครสมาชิก
         </div>
       </RouterLink>
 
       <RouterLink to="/login">
-        <div class="w-full my-4 py-2 text-xl rounded-full text-center text-rangmod-purple border-2 border-rangmod-purple transition-all hover:bg-rangmod-purple hover:text-white">
+        <div class="w-full my-4 py-2 rounded-full text-center text-rangmod-purple border-2 border-rangmod-purple transition-all hover:bg-rangmod-purple hover:text-white">
           เข้าสู่ระบบ
         </div>
       </RouterLink>

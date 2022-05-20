@@ -1,5 +1,5 @@
 <template>
-  <div class="font-primary relative">
+  <div class="font-primary">
     <div class="bg-rangmod-light-pink w-full h-16 absolute -z-10 top-0">&nbsp;</div>
 
     <NavMenuUser />

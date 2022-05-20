@@ -1,17 +1,17 @@
 <template>
-  <div class="font-primary bg-white rounded-xl shadow-md mx-10 p-5 mb-10">
+  <div class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2">
 
     <div class="text-xl">รายละเอียดและสถานะ</div>
     <hr class="my-5">
 
-    <div class="flex flex-col md:flex-row">
+    <!-- <div class="flex flex-col md:flex-row">
       <div class="text-xl">ตรวจสอบสถานะแจ้งซ่อม</div>
       <div class="border border-rangmod-gray rounded-lg mx-0 md:mx-4">
         <input type="text" class="rounded-lg outline-none px-2">
       </div>
-    </div>
+    </div> -->
 
-    <div class="w-2/3 mx-auto my-20">
+    <div class="w-full mx-auto my-20">
 
       <!-- status update -->
       <div class="flex flex-row justify-center">
@@ -38,21 +38,21 @@
 
     </div>
 
-    <RepairForm />
+    <ReportForm />
 
     
-
+/
   </div> 
   
 </template>
 
 <script>
 
-import RepairForm from "@/components/repair_status/RepairForm.vue";
+import ReportForm from "@/components/report/ReportForm.vue";
 
 export default {
 
-  components: { RepairForm },
+  components: { ReportForm },
 
   data() {
     return {

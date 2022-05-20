@@ -13,6 +13,7 @@ module.exports = {
         'rangmod-black': "#525252",
         'rangmod-gray': "#B4B4B4",
         'rangmod-pink': "#FFECEC", 
+        'rangmod-dark-pink': "#FF8477",
         'rangmod-light-pink': "#F6F2FF",
         'rangmod-purple': "#7364FF",
         'rangmod-light-yellow': "#FFE996",
@@ -20,7 +21,9 @@ module.exports = {
         'rangmod-dark-yellow': "#7A671F",
         'rangmod-red': "#EB3B2A",
         'rangmod-blue': "#268CCB",
+        'rangmod-dark-blue': "#4A80AA",
         'rangmod-green': "#64BD79",
+        
         
       },
     },

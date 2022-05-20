@@ -1,9 +1,8 @@
 <template>
-  <div class="font-primary relative">
+  <div class="relative">
 
-    <NavMenu />
     <HomeContent />
-    
+
   </div>
 </template>
 

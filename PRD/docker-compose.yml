@@ -1,0 +1,11 @@
+version: '3.3'
+services:
+  front-docker:
+    image: ghcr.io/artidsun/int371-frontend:latest
+    container_name: frontendPrd
+    ports:
+      - "8080:8080"
+networks:
+    default:
+      external:
+        name: project-net
