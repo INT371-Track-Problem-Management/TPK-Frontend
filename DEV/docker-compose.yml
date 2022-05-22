@@ -1,11 +1,12 @@
 version: '3.3'
 services:
   front-docker:
-    build: .
-    image: ghcr.io/artidsun/int371-frontend:latest
+    image: ghcr.io/artidsun/int371-frontend-dev:latest
     container_name: frontendDev
     ports:
-      - "8080:8080"
+      - "8085:8080"
+    copy:
+     - nginxDev/conf.d /etc/nginx/conf.d
 networks:
     default:
       external:
