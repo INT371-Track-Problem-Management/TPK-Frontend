@@ -5,7 +5,7 @@ services:
     container_name: frontendPrd
     ports:
       - "8080:8080"
-    copy:
+    volumes:
      - nginxPrd/conf.d /etc/nginx/conf.d
 networks:
     default:

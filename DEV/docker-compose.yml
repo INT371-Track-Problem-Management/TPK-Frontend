@@ -5,7 +5,7 @@ services:
     container_name: frontendDev
     ports:
       - "8085:8080"
-    copy:
+    volumes:
      - nginxDev/conf.d /etc/nginx/conf.d
 networks:
     default:
