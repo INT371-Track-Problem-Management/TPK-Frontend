@@ -37,7 +37,7 @@ jobs:
             cd TPK-Frontend
             git checkout dev
             git pull origin dev
-            sudo docker rm -f frontend
+            sudo docker rm -f frontendDev
             sudo docker rmi ghcr.io/artidsun/int371-frontend-dev:latest
             sudo docker pull ghcr.io/artidsun/int371-frontend-dev:latest
             cd DEV
