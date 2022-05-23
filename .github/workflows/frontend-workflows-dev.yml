@@ -21,25 +21,25 @@ jobs:
           file: DEV/Dockerfile
           push: true
           tags: ghcr.io/artidsun/int371-frontend-dev:latest
-  # deploy:
-  #   needs: build
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@main
-  #     - name: pull images and deploy
-  #       uses: appleboy/ssh-action@master
-  #       with:
-  #         host: ${{ secrets.SSH_HOST }}
-  #         username: ${{ secrets.SSH_USERNAME }}
-  #         password: ${{ secrets.SSH_PASSWORD }}
-  #         port: ${{ secrets.SSH_PORT }}
-  #         script: |
-  #           cd TPK-Frontend
-  #           git checkout dev
-  #           git pull origin dev
-  #           sudo docker rm -f frontendDev
-  #           sudo docker rmi ghcr.io/artidsun/int371-frontend-dev:latest
-  #           sudo docker pull ghcr.io/artidsun/int371-frontend-dev:latest
-  #           cd DEV
-  #           sudo docker-compose up -d
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+      - name: pull images and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd TPK-Frontend
+            git checkout dev
+            git pull origin dev
+            sudo docker rm -f frontendDev
+            sudo docker rmi ghcr.io/artidsun/int371-frontend-dev:latest
+            sudo docker pull ghcr.io/artidsun/int371-frontend-dev:latest
+            cd DEV
+            sudo docker-compose up -d
