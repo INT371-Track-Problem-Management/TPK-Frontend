@@ -4,7 +4,7 @@ services:
     image: ghcr.io/artidsun/int371-frontend-prd:latest
     container_name: frontendPrd
     ports:
-      - "8081:8080"
+      - "8081:80"
     volumes:
      - nginxPrd/conf.d /etc/nginx/conf.d
 networks:
