@@ -1,0 +1,45 @@
+name: ci-frontend-int371-dev
+on:
+  push:
+    branches:
+      - dev
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ secrets.USER }}
+          password: ${{ secrets.TOKEN }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          file: DEV/Dockerfile
+          push: true
+          tags: ghcr.io/artidsun/int371-frontend-dev:latest
+  deploy:
+    needs: build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+      - name: pull images and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd TPK-Frontend
+            git checkout dev
+            git pull origin dev
+            sudo docker rm -f frontendDev
+            sudo docker rmi ghcr.io/artidsun/int371-frontend-dev:latest
+            sudo docker pull ghcr.io/artidsun/int371-frontend-dev:latest
+            cd DEV
+            sudo docker-compose up -d

@@ -1,8 +1,8 @@
-name: ci-frontend-int222
+name: ci-frontend-int371-prd
 on:
   push:
     branches:
-      - dev
+      - prd
 jobs:
   build:
     runs-on: ubuntu-20.04
@@ -18,8 +18,9 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
+          file: PRD/Dockerfile
           push: true
-          tags: ghcr.io/artidsun/int371-frontend:latest
+          tags: ghcr.io/artidsun/int371-frontend-prd:latest
   deploy:
     needs: build
     runs-on: ubuntu-20.04
@@ -35,9 +36,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             cd TPK-Frontend
-            git checkout dev
-            git pull origin dev
-            sudo docker rm -f frontend
-            sudo docker rmi ghcr.io/artidsun/int371-frontend:latest
-            sudo docker pull ghcr.io/artidsun/int371-frontend:latest
+            git checkout prd
+            git pull origin prd
+            sudo docker rm -f frontendPrd
+            sudo docker rmi ghcr.io/artidsun/int371-frontend-prd:latest
+            sudo docker pull ghcr.io/artidsun/int371-frontend-prd:latest
+            cd PRD
             sudo docker-compose up -d
