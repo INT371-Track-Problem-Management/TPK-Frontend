@@ -2,15 +2,15 @@
   
   <div class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2">
 
-    <div class="text-xl">ค้นหาข้อมูลผู้พัก</div>
+    <div class="text-xl">ค้นหาการรายงานปัญหา</div>
 
     <hr class="my-4 border-rangmod-purple">
 
-    <div class="flex flex-col lg:flex-row lg:space-x-4 justify-center my-6 ">
+    <div class="flex flex-col lg:flex-row lg:space-x-4 justify-center my-6">
 
       <div class="flex flex-row space-x-2 items-center mb-2">
         <div class="w-2/5 text-right lg:w-max text-md">ชื่อ</div>
-        <div class="">
+        <div>
           <input 
             type="text" 
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
@@ -20,17 +20,17 @@
 
       <div class="flex flex-row space-x-2 items-center mb-2">
         <div class="w-2/5 text-right lg:w-max text-md">นามสกุล</div>
-        <div class="">
+        <div>
           <input 
             type="text" 
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           >
         </div>
       </div>
-    
+
       <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">วันลงทะเบียน</div>
-        <div class="">
+        <div class="w-2/5 text-right lg:w-max text-md">วันที่นัดซ่อม </div>
+        <div>
           <input 
             type="text" 
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
@@ -40,7 +40,7 @@
 
       <div class="flex flex-row space-x-2 items-center mb-2">
         <div class="w-2/5 text-right lg:w-max text-md">ห้อง</div>
-        <div class="">
+        <div>
           <input 
             type="text" 
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"

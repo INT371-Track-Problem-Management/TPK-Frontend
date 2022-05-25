@@ -25,7 +25,7 @@
         v-show="apartmentsList.length > 0"
         class="flex justify-end px-2 md:px-12"
       >
-        <RouterLink to="/apartments/add" >
+        <RouterLink to="/dashboard/config/apartment/add" >
           <div 
             class="w-20 bg-rangmod-purple text-white border border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
           >
@@ -48,7 +48,7 @@
               <div class="aspect-square bg-rangmod-pink rounded-xl mx-2">
                 <img :src="ap.thumbnail" alt="" class="object-none object-center">
               </div>
-              <div class="text-center my-2 text-lg sm:text-xl">
+              <div class="text-center my-2 text-sm md:text-base">
                 {{ap.name}}
               </div>
             </div>
@@ -62,7 +62,7 @@
         class="w-1/2 mx-auto text-center justify-center"
       >
         <div class="my-4">ยังไม่มีอาพาร์ตเม้นต์ในระบบ</div>
-        <RouterLink to="/apartments/add">
+        <RouterLink to="/dashboard/config/apartment/add">
           <div class="w-20 mx-auto bg-rangmod-purple text-white border border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple">
             + เพิ่ม
           </div>
@@ -81,47 +81,47 @@ export default {
   data() {
     return {
       apartmentsList: [
-        // {
-        //   index: "1",
-        //   name: "PWS อพาร์ตเม้นต์",
-        //   thumbnail: "",
-        //   url: "/apartments",
-        // },
-        // {
-        //   index: "2",
-        //   name: "3Friend อพาร์ตเม้นต์",
-        //   thumbnail: "",
-        //   url: "/apartments",
-        // },
+        {
+          index: "1",
+          name: "PWS อพาร์ตเม้นต์",
+          thumbnail: "",
+          url: "/dashboard/config/apartment",
+        },
+        {
+          index: "2",
+          name: "3Friend อพาร์ตเม้นต์",
+          thumbnail: "",
+          url: "/dashboard/config/apartment",
+        },
         // {
         //   index: "3",
         //   name: "3",
         //   thumbnail: "",
-        //   url: "/apartments",
+        //   url: "/dashboard/config/apartment",
         // },
         // {
         //   index: "4",
         //   name: "4",
         //   thumbnail: "",
-        //   url: "/apartments",
+        //   url: "/dashboard/config/apartment",
         // },
         // {
         //   index: "5",
         //   name: "5",
         //   thumbnail: "",
-        //   url: "/apartments",
+        //   url: "/dashboard/config/apartment",
         // },
         // {
         //   index: "6",
         //   name: "6",
         //   thumbnail: "",
-        //   url: "/apartments",
+        //   url: "/dashboard/config/apartment",
         // },
         // {
         //   index: "7",
         //   name: "7",
         //   thumbnail: "",
-        //   url: "/apartments",
+        //   url: "/dashboard/config/apartment",
         // },
       ]
     }

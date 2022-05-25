@@ -15,7 +15,7 @@
     
     </div>
 
-    <div class="w-full lg:w-1/2 mx-auto">
+    <div class="w-full lg:w-2/3 mx-auto">
       
       <div class="text-xl my-5">ติดตั้งอพาร์ตเม้นต์</div>
 
@@ -138,7 +138,7 @@ export default {
       console.log(`Add Floor !`);
     },
     submitSetting() {
-      this.$router.push(`/apartments/`);
+      this.$router.push(`/dashboard/config/apartment`);
       },
     },
   }
