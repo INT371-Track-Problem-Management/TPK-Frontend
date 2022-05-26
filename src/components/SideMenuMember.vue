@@ -17,7 +17,11 @@
             :to="menu.url"
             v-if="!menu.isDropdown"
           >
-            <div class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink" >
+            <div 
+              class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink"
+              :class="menu.isActive ? `bg-rangmod-light-pink` : ``"
+              @click="selectMenu(i, false)"
+            >
               <div v-html="menu.icon"></div>
               <div>
                 {{menu.name}}
@@ -25,11 +29,11 @@
             </div>
           </RouterLink>
 
-          <div
-            v-else
-            @click="menu.activeDropdown = !menu.activeDropdown"
-          >
-            <div class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative" >
+          <div v-else >
+            <div 
+              class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative"
+              @click="menu.activeDropdown = !menu.activeDropdown"
+            >
               <div v-html="menu.icon"></div>
               <div>
                 {{menu.name}}
@@ -47,7 +51,11 @@
                 :key="j"
               >
                 <RouterLink :to="item.url">
-                  <div class="flex flex-row space-x-2 items-center px-8 py-2 rounded-xl hover:bg-rangmod-light-pink">
+                  <div 
+                    class="flex flex-row space-x-2 items-center px-8 py-2 rounded-xl hover:bg-rangmod-light-pink"
+                    :class="item.isActive ? `bg-rangmod-light-pink` : ``"
+                    @click="selectMenu(i, j, true)"
+                  >
                     <div>
                       <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
