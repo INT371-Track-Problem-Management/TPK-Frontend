@@ -1,16 +1,16 @@
 <template>
   <div class="font-primary container mx-auto px-5">
-    <div class="grid grid-cols-1 md:grid-cols-2 content-center">
+    <div class="grid grid-cols-1 md:grid-cols-2 content-center pb-20">
       
-      <div class="md:hidden w-72 mx-auto my-10">
+      <div class="md:hidden w-8/12 mx-auto mb-8">
         <img src="@/assets/images/RangmodLogo.webp">
       </div>
 
-      <div class="font-black self-center mx-auto">
+      <div class="flex flex-col font-black self-center items-center md:items-end mx-auto  ">
         
-        <div class="text-5xl md:text-7xl">RANGMOD</div>
-        <div class="text-md md:text-lg">Web Application (รังมด)</div>
-        <div class="text-md md:text-lg">สำหรับจัดการระบบรายงานปัญหาในหอพัก</div>
+        <div class="mb-2 text-5xl md:text-7xl">RANGMOD</div>
+        <div class="mb-2 text-md md:text-lg">Web Application (รังมด)</div>
+        <div class="mb-2 text-md md:text-lg">สำหรับจัดการระบบรายงานปัญหาในหอพัก</div>
 
         <RouterLink 
           to="/repair_status"
@@ -24,7 +24,7 @@
 
       </div>
       
-      <div class="hidden md:block p-16">
+      <div class="hidden md:flex p-16">
         <img src="@/assets/images/RangmodLogo.webp">
       </div>
 

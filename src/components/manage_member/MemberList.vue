@@ -96,7 +96,7 @@
     <div
       :class="
         showModal
-          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
           : 'hidden opacity-0'
       "
       v-on:click="showModal = !showModal"
@@ -105,7 +105,7 @@
     <transition>
       <div
         v-show="showModal"
-        class="fixed w-full h-screen z-90 inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
       >
         <div
           class="w-11/12 lg:w-1/2 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
@@ -308,7 +308,9 @@ export default {
         room: "102",
         status: "2",
       },
-
+      roomList: [],
+      dormList: [],
+      reportList: [],
       statusList: [
         {
           id: "1",
@@ -364,7 +366,6 @@ export default {
         //   room: "203",
         //   status: "3",
         // },
-
         //     {
         //     customerId: "",
         //     email: "",
@@ -379,6 +380,7 @@ export default {
         //     username: ""
         // }
       ],
+      // username: "",
     };
   },
   mounted() {
@@ -386,13 +388,21 @@ export default {
   },
   methods: {
     async create() {
-      this.memberList = await this.getMember();
+      this.memberList = await this.getMembers();
+      this.roomList = await this.getRooms();
+      this.dormList = await this.getDorm();
+      this.reportList = await this.getReport();
       console.log(this.memberList);
+      console.log(this.roomList);
+      console.log(this.dormList);
+      console.log(this.reportList);
+      // this.username = localStorage.username;
+      // console.log(this.username);
     },
-    async getMember() {
+    async getMembers() {
       try {
-        // const res = await fetch("https://dev.rungmod.com/api/customer");
-        const res = await fetch("http://localhost:5000/api/customer");
+        const res = await fetch("https://dev.rungmod.com/api/customer");
+        // const res = await fetch("http://localhost:5000/api/customer");
         const data = res.json();
         return data;
       } catch (e) {
@@ -423,6 +433,46 @@ export default {
     add() {
       console.log("add");
     },
+    async getRooms() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/rooms");
+        // const res = await fetch("http://localhost:5000/api/rooms");
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getDorm() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/dorm");
+        // const res = await fetch("http://localhost:5000/api/dorm");
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getReport() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/report");
+        // const res = await fetch("http://localhost:5000/api/report");
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    // async getReportById() {
+    //   try {
+    //     const res = await fetch("https://dev.rungmod.com/api/reportById");
+    //     // const res = await fetch("http://localhost:5000/api/customer");
+    //     const data = res.json();
+    //     return data;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // },
   },
 };
 </script>

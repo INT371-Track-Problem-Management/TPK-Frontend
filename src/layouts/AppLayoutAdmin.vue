@@ -28,6 +28,7 @@
             url: "/dashboard/member",
             activeDropdown: false,
             isDropdown: false,
+            isActive: false,
             menuItems: [],
           },
           {
@@ -36,14 +37,17 @@
             url: "/dashboard/room",
             activeDropdown: false,
             isDropdown: true,
+            isActive: false,
             menuItems: [
               {
                 name: "ห้องว่าง",
                 url: "/dashboard/room/status",
+                isActive: false,
               },
               {
                 name: "ผังห้อง",
                 url: "/dashboard/room/config",
+                isActive: false,
               },
             ],
           },
@@ -53,6 +57,7 @@
             url: "/dashboard/report",
             activeDropdown: false,
             isDropdown: false,
+            isActive: false,
             menuItems: [],
           },
           {
@@ -61,6 +66,7 @@
             url: "/dashboard/config",
             activeDropdown: false,
             isDropdown: true,
+            isActive: false,
             menuItems: [
               {
                 name: "อาพาร์ตเม้นต์",

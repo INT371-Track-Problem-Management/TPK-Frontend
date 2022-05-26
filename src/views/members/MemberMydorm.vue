@@ -2,7 +2,7 @@
   
   <div>
     <!-- <SearchPanel /> -->
-    <ReportList />
+    Dorm
   </div>
 
 </template>
