@@ -9,23 +9,11 @@
       <div class="flex flex-row space-x-2 items-center mb-4">
         <!-- <router-link to="/member/report"> -->
         <div
-          v-for="(status, i) in requestStatusList"
-          :key="i"
-          :class="status.bgcolor"
           @click="showModal = !showModal"
-          class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90"
+          class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
         >
-          <div :class="status.color" class="text-lg">{{ status.title }}</div>
+          <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
         </div>
-        <!-- </router-link> -->
-        <!-- <div 
-          @click="doFilter('')"
-          class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-black/20"
-        >
-          <div
-            class="text-lg text-rangmod-black"
-          >ทั้งหมด</div>
-        </div> -->
       </div>
 
       <div
@@ -80,44 +68,45 @@
       </tr>
 
       <tr
-        v-for="(request, i) in requestList"
+        v-for="(report, i) in reportList"
         :key="i"
         class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4">{{ i + 1 }}</td>
         <!-- <td class="text-center py-4">{{request.room}}</td> -->
-        <td class="text-center py-4">{{ request.id }}</td>
-        <td class="text-center py-4">{{ request.title }}</td>
-        <td class="text-center py-4">{{ request.request_date }}</td>
+        <td class="text-center py-4">{{ report.reportId }}</td>
+        <td class="text-center py-4">{{ report.title }}</td>
+        <td class="text-center py-4">{{ dateFormat(report.reportDate) }}</td>
         <td class="text-center py-4">
-          <div v-for="(repair, j) in request.repair_date" :key="j">
+          {{ dateFormat(report.reportDate) }}
+          <!-- <div v-for="(repair, j) in requreportest.repair_date" :key="j">
             <div v-if="repair.isActive">{{ repair.date }}</div>
-          </div>
+          </div> -->
         </td>
         <td class="text-center py-4">
-          <div v-for="(status, j) in requestStatusList" :key="j">
-            <div v-if="request.status == status.id" :class="status.color">
-              {{ status.title }}
+          <div v-for="status in statusList">
+            <div v-if="report.status == status.status" :class="status.color">
+              {{ report.status }}
             </div>
           </div>
         </td>
-        <!-- <td class="text-center py-4">
-          <RouterLink 
-            :to="`/dashboard/report/${request.id}`"
-            class="text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          >
-            รายละเอียด
-          </RouterLink>
-        </td> -->
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="showDetail(request.id)"
+
         >
-          <!-- <RouterLink :to="`/member/${member.code}`"></RouterLink> -->
-          <div>รายละเอียด</div>
+          <RouterLink to="/member/report/detail">รายละเอียด</RouterLink>
         </td>
       </tr>
     </table>
+
+    <div
+      :class="
+        showModal
+          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
+          : 'hidden opacity-0'
+      "
+      v-on:click="showModal = !showModal"
+    ></div>
 
     <transition>
       <div
@@ -152,17 +141,17 @@
           <div class="text-rangmod-black">หัวข้อปัญหา</div>
           <div class="mb-5">
             <input
+              v-model="title"
               type="text"
-              class="w-full text-xl bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-              readonly
+              class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             />
           </div>
 
           <div class="text-rangmod-black">รายละเอียดปัญหา</div>
           <div class="mb-5">
             <textarea
-              class="w-full text-xl bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-              readonly
+              v-model="description"
+              class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             ></textarea>
           </div>
 
@@ -170,7 +159,7 @@
 
           <div class="flex flex-col">
             <div
-              v-for="(reminder, i) in date_reminder"
+              v-for="(engageDate, i) in engageDates"
               :key="i"
               class="flex flex-row relative"
             >
@@ -179,9 +168,8 @@
                   <div class="text-rangmod-black">ว/ด/ป</div>
                   <input
                     type="text"
-                    class="w-full text-xl bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                    :value="reminder.date"
+                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                    :value="engageDate.date"
                   />
                 </div>
 
@@ -189,23 +177,17 @@
                   <div class="text-rangmod-black">เวลา</div>
                   <input
                     type="text"
-                    class="w-full text-xl bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                    :value="reminder.time"
+                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                    :value="engageDate.time"
                   />
                 </div>
               </div>
-
-              <!-- <div
-              class="w-7 h-7 rounded-full absolute -right-16 bottom-6"
-              :class="reminder.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'"
-            ></div> -->
             </div>
           </div>
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="showModal = !showModal"
+              v-on:click="sendReport()"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยืนยัน
@@ -221,26 +203,43 @@
 export default {
   data() {
     return {
-      date_reminder: [
+      title: "",
+      category: "test001", //mockup dont del
+      description: "",
+      status: "รอรับเรื่อง",
+      createdBy: 1111,
+      engage:{
+        formatedDate1: "05/11/2000 00:00:00",
+        formatedDate2: "2000-11-05 00:00:00",
+        formatedDate3: "2000-11-05 00:00:00",
+        formatedDate4: "2000-11-05 00:00:00",
+        reportId: 0
+      },
+
+      engageDates: [
         {
-          date: "",
-          time: "",
-          isActive: false,
+          date: "1",
+          time: "1",
+          dateTime: ""
+          // isActive: false,
         },
         {
           date: "",
           time: "",
-          isActive: true,
+          dateTime: ""
+          // isActive: true,
         },
         {
           date: "",
           time: "",
-          isActive: false,
+          dateTime: ""
+          // isActive: false,
         },
         {
           date: "",
           time: "",
-          isActive: false,
+          dateTime: ""
+          // isActive: false,
         },
       ],
 
@@ -264,197 +263,238 @@ export default {
         { key: "room", name: "ห้อง" },
         { key: "request_date", name: "ว/ด/ป แจ้งซ่อม" },
       ],
-
-      requestStatusList: [
+      statusList: [
         {
           id: "1",
-          color: "text-rangmod-dark-yellow",
-          bgcolor: "bg-rangmod-light-yellow",
-          title: "แจ้งปัญหา",
+          color: "text-rangmod-green",
+          status: "เสร็จสิ้น",
         },
-        // {
-        //   id: "2",
-        //   color: "text-rangmod-yellow",
-        //   bgcolor: "bg-rangmod-yellow/20",
-        //   title: "รอดำเนินการ"
-        // },
-        // {
-        //   id: "3",
-        //   color: "text-rangmod-green",
-        //   bgcolor: "bg-rangmod-green/20",
-        //   title: "ดำเนินการแล้ว"
-        // },
-        // {
-        //   id: "4",
-        //   color: "text-rangmod-purple",
-        //   bgcolor: "bg-rangmod-purple/20",
-        //   title: "เลื่อนนัด"
-        // },
-        // {
-        //   id: "5",
-        //   color: "text-rangmod-red",
-        //   bgcolor: "bg-rangmod-red/20",
-        //   title: "ยกเลิก"
-        // },
+        {
+          id: "2",
+          color: "text-rangmod-yellow",
+          status: "รอซ่อม",
+        },
+        {
+          id: "3",
+          color: "text-rangmod-red",
+          status: "ยกเลิกนัด",
+        },
+        {
+          id: "4",
+          color: "text-rangmod-blue",
+          status: "เลื่อนนัด",
+        },
+        {
+          id: "5",
+          color: "text-rangmod-dark-blue",
+          status: "รอรับเรื่อง",
+        },
       ],
-
       requestList: [
-        {
-          id: "ED123456",
-          room: "201",
-          title: "น้ำไม่ไหล",
-          desc: "น้ำไม่ไหล DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED654321",
-          room: "102",
-          title: "ไฟไม่ติด",
-          desc: "ไฟไม่ติด DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED789101",
-          room: "203",
-          title: "น้ำรั่ว",
-          desc: "น้ำรั่ว DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED786123",
-          room: "203",
-          title: "ปลวกขึ้น",
-          desc: "ปลวกขึ้น DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED543210",
-          room: "201",
-          title: "โต๊ะพัง",
-          desc: "โต๊ะพัง DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
+        // {
+        //   id: "ED123456",
+        //   room: "201",
+        //   title: "น้ำไม่ไหล",
+        //   desc: "น้ำไม่ไหล DESC ",
+        //   status: "1",
+        //   request_date: "29/03/2565",
+        //   repair_date: [
+        //     {
+        //       date: "31/03/2565",
+        //       isActive: true,
+        //       remark: "เหตุผลครั้งที่ 1",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: "ED654321",
+        //   room: "102",
+        //   title: "ไฟไม่ติด",
+        //   desc: "ไฟไม่ติด DESC ",
+        //   status: "1",
+        //   request_date: "29/03/2565",
+        //   repair_date: [
+        //     {
+        //       date: "31/03/2565",
+        //       isActive: true,
+        //       remark: "เหตุผลครั้งที่ 1",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: "ED789101",
+        //   room: "203",
+        //   title: "น้ำรั่ว",
+        //   desc: "น้ำรั่ว DESC ",
+        //   status: "1",
+        //   request_date: "29/03/2565",
+        //   repair_date: [
+        //     {
+        //       date: "31/03/2565",
+        //       isActive: true,
+        //       remark: "เหตุผลครั้งที่ 1",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: "ED786123",
+        //   room: "203",
+        //   title: "ปลวกขึ้น",
+        //   desc: "ปลวกขึ้น DESC ",
+        //   status: "1",
+        //   request_date: "29/03/2565",
+        //   repair_date: [
+        //     {
+        //       date: "31/03/2565",
+        //       isActive: true,
+        //       remark: "เหตุผลครั้งที่ 1",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //   ],
+        // },
+        // {
+        //   id: "ED543210",
+        //   room: "201",
+        //   title: "โต๊ะพัง",
+        //   desc: "โต๊ะพัง DESC ",
+        //   status: "1",
+        //   request_date: "29/03/2565",
+        //   repair_date: [
+        //     {
+        //       date: "31/03/2565",
+        //       isActive: true,
+        //       remark: "เหตุผลครั้งที่ 1",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //     {
+        //       date: "",
+        //       isActive: false,
+        //       remark: "",
+        //     },
+        //   ],
+        // },
       ],
+      reportList: [],
     };
   },
-
+  mounted() {
+    this.create();
+    // this.dateFormat("2022-05-25 08:02:27");
+  },
   methods: {
+    async create() {
+      this.reportList = await this.getReport();
+      console.log(this.reportList);
+    },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
     },
     doSort(id) {
       console.log(`Sorted by ${id} !`);
     },
-    showDetail(report_code) {
-      console.log(`Show ${report_code} !`);
-
-      this.showModal = true;
-      // let memberList = this.memberList
-
-      // for (var i = 0; i < memberList.length; i++){
-      //   if (memberList[i].code == report_code){
-      //     this.modal.code = memberList[i].code
-      //     this.modal.name = memberList[i].name
-      //     this.modal.surname = memberList[i].surname
-      //     this.modal.date = memberList[i].date
-      //     this.modal.age = memberList[i].age
-      //     this.modal.gender = memberList[i].gender
-      //     this.modal.tel = memberList[i].tel
-      //     this.modal.address = memberList[i].address
-      //     this.modal.room = memberList[i].room
-      //     this.modal.status = memberList[i].status
-      //   }
-      // }
+    showDetail(reportId) {
+      console.log(reportId);
+    },
+    sendReport() {
+      fetch(`https://dev.rungmod.com/api/report`, {
+        // fetch(`http://localhost:5000/api/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Title: this.title,
+          CategoriesReport: this.category,
+          ReportDes: this.description,
+          Status: this.status,
+          CreatedBy: this.createdBy,
+        })
+      }).then((response) => {
+        const res = response.json();
+        // console.log(res);
+        // this.engage();
+        console.log("Add report!");
+        return res;
+      }).then((response) => {
+        this.sendEngageDate(response);
+        console.log(response);
+      });
+    },
+    sendEngageDate(reportId) {
+      fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
+        // fetch(`http://localhost:5000/api/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Date1: this.engage.formatedDate1,
+          Date2: this.engage.formatedDate2,
+          Date3: this.engage.formatedDate3,
+          Date4: this.engage.formatedDate4,
+          ReportId: reportId,
+        })
+      }).then((res) => {
+        console.log(res);
+        console.log("Add report!");
+      });
+    },
+    async getReport() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/report");
+        // const res = await fetch("http://localhost:5000/api/report");
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    dateFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+      // console.log(typeof(inputDate))
+      // console.log(typeof(date))
+      // console.log(typeof(formatedDate))
+      return formatedDate;
     },
   },
 };

@@ -12,7 +12,7 @@
       v-on:click="handleMenu = !handleMenu"
     ></div>
 
-    <div 
+    <div  
       class="bg-white mx-auto fixed inset-y-0 duration-300 transition-right overflow-scroll z-50 w-80 shadow-xl" 
       :class="handleMenu ? 'left-0' : '-left-full'" 
     >
@@ -38,7 +38,11 @@
               v-if="!menu.isDropdown"
               v-on:click="handleMenu = !handleMenu"
             >
-              <div class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink" >
+              <div 
+                class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink" 
+                :class="menu.isActive ? `bg-rangmod-light-pink` : ``"
+                @click="selectMenu(i, false)"
+              >
                 <div v-html="menu.icon"></div>
                 <div>
                   {{menu.name}}
@@ -46,11 +50,11 @@
               </div>
             </RouterLink>
 
-            <div
-              v-else
-              @click="menu.activeDropdown = !menu.activeDropdown"
-            >
-              <div class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative" >
+            <div v-else >
+              <div 
+                class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative" 
+                @click="menu.activeDropdown = !menu.activeDropdown"
+              >
                 <div v-html="menu.icon"></div>
                 <div>
                   {{menu.name}}
@@ -71,7 +75,11 @@
                     :to="item.url"
                     v-on:click="handleMenu = !handleMenu"
                   >
-                    <div class="flex flex-row space-x-2 items-center px-8 py-2 text-lg rounded-xl hover:bg-rangmod-light-pink">
+                    <div 
+                      class="flex flex-row space-x-2 items-center px-8 py-2 text-lg rounded-xl hover:bg-rangmod-light-pink"
+                      :class="item.isActive ? `bg-rangmod-light-pink` : ``"
+                      @click="selectMenu(i, j, true)"
+                    >
                       <div>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -91,9 +99,9 @@
       </div>
     </div>
 
-    <div class="container mx-auto px-5">
+    <div class="w-full mx-auto">
 
-      <div class="flex flex-row justify-between py-2">
+      <div class="flex flex-row justify-between py-2  pl-5 pr-10">
 
         <div class="w-40 xl:w-32 flex flex-row items-center space-x-4">
           <div class="px-2 cursor-pointer xl:hidden" v-on:click="handleMenu = !handleMenu">
@@ -131,6 +139,37 @@ export default {
   data() {
     return {
       handleMenu: false,
+
+    }
+  },
+
+  methods: {
+    selectMenu(index, listIndex, isItemList){
+
+      this.menuList.forEach((menu, i) => {
+        if (menu.isActive) { menu.isActive = false }
+        // if (menu.activeDropdown) { menu.activeDropdown = false }
+        menu.menuItems.forEach((item, j) => {
+          if (item.isActive) { item.isActive = false }
+        })
+      })
+
+      if(!isItemList) {
+        this.menuList.forEach((menu, i) => {
+          if(i == index){
+            menu.isActive = true
+          }
+        })
+      } else {
+        this.menuList.forEach((menu, i) => {
+          // if(i == index) { menu.activeDropdown = true }
+          menu.menuItems.forEach((item, j) => {
+            if(i == index && j == listIndex){
+              item.isActive = true
+            }
+          })
+        })
+      }
 
     }
   },

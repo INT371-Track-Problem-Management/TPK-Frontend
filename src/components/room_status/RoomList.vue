@@ -47,7 +47,7 @@
     
     <div 
       :class="showModal ? 
-      'bg-black fixed inset-0 opacity-60 visible z-80' : 
+      'bg-black fixed inset-0 opacity-60 visible z-[80]' : 
       'hidden opacity-0'"
       v-on:click="showModal = !showModal"
     ></div>

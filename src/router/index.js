@@ -24,6 +24,7 @@ import DashboardConfigApertmentsSetRoomPage from '../views/apartments-config/set
 
 import MemberMydorm from '../views/members/MemberMydorm.vue'
 import MemberReport from '../views/members/MemberReport.vue'
+import MemberReportDetail from '../views/members/MemberReportDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -143,6 +144,12 @@ const router = createRouter({
       path: '/member/report',
       name: 'member-report',
       component: MemberReport,
+      meta: { layout: 'AppLayoutMember' }
+    },
+    {
+      path: '/member/report/detail',
+      name: 'member-report-detail',
+      component: MemberReportDetail,
       meta: { layout: 'AppLayoutMember' }
     },
   ]

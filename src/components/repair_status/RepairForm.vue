@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full xl:w-1/2 mx-auto">
+  <div class="w-full xl:w-3/4 mx-auto">
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-24">
 
@@ -47,35 +47,35 @@
           <div 
             v-for="(reminder, i) in date_reminder"
             :key="i"
-            class="flex flex-row relative"
+            class="flex flex-row space-x-4 justify-between items-center"
           >
-            <div class="flex flex-row space-x-4">
 
-              <div class="mb-5">
-                <div class="text-rangmod-black">ว/ด/ป</div>
-                <input 
-                  type="text" 
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  readonly
-                  :value="reminder.date"
-                >
-              </div>
+            <div class="mb-5">
+              <div class="text-rangmod-black">ว/ด/ป</div>
+              <input 
+                type="text" 
+                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                readonly
+                :value="reminder.date"
+              >
+            </div>
 
-              <div class="mb-5">
-                <div class="text-rangmod-black">เวลา</div>
-                <input 
-                  type="text" 
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  readonly
-                  :value="reminder.time"
-                >
-              </div>  
+            <div class="mb-5">
+              <div class="text-rangmod-black">เวลา</div>
+              <input 
+                type="text" 
+                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                readonly
+                :value="reminder.time"
+              >
             </div>  
 
-            <div
-              class="w-7 h-7 rounded-full absolute -right-16 bottom-6"
-              :class="reminder.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'"
-            ></div>
+            <div class="w-7">
+              <div
+                class="w-7 h-7 rounded-full"
+                :class="reminder.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'"
+              ></div>
+            </div>
 
           </div>
         </div>
