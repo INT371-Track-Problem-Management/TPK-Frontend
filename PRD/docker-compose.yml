@@ -1,10 +1,12 @@
 version: '3.3'
 services:
   front-docker:
-    image: ghcr.io/artidsun/int371-frontend:latest
+    image: ghcr.io/artidsun/int371-frontend-prd:latest
     container_name: frontendPrd
     ports:
-      - "8080:8080"
+      - "8081:80"
+    volumes:
+     - nginxPrd/conf.d /etc/nginx/conf.d
 networks:
     default:
       external:
