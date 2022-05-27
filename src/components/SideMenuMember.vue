@@ -84,6 +84,37 @@ export default {
 
   props: ["menuList"],
 
+  methods: {
+    selectMenu(index, listIndex, isItemList){
+
+      this.menuList.forEach((menu, i) => {
+        if (menu.isActive) { menu.isActive = false }
+        // if (menu.activeDropdown) { menu.activeDropdown = false }
+        menu.menuItems.forEach((item, j) => {
+          if (item.isActive) { item.isActive = false }
+        })
+      })
+
+      if(!isItemList) {
+        this.menuList.forEach((menu, i) => {
+          if(i == index){
+            menu.isActive = true
+          }
+        })
+      } else {
+        this.menuList.forEach((menu, i) => {
+          // if(i == index) { menu.activeDropdown = true }
+          menu.menuItems.forEach((item, j) => {
+            if(i == index && j == listIndex){
+              item.isActive = true
+            }
+          })
+        })
+      }
+
+    }
+  },
+
 }
 </script>
 
