@@ -10,7 +10,7 @@
           RANGMOD
         </RouterLink>
 
-        <div class="flex flex-row space-between lg:space-x-5 content-center mx-auto lg:mx-0 py-4 lg:py-0 text-sm sm:text-base">
+        <div class="flex flex-row space-between lg:space-x-12 content-center mx-auto lg:mx-0 py-4 lg:py-0">
           <RouterLink 
             to="/"
             class="tracking-wider px-5 py-1 transition-all hover:bg-rangmod-purple hover:rounded-full hover:text-white hover:scale-105"
