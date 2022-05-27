@@ -5,11 +5,7 @@
 </template>
 
 <script>
-
-  import NavMenu from "@/components/NavMenu.vue";
-  
   export default {
-    name: 'default',
-    components: { NavMenu },
+    name: 'AppLayoutRegister',
   }
 </script>

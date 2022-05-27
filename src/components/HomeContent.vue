@@ -1,5 +1,6 @@
 <template>
   <div class="font-primary container mx-auto px-5">
+
     <div class="grid grid-cols-1 md:grid-cols-2 content-center pb-20">
       
       <div class="md:hidden w-8/12 mx-auto mb-8">

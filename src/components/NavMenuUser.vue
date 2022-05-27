@@ -127,12 +127,9 @@
 
 <script>
 
-import SideMenu from "@/components/SideMenu.vue"
-
 export default {
 
-  name: 'admin',
-  components: { SideMenu },
+  name: 'NavMenuUser',
 
   props: ["menuList"],
 
@@ -146,10 +143,10 @@ export default {
   methods: {
     selectMenu(index, listIndex, isItemList){
 
-      this.menuList.forEach((menu, i) => {
+      this.menuList.forEach((menu) => {
         if (menu.isActive) { menu.isActive = false }
         // if (menu.activeDropdown) { menu.activeDropdown = false }
-        menu.menuItems.forEach((item, j) => {
+        menu.menuItems.forEach((item) => {
           if (item.isActive) { item.isActive = false }
         })
       })

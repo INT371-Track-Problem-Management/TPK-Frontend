@@ -16,23 +16,20 @@ import DashboardMemberPage from '../views/dashboard/ManageMember.vue'
 import DashboardRoomStatusPage from '../views/dashboard/RoomStatus.vue'
 import DashboardRoomConfigPage from '../views/dashboard/RoomConfig.vue'
 
-import DashboardReportPage from '../views/dashboard/Report.vue'
+import DashboardReportPage from '../views/dashboard/ReportList.vue'
 import DashboardReportDetailPage from '../views/dashboard/ReportDetail.vue'
 import DashboardConfigApertmentsPage from '../views/apartments-config/ApartmentsPage.vue'
 import DashboardConfigApertmentsAddPage from '../views/apartments-config/addPage.vue'
 import DashboardConfigApertmentsSetRoomPage from '../views/apartments-config/setRoomPage.vue'
 
-import MemberMydorm from '../views/members/MemberMydorm.vue'
-import MemberReport from '../views/members/MemberReport.vue'
-import MemberReportDetail from '../views/members/MemberReportDetail.vue'
-
-const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
+const routes = [
     {
       path: '/',
-      name: 'home',
+      name: 'HomePage',
       component: HomePage,
+      meta: {
+        layout: 'AppLayoutDefault'
+      }
     },
     {
       path: '/register',
@@ -79,7 +76,6 @@ const router = createRouter({
       name: 'apartments-set-room',
       component: ApartmentsSetRoomPage,
     },
-    
     {
       path: '/dashboard',
       name: 'dashboard',
@@ -134,25 +130,12 @@ const router = createRouter({
       component: DashboardConfigApertmentsSetRoomPage,
       meta: { layout: 'AppLayoutAdmin' }
     },
-    {
-      path: '/member/mydorm',
-      name: 'member-mydorm',
-      component: MemberMydorm,
-      meta: { layout: 'AppLayoutMember' }
-    },
-    {
-      path: '/member/report',
-      name: 'member-report',
-      component: MemberReport,
-      meta: { layout: 'AppLayoutMember' }
-    },
-    {
-      path: '/member/report/detail',
-      name: 'member-report-detail',
-      component: MemberReportDetail,
-      meta: { layout: 'AppLayoutMember' }
-    },
+    
   ]
+
+const router = createRouter({
+  history: createWebHistory(process.env.BASE_URL),
+  routes
 })
 
 export default router

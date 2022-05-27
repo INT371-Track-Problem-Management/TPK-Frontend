@@ -1,23 +1,17 @@
 <template>
 
-  <main>
-    <AppLayout />
-  </main>
+  <AppLayout>
+    <router-view />  
+  </AppLayout>
 
 </template>
 
-<script>  
-
-  import { RouterLink, RouterView } from 'vue-router'
-  import AppLayout from '@/layouts/AppLayout.vue'
-
-  export default ({
-  name: 'App',
-    components: {
-      RouterView, AppLayout,
-    }
-  })
-
+<script>
+  import AppLayout from '@/layouts/AppLayout'
+  export default {
+    name: "App",
+    components: { AppLayout }
+  }
 </script>
 
 <style>

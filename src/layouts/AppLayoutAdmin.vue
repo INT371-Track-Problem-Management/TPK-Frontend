@@ -16,7 +16,7 @@
   import SideMenu from "@/components/SideMenu.vue"
 
   export default {
-    name: 'admin',
+    name: 'AppLayoutAdmin',
     components: { NavMenuUser, SideMenu },
 
     data() {

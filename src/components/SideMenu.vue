@@ -87,10 +87,10 @@ export default {
   methods: {
     selectMenu(index, listIndex, isItemList){
 
-      this.menuList.forEach((menu, i) => {
+      this.menuList.forEach((menu) => {
         if (menu.isActive) { menu.isActive = false }
         // if (menu.activeDropdown) { menu.activeDropdown = false }
-        menu.menuItems.forEach((item, j) => {
+        menu.menuItems.forEach((item) => {
           if (item.isActive) { item.isActive = false }
         })
       })
