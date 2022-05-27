@@ -5,13 +5,14 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview --port 5050",
-    "rungmod": "vite --host --port 80"
+    "rungmod": "vite --host --port 8080"
   },
   "dependencies": {
     "vue": "^3.2.33",
     "vue-router": "^4.0.14"
   },
   "devDependencies": {
+    "@types/node": "^17.0.35",
     "@vitejs/plugin-vue": "^2.3.1",
     "autoprefixer": "^10.4.4",
     "postcss": "^8.4.12",
