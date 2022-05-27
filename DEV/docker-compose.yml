@@ -4,7 +4,7 @@ services:
     image: ghcr.io/artidsun/int371-frontend-dev:latest
     container_name: frontendDev
     ports:
-      - "8085:8080"
+      - "8085:80"
 networks:
     default:
       external:
