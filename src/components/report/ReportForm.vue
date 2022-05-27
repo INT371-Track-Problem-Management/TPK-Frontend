@@ -1,10 +1,11 @@
 <template>
-  <div class="w-full xl:w-4/5 mx-auto mb-24">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-10">
+  <div class="w-full xl:w-3/4 mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-24">
       <div class="flex md:hidden flex-col justify-start">
         <div class="text-rangmod-black">ชื่อ-นามสกุลช่าง</div>
         <div class="mb-5">
           <input
+            :value="report.reportId"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -13,6 +14,7 @@
         <div class="text-rangmod-black">เบอร์ติดต่อช่าง</div>
         <div class="mb-5">
           <input
+            :value="report.reportId"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -23,6 +25,7 @@
         <div class="text-rangmod-black">หัวข้อปัญหา</div>
         <div class="mb-5">
           <input
+            :value="report.title"
             type="text"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
@@ -34,14 +37,14 @@
           <textarea
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
-          ></textarea>
+          >${report.reportId}</textarea>
         </div>
 
         <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
         <div class="flex flex-col">
           <div
-            v-for="(reminder, i) in date_reminder"
+            v-for="(engageDate, i) in engageDates"
             :key="i"
             class="flex flex-row space-x-4 justify-between items-center"
           >
@@ -51,7 +54,7 @@
                 type="text"
                 class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
-                :value="reminder.date"
+                :value="engageDate.date"
               />
             </div>
 
@@ -61,7 +64,7 @@
                 type="text"
                 class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
-                :value="reminder.time"
+                :value="engageDate.time"
               />
             </div>
 
@@ -69,7 +72,7 @@
               <div
                 class="w-7 h-7 rounded-full"
                 :class="
-                  reminder.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'
+                  engageDate.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'
                 "
               ></div>
             </div>
@@ -81,6 +84,7 @@
         <div class="text-rangmod-black">ชื่อ-นามสกุลช่าง</div>
         <div class="mb-5">
           <input
+            :value="report.reportId"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -89,51 +93,68 @@
         <div class="text-rangmod-black">เบอร์ติดต่อช่าง</div>
         <div class="mb-5">
           <input
+            :value="report.reportId"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
         </div>
       </div>
     </div>
-
-    <div class="flex justify-end space-x-4">
+    <div class="flex flex-row justify-end space-x-4">
       <div
-        class="mx-auto grid grid-cols-2 gap-4 justify-items-center md:flex justify-center xl:justify-end md:space-x-4"
+        @click="postpone(82)"
+        class="bg-rangmod-blue w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
+      >
+        เลื่อนนัด
+      </div>
+
+      <div
+        @click="cancel(report.reportId)"
+        class="bg-rangmod-dark-pink w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
+      >
+        ยกเลิกนัด
+      </div>
+
+      <div
+        @click="save('save')"
+        class="bg-rangmod-purple w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
+      >
+        บันทึก
+      </div>
+
+      <!-- status update mobile -->
+      <!-- <div
+        class="w-full md:w-2/5 mx-auto lg:hidden flex flex-col justify-start"
       >
         <div
-          @click="actionButton('postpone')"
-          class="bg-rangmod-blue w-32 md:w-40 text-center text-white text-lg md:text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
+          v-for="(status, i) in statusList"
+          :key="i"
+          class="flex flex-row items-center space-x-6 pb-8 -mb-1 relative"
         >
-          เลื่อนนัด
-        </div>
+          <div
+            class="w-16 h-16 rounded-full"
+            :class="
+              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
+            "
+          ></div>
+          <div class="text-base md:text-lg">{{ status.name }}</div>
 
-        <div
-          @click="actionButton('accept')"
-          class="bg-rangmod-blue w-32 md:w-40 text-center text-white text-lg md:text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-        >
-          รับเรื่อง
+          <div
+            v-show="status.divider"
+            class="w-2 h-20 absolute left-1 bottom-1 z-20"
+            :class="
+              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
+            "
+          ></div>
         </div>
-
-        <div
-          @click="actionButton('cancel')"
-          class="bg-rangmod-blue w-32 md:w-40 text-center text-white text-lg md:text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-        >
-          ยกเลิกนัด
-        </div>
-
-        <div
-          @click="actionButton('save')"
-          class="bg-rangmod-purple w-32 md:w-40 text-center text-white text-lg md:text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-        >
-          บันทึก
-        </div>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  props: ["report"],
   data() {
     return {
       date_reminder: [
@@ -158,11 +179,66 @@ export default {
           isActive: false,
         },
       ],
+      engageDates: [
+        {
+          date: "2022-05-25",
+          time: "08:02:27",
+          // dateTime: '',
+          isActive: true,
+        },
+        {
+          date: "2022-07-26",
+          time: "09:04:27",
+          // dateTime: '',
+          isActive: false,
+        },
+        {
+          date: "2022-09-27",
+          time: "10:06:27",
+          // dateTime: '',
+          isActive: false,
+        },
+        {
+          date: "2022-11-28",
+          time: "11:08:27",
+          // dateTime: '',
+          isActive: false,
+        },
+      ],
     };
   },
-
+  mount() {
+    this.create();
+  },
   methods: {
-    actionButton(action) {
+    create() {
+      console.log(this.report)
+    },
+    postpone(reportId) {
+      fetch(`https://dev.rungmod.com/api/statusReport`, {
+        method: "PUT",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          ReportId: reportId,
+          Status: "เลื่อนนัด"
+        }),
+      }).then(() => {
+        alert("Edited!")
+      })
+    },
+    cancel(reportId) {
+      fetch(`https://dev.rungmod.com/api/deleteReportById`, {
+        method: "DELETE",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          ReportId: reportId,
+        }),
+      }).then(() => {
+        alert("Deleted!")
+      })
+
+    },
+    save(action) {
       console.log(action);
     },
   },

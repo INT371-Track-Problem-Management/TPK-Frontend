@@ -127,9 +127,12 @@
 
 <script>
 
+// import SideMenu from "@/components/SideMenu.vue"
+
 export default {
 
-  name: 'NavMenuUser',
+  // name: 'admin',
+  // components: { SideMenu },
 
   props: ["menuList"],
 

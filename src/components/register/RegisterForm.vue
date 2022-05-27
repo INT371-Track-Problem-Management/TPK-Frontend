@@ -9,6 +9,7 @@
       <div class="text-rangmod-black px-1">อีเมล์</div>
       <div class="border border-rangmod-gray rounded-xl px-3">
         <input 
+        v-model="email"
           type="email" 
           placeholder="example@example.com"
           class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
@@ -20,6 +21,7 @@
       <div class="text-rangmod-black px-1">รหัสผ่าน</div>
       <div class="border border-rangmod-gray rounded-xl px-3 relative">
         <input 
+        v-model="password"
           :type="textPassword" 
           class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
         >
@@ -44,6 +46,7 @@
       <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
       <div class="border border-rangmod-gray rounded-xl px-3 relative">
         <input 
+        v-model="confirmPassword"
           :type="textPasswordConfirm" 
           class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
         >
@@ -87,8 +90,28 @@ export default {
   data() {
     return {
       textPassword : 'password',
-      textPasswordConfirm : 'password'
+      textPasswordConfirm : 'password',
+      email: '',
+      password: '',
+      confirmPassword: ''
     }
+  },
+  methods: {
+    register() {
+      fetch(`https://dev.rungmod.com/api/register`, {
+        // fetch(`http://localhost:5000/api/report`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: this.email,
+          Password: this.password,
+        }),
+      }).then((res) => {
+        console.log(res);
+        this.engage();
+        console.log("Add report!");
+      });
+    },
   }
 }
 </script>

@@ -22,14 +22,15 @@ import DashboardConfigApertmentsPage from '../views/apartments-config/Apartments
 import DashboardConfigApertmentsAddPage from '../views/apartments-config/addPage.vue'
 import DashboardConfigApertmentsSetRoomPage from '../views/apartments-config/setRoomPage.vue'
 
-const routes = [
+import MemberMydorm from '../views/members/MemberMydorm.vue'
+import MemberReport from '../views/members/MemberReport.vue'
+import MemberReportDetail from '../views/members/MemberReportDetail.vue'
+
+  const routes = [
     {
       path: '/',
-      name: 'HomePage',
+      name: 'home',
       component: HomePage,
-      meta: {
-        layout: 'AppLayoutDefault'
-      }
     },
     {
       path: '/register',
@@ -76,6 +77,7 @@ const routes = [
       name: 'apartments-set-room',
       component: ApartmentsSetRoomPage,
     },
+    
     {
       path: '/dashboard',
       name: 'dashboard',
@@ -130,7 +132,26 @@ const routes = [
       component: DashboardConfigApertmentsSetRoomPage,
       meta: { layout: 'AppLayoutAdmin' }
     },
-    
+    {
+      path: '/member/mydorm',
+      name: 'member-mydorm',
+      component: MemberMydorm,
+      meta: { layout: 'AppLayoutMember' }
+    },
+    {
+      path: '/member/report',
+      name: 'member-report',
+      component: MemberReport,
+      meta: { layout: 'AppLayoutMember' }
+    },
+    {
+      path: '/member/report/detail/:id',
+      name: 'member-report-detail',
+      props: true ,
+      component: MemberReportDetail,
+
+      meta: { layout: 'AppLayoutMember' }
+    },
   ]
 
 const router = createRouter({
