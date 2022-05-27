@@ -23,8 +23,6 @@ module.exports = {
         'rangmod-blue': "#268CCB",
         'rangmod-dark-blue': "#4A80AA",
         'rangmod-green': "#64BD79",
-        
-        
       },
     },
   },
