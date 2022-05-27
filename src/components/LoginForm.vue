@@ -10,7 +10,7 @@
         <div class="text-rangmod-black px-1">อีเมล์</div>
         <div class="border border-rangmod-gray rounded-xl px-3">
           <input
-          v-model="username"
+          v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -87,11 +87,11 @@ export default {
     return {
       textPassword: "password",
       // type: "member",
-      username: "",
+      email: "",
       password: "",
       // res: "",
       userLogin: {
-        username: "",
+        email: "",
         role: "",
         status: "",
       },
@@ -105,7 +105,7 @@ export default {
         method: "POST",
         headers: { "content-Type": "application/json" },
         body: JSON.stringify({
-          username: this.username,
+          email: this.email,
           password: this.password,
         }),
       })
@@ -115,10 +115,10 @@ export default {
         })
         .then((res) => {
           // this.res = res;
-          this.userLogin.username = this.parseJwt(res).username;
+          this.userLogin.email = this.parseJwt(res).email;
           this.userLogin.role = this.parseJwt(res).role;
           this.userLogin.status = this.parseJwt(res).status;
-          localStorage.setItem("username", this.userLogin.username);
+          localStorage.setItem("email", this.userLogin.email);
           console.log(this.userLogin); //checkuserlogin
           console.log(res); // checktoken
         })
