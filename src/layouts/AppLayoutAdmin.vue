@@ -12,8 +12,8 @@
 
 <script>
 
-  import NavMenuUser from "@/components/NavMenuUser.vue"
-  import SideMenu from "@/components/SideMenu.vue"
+  import NavMenuUser from "../components/NavMenuUser.vue"
+  import SideMenu from "../components/SideMenu.vue"
 
   export default {
     name: 'admin',
