@@ -18,4 +18,4 @@ COPY ../package*.json ./
 RUN npm install
 COPY .. ./
 CMD [ "npm", "run", "rungmod"]
-EXPOSE 3000
+EXPOSE 80
