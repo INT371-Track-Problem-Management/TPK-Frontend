@@ -92,7 +92,6 @@
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-
         >
           <RouterLink to="/member/report/detail">รายละเอียด</RouterLink>
         </td>
@@ -203,42 +202,42 @@
 export default {
   data() {
     return {
-      title: "",
+      title: "testFinal",
       category: "test001", //mockup dont del
-      description: "",
+      description: "testFinal",
       status: "รอรับเรื่อง",
-      createdBy: 1111,
-      engage:{
-        formatedDate1: "2000-11-05 00:00:00",
-        formatedDate2: "2000-11-05 00:00:00",
-        formatedDate3: "2000-11-05 00:00:00",
-        formatedDate4: "2000-11-05 00:00:00",
-        reportId: 0
+      createdBy: 0,
+      engage: {
+        // formatedDate1: this.engageDates[0].date + " " + this.engageDates[0].time,
+        // formatedDate2: this.engageDates[1].date + " " + this.engageDates[1].time,
+        // formatedDate3: this.engageDates[2].date + " " + this.engageDates[2].time,
+        // formatedDate4: this.engageDates[3].date + " " + this.engageDates[3].time,
+        reportId: 0,
       },
       customers: [],
       engageDates: [
         {
-          date: "1",
-          time: "1",
-          dateTime: ""
+          date: "2022-05-25",
+          time: "08:02:27",
+          dateTime: '',
           // isActive: false,
         },
         {
-          date: "",
-          time: "",
-          dateTime: ""
+          date: "2022-05-25",
+          time: "08:02:27",
+          dateTime: '',
           // isActive: true,
         },
         {
-          date: "",
-          time: "",
-          dateTime: ""
+          date: "2022-05-25",
+          time: "08:02:27",
+          dateTime: '',
           // isActive: false,
         },
         {
-          date: "",
-          time: "",
-          dateTime: ""
+          date: "2022-05-25",
+          time: "08:02:27",
+          dateTime: '',
           // isActive: false,
         },
       ],
@@ -428,7 +427,9 @@ export default {
     async create() {
       this.reportList = await this.getReport();
       this.customers = await this.getCustomers();
-      console.log(this.reportList);
+      this.createdBy = this.getUserLogin();
+      console.log(this.createdBy);
+      console.log(this.engageDates)
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -450,17 +451,19 @@ export default {
           ReportDes: this.description,
           Status: this.status,
           CreatedBy: this.createdBy,
+        }),
+      })
+        .then((response) => {
+          const res = response.json();
+          // console.log(res);
+          // this.engage();
+          console.log("Add report!");
+          return res;
         })
-      }).then((response) => {
-        const res = response.json();
-        // console.log(res);
-        // this.engage();
-        console.log("Add report!");
-        return res;
-      }).then((response) => {
-        this.sendEngageDate(response);
-        console.log(response);
-      });
+        .then((response) => {
+          this.sendEngageDate(response);
+          console.log(response);
+        });
     },
     sendEngageDate(reportId) {
       fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
@@ -468,12 +471,12 @@ export default {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          Date1: this.engage.formatedDate1,
-          Date2: this.engage.formatedDate2,
-          Date3: this.engage.formatedDate3,
-          Date4: this.engage.formatedDate4,
+          Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
+          Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
+          Date3: this.engageDates[2].date + " " + this.engageDates[2].time,
+          Date4: this.engageDates[3].date + " " + this.engageDates[3].time,
           ReportId: reportId,
-        })
+        }),
       }).then((res) => {
         console.log(res);
         console.log("Add report!");
@@ -491,25 +494,27 @@ export default {
     },
     dateFormat(inputDate) {
       const date = new Date(inputDate);
-      const formatedDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+      const formatedDate =
+        date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
       return formatedDate;
     },
     async getCustomers() {
       try {
-        const res = await fetch("https://dev.rungmod.com/api/customer").then((response) => {
-          const res = response.json()
-          return res
-        }).then((res) => {
-          const cus = res.find((email) => {return email == localStorage.email})
-          console.log(cus)
-        })
-        // const res = await fetch("http://localhost:5000/api/customer");
-        // const data = res.json();
-        // return data;
+        const res = await fetch("https://dev.rungmod.com/api/customer");
+        const data = res.json();
+        return data;
       } catch (e) {
         console.log(e);
       }
     },
+    getUserLogin() {
+      for(let i = 0; i < this.customers.length; i++) {
+        if(this.customers[i].email == localStorage.email) {
+          console.log(this.engageDates[0].date + " " + this.engageDates[0].time)
+          return this.customers[i].customerId
+        }
+      }
+    }
   },
 };
 </script>
