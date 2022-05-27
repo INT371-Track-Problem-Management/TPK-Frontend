@@ -215,7 +215,7 @@ export default {
         formatedDate4: "2000-11-05 00:00:00",
         reportId: 0
       },
-
+      customers: [],
       engageDates: [
         {
           date: "1",
@@ -427,6 +427,7 @@ export default {
   methods: {
     async create() {
       this.reportList = await this.getReport();
+      this.customers = await this.getCustomers();
       console.log(this.reportList);
     },
     doFilter(id) {
@@ -491,10 +492,23 @@ export default {
     dateFormat(inputDate) {
       const date = new Date(inputDate);
       const formatedDate = date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
-      // console.log(typeof(inputDate))
-      // console.log(typeof(date))
-      // console.log(typeof(formatedDate))
       return formatedDate;
+    },
+    async getCustomers() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/customer").then((response) => {
+          const res = response.json()
+          return res
+        }).then((res) => {
+          const cus = res.find((email) => {return email == localStorage.email})
+          console.log(cus)
+        })
+        // const res = await fetch("http://localhost:5000/api/customer");
+        // const data = res.json();
+        // return data;
+      } catch (e) {
+        console.log(e);
+      }
     },
   },
 };

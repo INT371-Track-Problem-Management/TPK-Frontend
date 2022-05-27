@@ -119,6 +119,7 @@ export default {
           this.userLogin.role = this.parseJwt(res).role;
           this.userLogin.status = this.parseJwt(res).status;
           localStorage.setItem("email", this.userLogin.email);
+          localStorage.setItem("role", this.userLogin.role);
           console.log(this.userLogin); //checkuserlogin
           console.log(res); // checktoken
         })
