@@ -82,12 +82,12 @@ export default {
         {
           name: "รอรับเรื่อง",
           divider: true,
-          isActive: true,
+          isActive: false,
         },
         {
           name: "รอดำเนินการ",
           divider: true,
-          isActive: true,
+          isActive: false,
         },
         {
           name: "ดำเนินการแล้ว",
@@ -111,31 +111,71 @@ export default {
         },
       ],
       reportById: {},
+      reportId: parseInt(this.id),
     };
   },
   mounted() {
     this.create();
+    
   },
   methods: {
     async create() {
-      this.reportById = await this.getReportById(this.id);
-      console.log(this.reportById)
+      console.log(typeof(this.reportId))
+      this.reportById = await this.getReportById(this.reportId);
+      this.checkStatus(this.reportById);
+      // console.log(typeof(this.reportById))
     },
     async getReportById(reportId) {
-      console.log(reportId)
+      // console.log(reportId)
       try {
-        // const res = await fetch(`https://dev.rungmod.com/api/reportById`, {
-        const res = await fetch(`http://localhost:5000/api/reportById`, {
+        const res = await fetch(`https://dev.rungmod.com/api/reportById`, {
+        // const res = await fetch(`http://localhost:5000/api/reportById`, {
           method: "POST",
           headers: { "content-Type": "application/json" },
           body: JSON.stringify({
-            ReportId: 82
+            ReportId: reportId
           }),
         })
+        // console.log(reportId)
         const data = res.json();
         return data;
       } catch (e) {
         console.log(e);
+      }
+    },
+    checkStatus(report) {
+      if(report.status == 'รอรับเรื่อง') {
+        this.statusList[0].isActive = true
+      }
+      if(report.status == 'รอดำเนินการ') {
+        this.statusList[0].isActive = true
+        this.statusList[1].isActive = true
+      }
+      if(report.status == 'รอซ่อม') {
+        this.statusList[0].isActive = true
+        this.statusList[1].isActive = true
+        this.statusList[2].isActive = true
+      }
+      if(report.status == 'เลื่อนนัด') {
+        this.statusList[0].isActive = true
+        this.statusList[1].isActive = true
+        this.statusList[2].isActive = true
+        this.statusList[3].isActive = true
+      }
+      if(report.status == 'ยกเลิกนัด') {
+        this.statusList[0].isActive = true
+        this.statusList[1].isActive = true
+        this.statusList[2].isActive = true
+        this.statusList[3].isActive = true
+        this.statusList[4].isActive = true
+      }
+      if(report.status == 'เสร็จสิ้น') {
+        this.statusList[0].isActive = true
+        this.statusList[1].isActive = true
+        this.statusList[2].isActive = true
+        this.statusList[3].isActive = true
+        this.statusList[4].isActive = true
+        this.statusList[5].isActive = true
       }
     },
     postpone(action) {

@@ -93,7 +93,13 @@
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
         >
-          <RouterLink :to="{name: 'member-report-detail',  params: {id: report.reportId}}">รายละเอียด</RouterLink>
+          <RouterLink
+            :to="{
+              name: 'member-report-detail',
+              params: { id: report.reportId },
+            }"
+            >รายละเอียด</RouterLink
+          >
         </td>
       </tr>
     </table>
@@ -201,10 +207,10 @@
 <script>
 export default {
   props: {
-        id: {
-            type: Number
-        }
+    id: {
+      type: Number,
     },
+  },
   data() {
     return {
       title: "testFinal",
@@ -224,25 +230,25 @@ export default {
         {
           date: "2022-05-25",
           time: "08:02:27",
-          dateTime: '',
+          dateTime: "",
           // isActive: false,
         },
         {
           date: "2022-07-26",
           time: "09:04:27",
-          dateTime: '',
+          dateTime: "",
           // isActive: true,
         },
         {
           date: "2022-09-27",
           time: "10:06:27",
-          dateTime: '',
+          dateTime: "",
           // isActive: false,
         },
         {
           date: "2022-11-28",
           time: "11:08:27",
-          dateTime: '',
+          dateTime: "",
           // isActive: false,
         },
       ],
@@ -434,7 +440,7 @@ export default {
       this.customers = await this.getCustomers();
       this.createdBy = this.getUserLogin();
       console.log(this.createdBy);
-      console.log(this.reportList)
+      console.log(this.reportList);
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -446,45 +452,63 @@ export default {
       console.log(reportId);
     },
     sendReport() {
-      fetch(`https://dev.rungmod.com/api/report`, {
-        // fetch(`http://localhost:5000/api/report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Title: this.title,
-          CategoriesReport: this.category,
-          ReportDes: this.description,
-          Status: this.status,
-          CreatedBy: this.createdBy,
-        }),
-      })
-        .then((response) => {
-          const res = response.json();
-          console.log("Add report!");
-          return res;
+      if (this.title == "" || this.description == "") {
+        alert("some form is empty");
+      } else {
+        fetch(`https://dev.rungmod.com/api/report`, {
+          // fetch(`http://localhost:5000/api/report`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Title: this.title,
+            CategoriesReport: this.category,
+            ReportDes: this.description,
+            Status: this.status,
+            CreatedBy: this.createdBy,
+          }),
         })
-        .then((response) => {
-          this.sendEngageDate(response);
-          console.log(response);
-        });
+          .then((response) => {
+            const res = response.json();
+            // console.log("Add report!");
+            return res;
+          })
+          .then((response) => {
+            this.sendEngageDate(response);
+            // console.log(response);
+            alert("Send report!");
+            this.showModal = !this.showModal;
+          });
+      }
     },
     sendEngageDate(reportId) {
-      fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
-        // fetch(`http://localhost:5000/api/report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
-          Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
-          Date3: this.engageDates[2].date + " " + this.engageDates[2].time,
-          Date4: this.engageDates[3].date + " " + this.engageDates[3].time,
-          ReportId: reportId,
-          SelectDate: 1
-        }),
-      }).then((res) => {
-        console.log(res);
-        console.log("Add report!");
-      });
+      // if (reportId) {
+      //   for (let i = 0; i < this.engageDates.length; i++) {
+      //     if (
+      //       this.engageDates[i].date == "" ||
+      //       this.engageDates[i].time == ""
+      //     ) {
+      //       alert("some date or time is empty");
+      //       break;
+      //     }
+      //   }
+      // } else {
+        fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
+          // fetch(`http://localhost:5000/api/report`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
+            Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
+            Date3: this.engageDates[2].date + " " + this.engageDates[2].time,
+            Date4: this.engageDates[3].date + " " + this.engageDates[3].time,
+            ReportId: reportId,
+            SelectDate: 1,
+          }),
+        }).then((res) => {
+          console.log(res);
+          console.log("Add report!");
+        });
+      // }
     },
     async getReport() {
       try {
@@ -497,9 +521,13 @@ export default {
       }
     },
     dateFormat(inputDate) {
+      // console.log(inputDate)
       const date = new Date(inputDate);
+      // console.log(date.getDate())
+      // console.log(date.getMonth())
+      // console.log(date.getFullYear())
       const formatedDate =
-        date.getDate() + "/" + date.getMonth() + "/" + date.getFullYear();
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
     },
     async getCustomers() {
@@ -512,13 +540,15 @@ export default {
       }
     },
     getUserLogin() {
-      for(let i = 0; i < this.customers.length; i++) {
-        if(this.customers[i].email == localStorage.email) {
-          console.log(this.engageDates[0].date + " " + this.engageDates[0].time)
-          return this.customers[i].customerId
+      for (let i = 0; i < this.customers.length; i++) {
+        if (this.customers[i].email == localStorage.email) {
+          console.log(
+            this.engageDates[0].date + " " + this.engageDates[0].time
+          );
+          return this.customers[i].customerId;
         }
       }
-    }
+    },
   },
 };
 </script>
