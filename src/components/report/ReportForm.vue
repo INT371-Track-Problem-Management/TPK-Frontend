@@ -34,10 +34,10 @@
 
         <div class="text-rangmod-black">รายละเอียดปัญหา</div>
         <div class="mb-5">
-          <textarea
+          <textarea v-model="description"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
-          >${report.reportId}</textarea>
+          ></textarea>
         </div>
 
         <div class="text-rangmod-black">วันและเวลาที่นัด</div>
@@ -102,7 +102,8 @@
     </div>
     <div class="flex flex-row justify-end space-x-4">
       <div
-        @click="postpone(82)"
+        @click="postpone(report.reportId)"
+        disable="true"
         class="bg-rangmod-blue w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
       >
         เลื่อนนัด
@@ -112,7 +113,7 @@
         @click="cancel(report.reportId)"
         class="bg-rangmod-dark-pink w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
       >
-        ยกเลิกนัด
+        ลบรายงานปัญหา
       </div>
 
       <div
@@ -153,32 +154,13 @@
 </template>
 
 <script>
+// import router from '@/router';
+
 export default {
   props: ["report"],
   data() {
     return {
-      date_reminder: [
-        {
-          date: "",
-          time: "",
-          isActive: false,
-        },
-        {
-          date: "",
-          time: "",
-          isActive: true,
-        },
-        {
-          date: "",
-          time: "",
-          isActive: false,
-        },
-        {
-          date: "",
-          time: "",
-          isActive: false,
-        },
-      ],
+      description: this.report.reportDes,
       engageDates: [
         {
           date: "2022-05-25",
@@ -212,19 +194,28 @@ export default {
   },
   methods: {
     create() {
-      console.log(this.report)
+      console.log(this.report);
     },
     postpone(reportId) {
-      fetch(`https://dev.rungmod.com/api/statusReport`, {
-        method: "PUT",
-        headers: { "content-Type": "application/json" },
-        body: JSON.stringify({
-          ReportId: reportId,
-          Status: "เลื่อนนัด"
-        }),
-      }).then(() => {
-        alert("Edited!")
-      })
+      if (
+        this.report.status == "รอรับเรื่อง" ||
+        // this.report.status == "รอซ่อม" ||
+        this.report.status == "ยกเลิกนัด" ||
+        this.report.status == "เสร็จสิ้น"
+      ) {
+        alert("Can't change status");
+      } else {
+        fetch(`https://dev.rungmod.com/api/statusReport`, {
+          method: "PUT",
+          headers: { "content-Type": "application/json" },
+          body: JSON.stringify({
+            ReportId: reportId,
+            Status: "เลื่อนนัด",
+          }),
+        }).then(() => {
+          alert("Status change!");
+        });
+      }
     },
     cancel(reportId) {
       fetch(`https://dev.rungmod.com/api/deleteReportById`, {
@@ -234,9 +225,9 @@ export default {
           ReportId: reportId,
         }),
       }).then(() => {
-        alert("Deleted!")
-      })
-
+        alert("Delete report!");
+        this.$router.push(`/member/report`);
+      });
     },
     save(action) {
       console.log(action);
