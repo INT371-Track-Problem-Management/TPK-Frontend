@@ -38,8 +38,8 @@ jobs:
             cd TPK-Frontend
             git checkout prd
             git pull origin prd
-            sudo docker rm -f frontendPrd
-            sudo docker rmi ghcr.io/artidsun/int371-frontend-prd:latest
-            sudo docker pull ghcr.io/artidsun/int371-frontend-prd:latest
+            docker rm -f frontendPrd
+            docker rmi ghcr.io/artidsun/int371-frontend-prd:latest
+            docker pull ghcr.io/artidsun/int371-frontend-prd:latest
             cd PRD
-            sudo docker-compose up -d
+            docker-compose up -d
