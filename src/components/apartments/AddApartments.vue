@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-5">
+  <div class="font-primary text-rangmod-black container mx-auto px-5">
       
     <div class="flex space-x-2 items-center my-5 text-rangmod-purple">
 
@@ -15,7 +15,7 @@
     
     </div>
 
-    <div class="w-1/2 mx-auto">
+    <div class="w-full lg:w-1/2 mx-auto">
       
       <div class="text-xl my-5">ติดตั้งอพาร์ตเม้นต์</div>
 
@@ -23,7 +23,7 @@
         ข้อมูล
       </div>
 
-      <div class="grid grid-cols-2 gap-10 my-5">
+      <div class="grid grid-cols-2 gap-5 lg:gap-10 my-5">
 
         <div class="">
           <div class="my-2">ชื่ออพาร์ตเม้นต์</div>
@@ -42,17 +42,17 @@
 
       </div>
 
-      <div class="w-2/3">
+      <div class="w-full lg:w-2/3">
         <div class="my-2">จำนวนห้องต่อชั้น</div>
 
         <div class="flex h-8 items-center border border-rangmod-gray rounded-xl my-4 overflow-hidden">
-          <div class="w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 1</div>
+          <div class="w-60 sm:w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 1</div>
           <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide px-3 ">
           <div class="text-sm p-2 text-rangmod-black bg-stone-200 border-l border-rangmod-gray">ห้อง</div>
         </div>
 
         <div class="flex h-8 items-center border border-rangmod-gray rounded-xl my-4 overflow-hidden">
-          <div class="w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 2</div>
+          <div class="w-60 sm:w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 2</div>
           <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide px-3 ">
           <div class="text-sm p-2 text-rangmod-black bg-stone-200 border-l border-rangmod-gray">ห้อง</div>
         </div>

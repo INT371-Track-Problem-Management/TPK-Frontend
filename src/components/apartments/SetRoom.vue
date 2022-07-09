@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-5">
+  <div class="font-primary text-rangmod-black container mx-auto px-5">
     
     <div class="flex space-x-2 items-center my-5 text-rangmod-purple">
 
@@ -15,22 +15,22 @@
     
     </div>
 
-    <div class="w-1/2 mx-auto">
+    <div class="w-full lg:w-1/2 mx-auto">
       
       <div class="text-xl my-5">ติดตั้งอพาร์ตเม้นต์</div>
 
       <div
-        v-for="(floor, i) in floor_data"
+        v-for="(room, i) in roomList"
         :key="i"
       >
         <div class="w-full bg-rangmod-light-pink text-lg p-4">
-          ชั้นที่ {{floor.floor_number}}
+          ชั้นที่ {{room.floor_number}}
         </div>
 
         <div class="px-4">
           <div class="my-2">เลขห้อง</div>
           <div 
-            v-for="(room, j) in floor.room_number"
+            v-for="(item, j) in room.roomItems"
             :key="j"
             class="grid grid-cols-2 gap-10 mb-3"
           >
@@ -39,30 +39,50 @@
                 <input 
                   type="text" 
                   class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide"
-                  v-model="room[j]"
+                  v-model="item.room_number"
                 >
               </div>
             </div>
-            <div class="flex items-center">
-              <div class="w-4 h-4 bg-rangmod-blue"></div>
-              <div class="ml-3">เปิดใช้งาน</div>
+
+            <div
+              @click="item.isActive = !item.isActive"
+              class="cursor-pointer"
+            >
+              <div v-if="item.isActive" class="flex items-center">
+                <div class="w-4 h-4 bg-rangmod-blue"></div>
+                <div class="ml-3">เปิดใช้งาน</div>
+              </div>
+
+              <div v-else class="flex items-center">
+                <div class="w-4 h-4 bg-rangmod-red"></div>
+                <div class="ml-3">ปิดใช้งาน</div>
+              </div>
             </div>
+
           </div>
 
           <div
-            @click="addRoom(floor.floor_number)"
-            class="w-full text-center cursor-pointer text-rangmod-purple my-20 py-2 border border-rangmod-purple rounded-xl transition-all hover:bg-rangmod-purple hover:text-white"
+            @click="addRoom(item.room_number)"
+            class="w-full text-center cursor-pointer text-rangmod-purple my-10 py-2 border border-rangmod-purple rounded-xl transition-all hover:bg-rangmod-purple hover:text-white"
           >
             + เพิ่มห้อง
           </div>
 
         </div>
-      </div>
-    
 
+        
+      </div>
+
+      <div
+        @click="addFloor()"
+        class="w-full text-center cursor-pointer text-rangmod-dark-yellow bg-rangmod-yellow my-10 py-2 border border-rangmod-yellow rounded-xl transition-all hover:bg-white hover:text-rangmod-yellow"
+      >
+        + เพิ่มชั้น
+      </div>
+      
       <div 
         @click="submitSetting" 
-        class="flex justify-end cursor-pointer mt-24"
+        class="flex justify-end cursor-pointer mt-10 mb-20"
       >
         <div class="w-32 my-4 py-1 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
           ต่อไป
@@ -79,25 +99,43 @@ export default {
 
   data() {
     return {
-      floor_data: [
+      roomList: [
         {
           floor_number: 1,
-          room_number: [101, 102, 103, 104],
+          roomItems: [
+            { room_number: "101", status: "3", isActive: true, },
+            { room_number: "102", status: "1", isActive: true, },
+            { room_number: "103", status: "3", isActive: true, },
+            { room_number: "104", status: "3", isActive: true, },
+          ],
         },
         {
           floor_number: 2,
-          room_number: [201, 202, 203, 204],
+          roomItems: [
+            { room_number: "201", status: "1", isActive: true, },
+            { room_number: "202", status: "3", isActive: true, },
+            { room_number: "203", status: "1", isActive: true, },
+            { room_number: "204", status: "3", isActive: true, },
+          ],
         },
         {
           floor_number: 3,
-          room_number: [301, 302, 303, 304],
+          roomItems: [
+            { room_number: "301", status: "3", isActive: false, },
+            { room_number: "302", status: "2", isActive: true, },
+            { room_number: "303", status: "3", isActive: false, },
+            { room_number: "304", status: "2", isActive: true, },
+          ],
         },
       ]
     };
   },
   methods: {
-    addRoom(floor_number) {
-      console.log(floor_number);
+    addRoom(room_number) {
+      console.log(room_number);
+    },
+    addFloor(){
+      console.log(`Add Floor !`);
     },
     submitSetting() {
       this.$router.push(`/apartments/`);

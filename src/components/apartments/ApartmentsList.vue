@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto px-5">
+  <div class="font-primary text-rangmod-black container mx-auto px-5 transition-all">
     <div class="flex space-x-2 items-center my-5 text-rangmod-purple">
 
       <div>
@@ -23,7 +23,7 @@
 
       <div 
         v-show="apartmentsList.length > 0"
-        class="flex justify-end px-12"
+        class="flex justify-end px-2 md:px-12"
       >
         <RouterLink to="/apartments/add" >
           <div 
@@ -36,7 +36,7 @@
 
       <div 
         v-if="apartmentsList.length > 0"
-        class="grid grid-cols-5 gap-5 my-5 px-12 py-2"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 md:gap-5 my-5 px-0 md:px-12 py-2"
       > 
 
         <div 
@@ -48,7 +48,7 @@
               <div class="aspect-square bg-rangmod-pink rounded-xl mx-2">
                 <img :src="ap.thumbnail" alt="" class="object-none object-center">
               </div>
-              <div class="text-center my-2 text-xl">
+              <div class="text-center my-2 text-lg sm:text-xl">
                 {{ap.name}}
               </div>
             </div>
@@ -83,45 +83,45 @@ export default {
       apartmentsList: [
         // {
         //   index: "1",
-        //   name: "1",
+        //   name: "PWS อพาร์ตเม้นต์",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "2",
-        //   name: "2",
+        //   name: "3Friend อพาร์ตเม้นต์",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "3",
         //   name: "3",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "4",
         //   name: "4",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "5",
         //   name: "5",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "6",
         //   name: "6",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
         // {
         //   index: "7",
         //   name: "7",
         //   thumbnail: "",
-        //   url: "/",
+        //   url: "/apartments",
         // },
       ]
     }

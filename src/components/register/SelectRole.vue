@@ -1,16 +1,16 @@
 <template>
 
-  <div class="bg-white w-full md:w-2/3 lg:w-1/3 mx-4 md:mx-auto my-4 p-10 rounded-xl shadow-md">
+  <div class="font-primary bg-white w-4/5 md:w-2/3 lg:w-1/3 mx-auto my-4 p-10 rounded-xl shadow-md">
     <div class="grid grid-cols-1 gap-4">
 
       <div class="flex flex-row justify-between">
-        <div class="text-rangmod-purple text-3xl">สวัสดี !</div>
+        <div class="text-rangmod-purple text-2xl">สวัสดี !</div>
         <div class="text-rangmod-black text-xl">1/2</div>
       </div>
 
       <hr class="my-4">
 
-      <div class="grid grid-cols-2 gap-10">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-10">
 
           <div 
             @click="selectRole('manager')"
@@ -40,13 +40,13 @@
       <div class="flex flex-row space-x-4 justify-center">
 
         <RouterLink to="/register">
-          <div class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
+          <div class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
             กลับ
           </div>
         </RouterLink>
 
         <div @click="checkConfirm" class="cursor-pointer">
-          <div class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
+          <div class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
             ต่อไป
           </div>
         </div>

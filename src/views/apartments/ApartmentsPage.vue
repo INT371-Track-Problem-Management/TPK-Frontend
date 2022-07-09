@@ -1,5 +1,5 @@
 <template>
-  <div class="font-primary relative">
+  <div class="font-primary">
     
     <NavMenuUser />
     <ApartmentsList />
