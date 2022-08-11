@@ -7,7 +7,7 @@
 
     <div class="w-full mx-auto my-12">
       <!-- status update -->
-      <div class="hidden lg:flex flex-row justify-center">
+      <!-- <div class="hidden lg:flex flex-row justify-center">
         <div
           v-for="(status, i) in statusList"
           :key="i"
@@ -31,28 +31,28 @@
             "
           ></div>
         </div>
-      </div>
+      </div> -->
 
       <!-- status update mobile -->
       <div
-        class="w-full md:w-2/5 mx-auto lg:hidden flex flex-col justify-start"
+        class="w-full ml-32 flex flex-col justify-start"
       >
         <div
           v-for="(status, i) in statusList"
           :key="i"
-          class="flex flex-row items-center space-x-6 pb-8 -mb-1 relative"
+          class="flex flex-row items-center pb-8 -mb-2 relative"
         >
           <div
-            class="w-16 h-16 rounded-full"
+            class="w-5 h-5 rounded-full"
             :class="
               status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
             "
           ></div>
-          <div class="text-base md:text-lg">{{ status.name }}</div>
+          <div class="px-3 text-base md:text-lg">{{ status.name }} (30/03/2565)</div>
 
           <div
             v-show="status.divider"
-            class="w-2 h-20 absolute left-1 bottom-1 z-20"
+            class="w-1 h-10 absolute ml-2 bottom-1 z-20"
             :class="
               status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
             "
@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-
+    <hr class="my-12 border-rangmod-purple" />
     <ReportForm :report="reportById"/>
   </div>
 </template>
@@ -82,7 +82,7 @@ export default {
         {
           name: "รอรับเรื่อง",
           divider: true,
-          isActive: false,
+          isActive: true,
         },
         {
           name: "รอดำเนินการ",
@@ -95,7 +95,17 @@ export default {
           isActive: false,
         },
         {
-          name: "เลื่อนนัด",
+          name: "เลื่อนนัด1",
+          divider: true,
+          isActive: false,
+        },
+        {
+          name: "เลื่อนนัด2",
+          divider: true,
+          isActive: false,
+        },
+        {
+          name: "เลื่อนนัด3",
           divider: true,
           isActive: false,
         },

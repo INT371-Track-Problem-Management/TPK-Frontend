@@ -9,34 +9,36 @@
         </svg>
       </div>
 
-      <div>
+      <div class="bg-white">
         อาพาร์ตเม้นต์
       </div>
     
     </div>
 
-    <div class="w-full lg:w-1/2 mx-auto">
+    <div class="w-full lg:w-1/2 mx-auto ">
       
       <div class="text-xl my-5">ติดตั้งอพาร์ตเม้นต์</div>
 
-      <div class="w-full bg-rangmod-light-pink text-lg p-4">
+      <div class="shadow-md">
+      <div class="w-full bg-rangmod-light-pink text-lg px-4 py-3">
         ข้อมูล
       </div>
-
+      
+      <div class="bg-white px-4">
       <div class="grid grid-cols-2 gap-5 lg:gap-10 my-5">
 
         <div class="">
           <div class="my-2">ชื่ออพาร์ตเม้นต์</div>
-          <div class="border border-rangmod-gray rounded-xl px-3">
-            <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide">
+          <div class="border border-rangmod-gray rounded-xl">
+            <input type="text" class="px-3 w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide">
             
           </div>
         </div>
 
         <div class="">
           <div class="my-2">จำนวนชั้น</div>
-          <div class="border border-rangmod-gray rounded-xl px-3">
-            <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide">
+          <div class="border border-rangmod-gray rounded-xl">
+            <input type="text" class="px-3 w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide">
           </div>
         </div>
 
@@ -47,13 +49,13 @@
 
         <div class="flex h-8 items-center border border-rangmod-gray rounded-xl my-4 overflow-hidden">
           <div class="w-60 sm:w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 1</div>
-          <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide px-3 ">
+          <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg outline-none leading-8 tracking-wide px-3 ">
           <div class="text-sm p-2 text-rangmod-black bg-stone-200 border-l border-rangmod-gray">ห้อง</div>
         </div>
 
         <div class="flex h-8 items-center border border-rangmod-gray rounded-xl my-4 overflow-hidden">
           <div class="w-60 sm:w-48 text-sm p-2 text-rangmod-black bg-stone-200 border-r border-rangmod-gray">จำนวนห้องชั้น 2</div>
-          <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide px-3 ">
+          <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg outline-none leading-8 tracking-wide px-3 ">
           <div class="text-sm p-2 text-rangmod-black bg-stone-200 border-l border-rangmod-gray">ห้อง</div>
         </div>
 
@@ -67,9 +69,9 @@
           ต่อไป
         </div>
       </div>
-
+</div>
     </div>
-
+  </div>
   </div> 
 </template>
 

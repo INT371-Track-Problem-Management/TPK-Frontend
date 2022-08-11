@@ -20,7 +20,7 @@
         <th class="py-4">ชื่อ-นามสกุล</th>
         <th class="py-4">ว/ด/ป ลงทะเบียน</th>
         <th class="py-4">ห้อง</th>
-        <th class="py-4"></th>
+        <th class="py-4">สถานะ</th>
         <th class="py-4"></th>
       </tr>
       <tr
@@ -31,7 +31,7 @@
         <td class="text-center py-4 whitespace-nowrap">{{ i + 1 }}</td>
         <td class="text-center py-4 whitespace-nowrap">{{ member.code }}</td>
         <td class="text-center py-4 whitespace-nowrap">
-          {{ member.fname }} {{ member.lname }}
+          {{ member.name }} {{ member.surname }}
         </td>
         <td class="text-center py-4 whitespace-nowrap">{{ member.date }}</td>
         <td class="text-center py-4 whitespace-nowrap">{{ member.room }}</td>
@@ -288,6 +288,204 @@
         </div>
       </div>
     </transition>
+
+    <div
+      :class="
+        showAdd
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
+          : 'hidden opacity-0'
+      "
+      v-on:click="showAdd = !showAdd"
+    ></div>
+
+    <transition>
+      <div
+        v-show="showAdd"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-11/12 lg:w-1/2 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <!-- Closed -->
+          <div class="flex justify-end">
+            <div @click="showAdd = false" class="cursor-pointer">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="text-2xl text-rangmod-purple mb-5">
+            ทำประวัติผู้พักอาศัย
+          </div>
+
+          <div class="mb-8">
+            <div class="text-rangmod-black px-1">รหัสผู้ใช้งาน</div>
+            <div class="border border-rangmod-gray rounded-xl px-3 relative">
+              <input
+                type="text"
+                v-model="addModal.code"
+                class="w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+
+              <div
+                @click = search(addModal.code)
+                class="absolute right-4 top-2 text-rangmod-purple cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">ชื่อ</div>
+            <div class="border-rangmod-gray rounded-xl">
+              <input
+                type="text"
+                readonly
+                v-model="addModal.fname"
+                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">นามสกุล</div>
+            <div class="border-rangmod-gray rounded-xl">
+              <input
+                type="text"
+                readonly
+                v-model="addModal.lname"
+                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+            </div>
+          </div>
+
+          <div class="mb-4 grid grid-cols-2 gap-2">
+            <div class="text-rangmod-black px-1">
+              ว/ด/ป/เกิด
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.dateOfBirth"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+
+            <div class="text-rangmod-black px-1">
+              อายุ
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.age"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4 grid grid-cols-2 gap-2">
+            <div class="text-rangmod-black px-1">
+              เพศ
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.sex"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+
+            <div class="text-rangmod-black px-1">
+              เบอร์มือถือ
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.phone"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">ที่อยู่</div>
+            <div class="border-rangmod-gray rounded-xl -pb-4">
+              <textarea
+                readonly
+                v-model="addModal.address"
+                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              ></textarea>
+            </div>
+          </div>
+
+          <div class="mb-4 grid grid-cols-2 gap-2">
+            <div class="text-rangmod-black px-1">
+              ห้องพัก
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.room"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+
+            <div class="text-rangmod-black px-1">
+              สถานะ
+              <div class="border-rangmod-gray rounded-xl">
+                <input
+                  type="text"
+                  readonly
+                  v-model="addModal.status"
+                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row space-x-4 justify-end">
+            <div
+              v-on:click="showModal = !showModal"
+              class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              ยืนยัน
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -295,7 +493,9 @@
 export default {
   data() {
     return {
+      token: "",
       showModal: false,
+      showAdd: false,
       modal: {
         code: "00000",
         name: "name",
@@ -307,6 +507,18 @@ export default {
         address: "Address B",
         room: "102",
         status: "2",
+      },
+      addModal: {
+        code: "",
+        name: "",
+        surname: "",
+        date: "",
+        age: "",
+        gender: "",
+        tel: "",
+        address: "",
+        room: "",
+        status: "",
       },
       roomList: [],
       dormList: [],
@@ -330,55 +542,42 @@ export default {
       ],
 
       memberList: [
-        // {
-        //   code: "00123",
-        //   name: "ธนวินท์",
-        //   surname: "วัตราเศรษฐ์",
-        //   date: "29/03/2565",
-        //   age: "24",
-        //   gender: "ชาย",
-        //   tel: "0809876543",
-        //   address: "Address A",
-        //   room: "201",
-        //   status: "1",
-        // },
-        // {
-        //   code: "00122",
-        //   name: "นพศร",
-        //   surname: "เตชะรุ่งเรืองวิทย์",
-        //   date: "29/03/2565",
-        //   age: "24",
-        //   gender: "หญิง",
-        //   tel: "0809876543",
-        //   address: "Address B",
-        //   room: "102",
-        //   status: "2",
-        // },
-        // {
-        //   code: "00121",
-        //   name: "อาทฤต",
-        //   surname: "วิจิตรพันธ์ไม้",
-        //   date: "29/03/2565",
-        //   age: "24",
-        //   gender: "ชาย",
-        //   tel: "0809876543",
-        //   address: "Address C",
-        //   room: "203",
-        //   status: "3",
-        // },
-        //     {
-        //     customerId: "",
-        //     email: "",
-        //     fname: "",
-        //     lname: "",
-        //     sex: "",
-        //     dateOfBirth: "",
-        //     age: 0,
-        //     phone: "",
-        //     address: "",
-        //     status: "",
-        //     username: ""
-        // }
+        {
+          code: "00123",
+          name: "ธนวินท์",
+          surname: "วัตราเศรษฐ์",
+          date: "29/03/2565",
+          age: "24",
+          gender: "ชาย",
+          tel: "0809876543",
+          address: "Address A",
+          room: "201",
+          status: "1",
+        },
+        {
+          code: "00122",
+          name: "นพศร",
+          surname: "เตชะรุ่งเรืองวิทย์",
+          date: "29/03/2565",
+          age: "24",
+          gender: "หญิง",
+          tel: "0809876543",
+          address: "Address B",
+          room: "102",
+          status: "2",
+        },
+        {
+          code: "00121",
+          name: "อาทฤต",
+          surname: "วิจิตรพันธ์ไม้",
+          date: "29/03/2565",
+          age: "24",
+          gender: "ชาย",
+          tel: "0809876543",
+          address: "Address C",
+          room: "203",
+          status: "3",
+        }
       ],
       // username: "",
     };
@@ -388,21 +587,26 @@ export default {
   },
   methods: {
     async create() {
-      this.memberList = await this.getMembers();
-      this.roomList = await this.getRooms();
-      this.dormList = await this.getDorm();
-      this.reportList = await this.getReport();
+      this.token = localStorage.token
+      // this.memberList = await this.getMembers();
+      // this.roomList = await this.getRooms();
+      // this.dormList = await this.getDorm();
+      // this.reportList = await this.getReport();
       console.log(this.memberList);
-      console.log(this.roomList);
-      console.log(this.dormList);
-      console.log(this.reportList);
+      // console.log(this.roomList);
+      // console.log(this.dormList);
+      // console.log(this.reportList);
       // this.username = localStorage.username;
       // console.log(this.username);
     },
     async getMembers() {
+      // this.token = localStorage.token
+      console.log(this.token)
       try {
-        const res = await fetch("https://dev.rungmod.com/api/customer");
-        // const res = await fetch("http://localhost:5000/api/customer");
+        const res = await fetch("https://dev.rungmod.com/api/employee/customer", {
+        method: "GET",
+        headers: { "Authorization" : `Bearer ${this.token}`}
+      })
         const data = res.json();
         return data;
       } catch (e) {
@@ -430,7 +634,11 @@ export default {
         }
       }
     },
+    search(customerCode) {
+      console.log(customerCode);
+    },
     add() {
+      this.showAdd = true;
       console.log("add");
     },
     async getRooms() {
