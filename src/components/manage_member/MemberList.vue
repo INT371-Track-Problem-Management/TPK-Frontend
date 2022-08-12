@@ -588,7 +588,7 @@ export default {
   methods: {
     async create() {
       this.token = localStorage.token
-      // this.memberList = await this.getMembers();
+      this.memberList = await this.getMembers();
       // this.roomList = await this.getRooms();
       // this.dormList = await this.getDorm();
       // this.reportList = await this.getReport();
@@ -600,8 +600,6 @@ export default {
       // console.log(this.username);
     },
     async getMembers() {
-      // this.token = localStorage.token
-      console.log(this.token)
       try {
         const res = await fetch("https://dev.rungmod.com/api/employee/customer", {
         method: "GET",

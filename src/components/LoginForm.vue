@@ -101,7 +101,6 @@ export default {
 
     async doLogin() {
       fetch(`https://dev.rungmod.com/api/login`, {
-        // fetch(`http://localhost:5000/api/login`, {
         method: "POST",
         headers: { "content-Type": "application/json" },
         body: JSON.stringify({
@@ -122,7 +121,7 @@ export default {
           localStorage.setItem("role", this.userLogin.role);
           localStorage.setItem("token", this.token);
           console.log(this.userLogin); //checkuserlogin
-          console.log(this.token); // checktoken
+          // console.log(this.token); // checktoken
         })
         .then(() => {
           if (this.userLogin.status == true) {
