@@ -160,7 +160,7 @@
             ></textarea>
           </div>
 
-          <div class="text-rangmod-black">วันและเวลาที่นัด</div>
+          <!-- <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
           <div class="flex flex-col">
             <div
@@ -188,7 +188,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
@@ -253,7 +253,7 @@ export default {
         },
       ],
 
-      showModal: false,
+        showModal: false,
       activeSortFilter: false,
       // modal: {
       //   code: "00000",
@@ -514,6 +514,7 @@ export default {
       try {
         const res = await fetch("https://dev.rungmod.com/api/report");
         // const res = await fetch("http://localhost:5000/api/report");
+        console.log(res)
         const data = res.json();
         return data;
       } catch (e) {

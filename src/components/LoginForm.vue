@@ -89,7 +89,7 @@ export default {
       // type: "member",
       email: "",
       password: "",
-      // res: "",
+      token: "",
       userLogin: {
         email: "",
         role: "",
@@ -101,7 +101,6 @@ export default {
 
     async doLogin() {
       fetch(`https://dev.rungmod.com/api/login`, {
-        // fetch(`http://localhost:5000/api/login`, {
         method: "POST",
         headers: { "content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,14 +113,15 @@ export default {
           return res;
         })
         .then((res) => {
-          // this.res = res;
-          this.userLogin.email = this.parseJwt(res).email;
-          this.userLogin.role = this.parseJwt(res).role;
-          this.userLogin.status = this.parseJwt(res).status;
+          this.token = res.token;
+          this.userLogin.email = this.parseJwt(this.token).email;
+          this.userLogin.role = this.parseJwt(this.token).role;
+          this.userLogin.status = this.parseJwt(this.token).status;
           localStorage.setItem("email", this.userLogin.email);
           localStorage.setItem("role", this.userLogin.role);
+          localStorage.setItem("token", this.token);
           console.log(this.userLogin); //checkuserlogin
-          console.log(res); // checktoken
+          // console.log(this.token); // checktoken
         })
         .then(() => {
           if (this.userLogin.status == true) {
@@ -142,19 +142,15 @@ export default {
         });
 
     },
-    parseJwt(token) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-      var jsonPayload = decodeURIComponent(
-        atob(base64)
-          .split("")
-          .map(function (c) {
-            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-          })
-          .join("")
-      );
-      return JSON.parse(jsonPayload);
-    },
+    parseJwt (token) {
+    var base64Url = token.toString().split('.')[1];
+    var base64 = base64Url?.replace('-', '+')?.replace('_', '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    return JSON.parse(jsonPayload);
+},
   },
 };
 </script>

@@ -19,6 +19,7 @@
       
       <div class="text-xl my-5">ติดตั้งอพาร์ตเม้นต์</div>
 
+      <div class="pb-3 shadow-md">
       <div
         v-for="(room, i) in roomList"
         :key="i"
@@ -72,7 +73,7 @@
 
         
       </div>
-
+      </div>
       <div
         @click="addFloor()"
         class="w-full text-center cursor-pointer text-rangmod-dark-yellow bg-rangmod-yellow my-10 py-2 border border-rangmod-yellow rounded-xl transition-all hover:bg-white hover:text-rangmod-yellow"
