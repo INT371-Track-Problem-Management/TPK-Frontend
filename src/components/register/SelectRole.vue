@@ -13,18 +13,18 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-10">
 
           <div 
-            @click="selectRole('manager')"
+            @click="selectRole('owner')"
             class="bg-rangmod-light-yellow rounded-3xl p-10 transition-all hover:shadow-md hover:cursor-pointer"
-            :class="role == 'manager' ? 'border-2 border-rangmod-purple' : ''"
+            :class="role == 'owner' ? 'border-2 border-rangmod-purple' : ''"
           >
             <img src="@/assets/images/unauthorized-person.webp" alt="">
             <div class="mt-8 text-center text-2xl text-rangmod-black ">ผู้ดูแลหอ</div>
           </div>
 
           <div 
-            @click="selectRole('member')"
+            @click="selectRole('customer')"
             class="bg-rangmod-light-yellow rounded-3xl p-10 transition-all hover:shadow-md hover:cursor-pointer"
-            :class="role == 'member' ? 'border-2 border-rangmod-purple' : ''"
+            :class="role == 'customer' ? 'border-2 border-rangmod-purple' : ''"
           >
             <img src="@/assets/images/teamwork.webp" alt="">
             <div class="mt-8 text-center text-2xl text-rangmod-black ">ผู้พักอาศัย</div>
@@ -60,21 +60,26 @@
 
 <script>
 export default {
+  // props: ["email"],
   data() {
     return {
       role : "",
       isConfirm : false,
+      email: this.$route.params.email,
+      password: this.$route.params.password
     }
   },
-
+  mounted() {
+    console.log(this.email)
+    console.log(this.password)
+  },
   methods: {
     selectRole(selectRole) {
       this.role = selectRole
     },
-
     checkConfirm(){
       if(this.role != "" && this.isConfirm) {
-        this.$router.push(`/register/form?type=${this.role}`)
+        this.$router.push({name:'register-form', params:{ email: this.email, password: this.password, role: this.role}})
       } else {
         alert("Please Select Role & Confirm")
       }

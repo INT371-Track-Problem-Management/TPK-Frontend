@@ -13,7 +13,7 @@
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ชื่อ</div>
         <div class="border border-rangmod-gray rounded-xl px-3">
-          <input
+          <input v-model="fname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -23,7 +23,7 @@
       <div class="mb-4">
         <div class="text-rangmod-black px-1">นามสกุล</div>
         <div class="border border-rangmod-gray rounded-xl px-3">
-          <input
+          <input v-model="lname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -32,10 +32,10 @@
 
       <div class="mb-4 grid grid-cols-2 gap-2">
         <div class="text-rangmod-black px-1">
-          ว/ด/ป/เกิด
+          วันเกิด
           <div class="border border-rangmod-gray rounded-xl px-3">
-            <input
-              type="text"
+            <input v-model="dob"
+              type="date"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
           </div>
@@ -44,7 +44,7 @@
         <div class="text-rangmod-black px-1">
           อายุ
           <div class="border border-rangmod-gray rounded-xl px-3">
-            <input
+            <input v-model="age"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
@@ -56,7 +56,8 @@
         <div class="text-rangmod-black px-1">
           เพศ
           <div class="border border-rangmod-gray rounded-xl px-3">
-            <input
+            <input v-model="sex"
+              maxlength="1"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
@@ -66,7 +67,8 @@
         <div class="text-rangmod-black px-1">
           เบอร์มือถือ
           <div class="border border-rangmod-gray rounded-xl px-3">
-            <input
+            <input v-model="phone"
+              maxlength="10"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
@@ -77,7 +79,7 @@
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ที่อยู่</div>
         <div class="border border-rangmod-gray rounded-xl px-3">
-          <textarea
+          <textarea v-model="address"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           ></textarea>
         </div>
@@ -92,14 +94,14 @@
           </div>
         </RouterLink>
 
-        <RouterLink :to="`/register/form?type=${type}`">
+        <!-- <RouterLink :to="`/register/form?type=${type}`"> -->
           <div
-            v-on:click="showModal = !showModal"
+            v-on:click="showModal = !showModal && checkRole()"
             class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
           >
             ยืนยัน
           </div>
-        </RouterLink>
+        <!-- </RouterLink> -->
       </div>
     </div>
 
@@ -198,12 +200,91 @@
 
 <script>
 export default {
-  props: ["type"],
+  // props: ["type"],
   data() {
     return {
+      role: this.$route.params.role,
+      email: this.$route.params.email,
+      password: this.$route.params.password,
+      fname: 'win',
+      lname: 'nie',
+      sex: 'M',
+      dob: '',
+      age: '22',
+      phone: '0123456789',
+      address: 'Hospital',
       showModal: false,
     };
   },
+  mounted() {
+    console.log(this.email)
+    console.log(this.password)
+    console.log(this.role)
+  },
+  methods: {
+    checkRole() {
+      console.log(this.role)
+      console.log(this.email)
+      console.log(this.password)
+      console.log(this.fname)
+      console.log(this.lname)
+      console.log(this.sex)
+      console.log(this.dob)
+      console.log(this.age)
+      console.log(this.phone)
+      console.log(this.address)
+      if(this.role == 'customer') {
+        this.registerCustomer()
+        console.log(this.role)
+      } else if(this.role == 'owner') {
+        this.registerOwner()
+        console.log(this.role)
+      } else {
+        alert('error')
+      }
+    },
+    registerCustomer() {
+      fetch(`https://dev.rungmod.com/api/registerCustomer`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: this.email,
+          Password: this.password,
+          Fname: this.fname,
+          Lname: this.lname,
+          Sex: this.sex,
+          DateOfBirth: this.dob,
+          Age: this.age,
+          Phone: this.phone,
+          Address: this.address,
+        }),
+      }).then((res) => {
+        console.log(res);
+        alert("Register success!");
+      });
+    },
+    registerOwner() {
+      fetch(`https://dev.rungmod.com/api/registerOwner`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: this.email,
+          Password: this.password,
+          Fname: this.fname,
+          Lname: this.lname,
+          Sex: this.sex,
+          DateOfBirth: this.dob,
+          Age: this.age,
+          Phone: this.phone,
+          Address: this.address,
+          Position: ''
+        }),
+      }).then((res) => {
+        console.log(res);
+        alert("Register success!");
+      });
+    },
+  }
 };
 </script>
 

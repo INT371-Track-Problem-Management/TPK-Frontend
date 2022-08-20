@@ -67,11 +67,11 @@
 
     <div class="my-10">
 
-      <RouterLink to="/register/select">
-        <div class="w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
+      <!-- <RouterLink :to="{ path:'/register/select', params:{ email: this.email, password}}"> -->
+        <div @click="register()" class="w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none">
           สมัครสมาชิก
         </div>
-      </RouterLink>
+      <!-- </RouterLink> -->
 
       <RouterLink to="/login">
         <div class="w-full my-4 py-2 rounded-full text-center text-rangmod-purple border-2 border-rangmod-purple transition-all hover:bg-rangmod-purple hover:text-white">
@@ -98,19 +98,11 @@ export default {
   },
   methods: {
     register() {
-      fetch(`https://dev.rungmod.com/api/register`, {
-        // fetch(`http://localhost:5000/api/report`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Email: this.email,
-          Password: this.password,
-        }),
-      }).then((res) => {
-        console.log(res);
-        this.engage();
-        console.log("Add report!");
-      });
+      if(this.password == this.confirmPassword) {
+        this.$router.push({ name:'register-select', params:{ email: this.email, password: this.password}})
+      } else {
+        alert('Confirm password incorrect!')
+      }
     },
   }
 }

@@ -36,18 +36,21 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       path: '/register',
       name: 'register',
       component: RegisterPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
       path: '/register/select',
       name: 'register-select',
       component: RegisterSelectPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
       path: '/register/form',
       name: 'register-form',
       component: RegisterFormPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
@@ -158,7 +161,6 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       path: '/member/report/detail',
       name: 'member-report-detail',
       component: MemberReportDetail,
-
       meta: { layout: 'AppLayoutMember' }
     },
   ]

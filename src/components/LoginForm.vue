@@ -91,6 +91,7 @@ export default {
       password: "",
       token: "",
       userLogin: {
+        id: "",
         email: "",
         role: "",
         status: "",
@@ -114,9 +115,11 @@ export default {
         })
         .then((res) => {
           this.token = res.token;
+          this.userLogin.id = this.parseJwt(this.token).id;
           this.userLogin.email = this.parseJwt(this.token).email;
           this.userLogin.role = this.parseJwt(this.token).role;
           this.userLogin.status = this.parseJwt(this.token).status;
+          localStorage.setItem("id", this.userLogin.id);
           localStorage.setItem("email", this.userLogin.email);
           localStorage.setItem("role", this.userLogin.role);
           localStorage.setItem("token", this.token);
