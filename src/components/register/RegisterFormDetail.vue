@@ -45,7 +45,7 @@
           อายุ
           <div class="border border-rangmod-gray rounded-xl px-3">
             <input v-model="age"
-              type="text"
+              type="number"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
           </div>
@@ -206,13 +206,13 @@ export default {
       role: this.$route.params.role,
       email: this.$route.params.email,
       password: this.$route.params.password,
-      fname: 'win',
-      lname: 'nie',
-      sex: 'M',
+      fname: '',
+      lname: '',
+      sex: '',
       dob: '',
-      age: '22',
-      phone: '0123456789',
-      address: 'Hospital',
+      age: 0,
+      phone: '',
+      address: '',
       showModal: false,
     };
   },
