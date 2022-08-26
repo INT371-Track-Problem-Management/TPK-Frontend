@@ -213,9 +213,10 @@ export default {
   },
   data() {
     return {
-      title: "testFinal",
-      category: "test001", //mockup dont del
-      description: "testFinal",
+      token: "",
+      title: "",
+      category: "", //mockup dont del
+      description: "",
       status: "รอรับเรื่อง",
       createdBy: 0,
       engage: {
@@ -432,15 +433,17 @@ export default {
   },
   mounted() {
     this.create();
-    // this.dateFormat("2022-05-25 08:02:27");
   },
   methods: {
     async create() {
+      this.token = localStorage.getItem("token");
+      this.createdBy = parseInt(localStorage.getItem("id"));
+      console.log(this.createdBy)
       this.reportList = await this.getReport();
-      this.customers = await this.getCustomers();
-      this.createdBy = this.getUserLogin();
-      console.log(this.createdBy);
+      console.log(this.token);
       console.log(this.reportList);
+      // this.customers = await this.getCustomers();
+      
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -455,10 +458,10 @@ export default {
       if (this.title == "" || this.description == "") {
         alert("some form is empty");
       } else {
-        fetch(`https://dev.rungmod.com/api/report`, {
-          // fetch(`http://localhost:5000/api/report`, {
+        fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
           body: JSON.stringify({
             Title: this.title,
             CategoriesReport: this.category,
@@ -495,7 +498,8 @@ export default {
         fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
           // fetch(`http://localhost:5000/api/report`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
           body: JSON.stringify({
             Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
             Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
@@ -511,15 +515,19 @@ export default {
       // }
     },
     async getReport() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/report");
-        // const res = await fetch("http://localhost:5000/api/report");
-        console.log(res)
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
+      fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
+        method: "POST",
+        headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
+        body: JSON.stringify({
+          CreatedBy: this.createdBy
+        }),
+      })
+        .then((response) => {
+          const res = response.json();
+          console.log(res)
+          return res;
+        })
     },
     dateFormat(inputDate) {
       // console.log(inputDate)
@@ -531,25 +539,15 @@ export default {
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
     },
-    async getCustomers() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/customer");
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    getUserLogin() {
-      for (let i = 0; i < this.customers.length; i++) {
-        if (this.customers[i].email == localStorage.email) {
-          console.log(
-            this.engageDates[0].date + " " + this.engageDates[0].time
-          );
-          return this.customers[i].customerId;
-        }
-      }
-    },
+    // async getCustomers() {
+    //   try {
+    //     const res = await fetch("https://dev.rungmod.com/api/customer");
+    //     const data = res.json();
+    //     return data;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // },
   },
 };
 </script>
