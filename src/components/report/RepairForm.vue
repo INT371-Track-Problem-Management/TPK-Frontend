@@ -113,13 +113,13 @@
       <div v-if="this.reportDetail.status != 'cancel'"
         class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
       >
-        <div
+        <!-- <div
           v-if="checkAccept()"
           @click="actionButton('postpone')"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-blue shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-blue hover:text-rangmod-light-blue hover:shadow-none"
         >
           เลื่อนนัด
-        </div>
+        </div> -->
 
         <div
           v-if="checkAccept()"
@@ -153,6 +153,14 @@
       >
         ลบรายงาน
       </div>
+      <div
+        v-if="this.reportDetail.status == 'finish'"
+        @click="actionButton('delete')"
+        class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
+      >
+        คะแนนการรายงาน
+      </div>
+      
     </div>
   </div>
 </template>
@@ -207,7 +215,7 @@ export default {
     async getData() {
       this.reportDetail = await this.getReportDetail()
       this.reportEngageAll = await this.getAllReportEngage();
-      console.log(this.reportEngageAll.selectedDate);
+      console.log(this.reportEngageAll);
       this.$parent.checkStatus(this.reportDetail.status)
       this.status = this.reportDetail.status
       this.reportEngageDate[0].datetime = this.dateTimeShowFormat(this.reportEngageAll.date1)

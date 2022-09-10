@@ -25,7 +25,7 @@
         <div class="text-rangmod-black">หัวข้อปัญหา</div>
         <div class="mb-5">
           <input
-            v-model="title"
+            v-model="this.reportWithEngage.title"
             type="text"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
@@ -35,7 +35,7 @@
         <div class="text-rangmod-black">รายละเอียดปัญหา</div>
         <div class="mb-5">
           <textarea
-            v-model="description"
+            v-model="this.reportWithEngage.reportDes"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
           ></textarea>
@@ -69,10 +69,10 @@
               </div> -->
 
               <div class="w-7">
-                <div
-                  class="w-7 h-7 rounded-full"
+                <div @click="postpone(engageDate.date)"
+                  class="w-7 h-7 rounded-full cursor-pointer"
                   :class="
-                  engageDate.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'
+                  engageDate.date == this.reportWithEngage.selectedDate ? 'bg-rangmod-green' : 'bg-rangmod-gray'
                   "
                 ></div>
               </div>
@@ -470,36 +470,38 @@ export default {
   props: ["report"],
   data() {
     return {
+      reportWithEngage: {},
       title: this.report.reportDes,
       description: this.report.reportDes,
       showModal: false,
       showFinish: false,
       showDelete: false,
+      token: localStorage.getItem("token"),
       
       reportEngageDate: [
         {
           date: "date1",
           // time: "",
           datetime: "",
-          isActive: true
+          // isActive: true
         },
         {
           date: "date2",
           // time: "",
           datetime: "",
-          isActive: false
+          // isActive: false
         },
         {
           date: "date3",
           // time: "",
           datetime: "",
-          isActive: false
+          // isActive: false
         },
         {
           date: "date4",
           // time: "",
           datetime: "",
-          isActive: false
+          // isActive: false
         },
       ],
     };
@@ -508,50 +510,50 @@ export default {
     this.create();
   },
   methods: {
-    create() {
-      console.log(this.$route.params.id);
+    async create() {
+      // console.log(localStorage.getItem('id'));
+      this.reportWithEngage = await this.getReportDetailWithEngage();
+      this.reportEngageDate[0].datetime = this.dateTimeShowFormat(this.reportWithEngage.date1)
+      this.reportEngageDate[1].datetime = this.dateTimeShowFormat(this.reportWithEngage.date2)
+      this.reportEngageDate[2].datetime = this.dateTimeShowFormat(this.reportWithEngage.date3)
+      this.reportEngageDate[3].datetime = this.dateTimeShowFormat(this.reportWithEngage.date4)
+      console.log(this.reportWithEngage);
+      // console.log(this.$route.params.id);
     },
-    // postpone(reportId) {
-    //   if (
-    //     this.report.status == "รอรับเรื่อง" ||
-    //     // this.report.status == "รอซ่อม" ||
-    //     this.report.status == "ยกเลิกนัด" ||
-    //     this.report.status == "เสร็จสิ้น"
-    //   ) {
-    //     alert("Can't change status");
-    //   } else {
-    //     fetch(`https://dev.rungmod.com/api/statusReport`, {
-    //       method: "PUT",
-    //       headers: { "content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         ReportId: reportId,
-    //         Status: "เลื่อนนัด",
-    //       }),
-    //     }).then(() => {
-    //       alert("Status change!");
-    //     });
-    //   }
-    // },
-    // cancel(reportId) {
-    //   fetch(`https://dev.rungmod.com/api/deleteReportById`, {
-    //     method: "DELETE",
-    //     headers: { "content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       ReportId: reportId,
-    //     }),
-    //   }).then(() => {
-    //     alert("Delete report!");
-    //     this.$router.push(`/member/report`);
-    //   });
-    // },
-    postpone() {
-      console.log("postpone");
+    postpone(selectedDate) {
+      if(confirm('คุณต้องการเลื่อนการนัดวันซ่อมใช่หรือไม่')) {
+        fetch(`https://dev.rungmod.com/api/customer/selectedPlanFixDate`, {
+            method: "PUT",
+            headers: {
+              "content-Type": "application/json",
+              "Authorization": `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              EngageId: parseInt(this.reportWithEngage.engageId),
+              SelectedDate: selectedDate
+            }),
+          }).then(alert('ทำการเลื่อนนัดวันเข้าซ่อมแล้ว')).then(async() => this.reportWithEngage = await this.getReportDetailWithEngage())
+        }
     },
     finish(action) {
       console.log(action);
     },
     delete(action) {
       console.log(action);
+    },
+    async getReportDetailWithEngage() {
+      const res = await fetch(
+        `https://dev.rungmod.com/api/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
+        {
+          method: "GET",
+          headers: {
+            "content-Type": "application/json",
+            "Authorization": `Bearer ${this.token}`,
+          }
+        }
+      );
+      const data = res.json();
+      return data;
     },
     dateFormat(inputDate) {
       const date = new Date(inputDate);
@@ -563,6 +565,12 @@ export default {
       const date = new Date(inputDate);
       const formatedDateTime =
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+      return formatedDateTime;
+    },
+    dateTimeShowFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDateTime =
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "   " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
       return formatedDateTime;
     },
   },
