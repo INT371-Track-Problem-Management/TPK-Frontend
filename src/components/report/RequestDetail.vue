@@ -3,11 +3,11 @@
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
     <div class="text-xl">รายละเอียดและสถานะ</div>
-    <hr class="my-4 border-rangmod-purple" />
+    <hr class="my-5 border-rangmod-purple" />
 
     <div class="w-full mx-auto my-12">
       <!-- status update -->
-      <div class="hidden lg:flex flex-row justify-center">
+      <!-- <div class="hidden lg:flex flex-row justify-center">
         <div
           v-for="(status, i) in statusList"
           :key="i"
@@ -31,38 +31,33 @@
             "
           ></div>
         </div>
-      </div>
+      </div> -->
+
       <!-- status update mobile -->
       <div
-        class="w-full md:w-2/5 mx-auto lg:hidden flex flex-col justify-start"
+        class="w-full ml-32 flex flex-col justify-start"
       >
         <div
-          v-for="(status, i) in statusList"
+          v-for="(status, i) in activateStatus"
           :key="i"
-          class="flex flex-row items-center space-x-6 pb-8 -mb-1 relative"
+          class="flex flex-row items-center pb-8 -mb-2 relative"
         >
-          <div
-            class="w-16 h-16 rounded-full"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
+        <!-- <div v-show="status.isActive"> -->
+          <div v-show="status.isActive"
+            class="w-5 h-5 rounded-full bg-rangmod-light-yellow"
           ></div>
-          <div class="text-base md:text-lg">{{ status.name }}</div>
+          <div v-show="status.isActive" class="px-3 text-base md:text-lg">{{ status.name }}</div>
+        <!-- </div> -->
 
           <div
             v-show="status.divider"
-            class="w-2 h-20 absolute left-1 bottom-1 z-20"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
+            class="w-1 h-10 absolute ml-2 bottom-1 z-20 bg-rangmod-light-yellow"
           ></div>
         </div>
       </div>
     </div>
-
-    <RepairForm :code="code" />
-
-    <!-- CODE: {{code}} -->
+    <hr class="my-12 border-rangmod-purple" />
+    <RepairForm :report="reportById"/>
   </div>
 </template>
 
@@ -72,222 +67,147 @@ import RepairForm from "@/components/report/RepairForm.vue";
 export default {
   components: { RepairForm },
 
-  props: ["code"],
+  // props: ["status"],
 
   data() {
     return {
+      status: "",
       statusList: [
         {
+          id: 1,
+          eng: "waiting",
           name: "รอรับเรื่อง",
-          divider: true,
+          divider: false,
           isActive: true,
         },
         {
-          name: "รอดำเนินการ",
-          divider: true,
+          id: 2,
+          eng: "accept",
+          name: "รับเรื่อง",
+          divider: false,
           isActive: true,
         },
         {
-          name: "ดำเนินการแล้ว",
-          divider: true,
-          isActive: false,
+          id: 3,
+          eng: "engage",
+          name: "นัดวันเข้าซ่อม",
+          divider: false,
+          isActive: true,
         },
         {
+          id: 4,
+          eng: "prepare",
+          name: "รอเข้าซ่อม",
+          divider: false,
+          isActive: true,
+        },
+        {
+          id: 5,
+          eng: "postpone",
           name: "เลื่อนนัด",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
+          id: 6,
+          eng: "cancle",
           name: "ยกเลิกนัด",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
+          id: 7,
+          eng: "success",
           name: "เสร็จสิ้น",
           divider: false,
-          isActive: false,
+          isActive: true,
         },
       ],
-
-      activeSortFilter: false,
-
-      sortList: [
-        { key: "id", name: "รหัสรายงาน" },
-        { key: "room", name: "ห้อง" },
-        { key: "request_date", name: "ว/ด/ป แจ้งซ่อม" },
-      ],
-
-      requestStatusList: [
-        {
-          id: "1",
-          color: "text-rangmod-blue",
-          bgcolor: "bg-rangmod-blue/20",
-          title: "รอรับเรื่อง",
-        },
-        {
-          id: "2",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
-          title: "รอดำเนินการ",
-        },
-        {
-          id: "3",
-          color: "text-rangmod-green",
-          bgcolor: "bg-rangmod-green/20",
-          title: "ดำเนินการแล้ว",
-        },
-        {
-          id: "4",
-          color: "text-rangmod-purple",
-          bgcolor: "bg-rangmod-purple/20",
-          title: "เลื่อนนัด",
-        },
-        {
-          id: "5",
-          color: "text-rangmod-red",
-          bgcolor: "bg-rangmod-red/20",
-          title: "ยกเลิก",
-        },
-      ],
-
-      requestList: [
-        {
-          id: "ED123456",
-          room: "201",
-          title: "น้ำไม่ไหล",
-          desc: "น้ำไม่ไหล DESC ",
-          status: "3",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED654321",
-          room: "102",
-          title: "ไฟไม่ติด",
-          desc: "ไฟไม่ติด DESC ",
-          status: "2",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED789101",
-          room: "203",
-          title: "น้ำรั่ว",
-          desc: "น้ำรั่ว DESC ",
-          status: "5",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED786123",
-          room: "203",
-          title: "ปลวกขึ้น",
-          desc: "ปลวกขึ้น DESC ",
-          status: "4",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-        {
-          id: "ED543210",
-          room: "201",
-          title: "โต๊ะพัง",
-          desc: "โต๊ะพัง DESC ",
-          status: "1",
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: "",
-            },
-          ],
-        },
-      ],
-    };
+      activateStatus: [
+      ]
+    }
   },
-
+  mounted() {
+    this.status = this.$route.params.status
+    // console.log(status)
+    // console.log(this.$route.params.status)
+    // this.checkStatus(this.status)
+    // console.log(this.activateStatus);
+  },
   methods: {
+    checkStatus(status) {
+      if(status == 'success') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.statusList[3].divider = true
+        this.statusList[4].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+        this.activateStatus.push(this.statusList[4])
+        this.activateStatus.push(this.statusList[5])
+      } else if(status == 'postpone') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.statusList[3].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+        this.activateStatus.push(this.statusList[4])
+      } else if(status == 'prepare') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+      } else if(status == 'engage') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+      } else if(status == 'accept') {
+        this.statusList[0].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+      } else if(status == 'cancel') {
+        this.statusList[0].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[5])
+      } else if(status == 'waiting') {
+        this.activateStatus.push(this.statusList[0])
+      }
+      // this.activateStatus.push()
+    },
+    updateStatus(status) {
+      for(let i = 0; i < this.statusList.length; i++) {
+        if(this.statusList[i].eng == status) {
+          this.statusList[i-1].divider = true
+          this.activateStatus.push(this.statusList[i])
+        } 
+    }
+    },
+    updateCancelStatus() {
+        this.activateStatus.push(this.statusList[5])
+        this.activateStatus[this.activateStatus.length-2].divider = true
+    }
+    },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
     },
     doSort(id) {
       console.log(`Sorted by ${id} !`);
     },
-  },
+    callParent() {
+      console.log('hello')
+    }
+  
 };
 </script>
 

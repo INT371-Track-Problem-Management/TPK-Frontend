@@ -18,7 +18,7 @@
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัสสมาชิก</th>
         <th class="py-4">ชื่อ-นามสกุล</th>
-        <th class="py-4">ว/ด/ป ลงทะเบียน</th>
+        <!-- <th class="py-4">ว/ด/ป ลงทะเบียน</th> -->
         <th class="py-4">ห้อง</th>
         <th class="py-4">สถานะ</th>
         <th class="py-4"></th>
@@ -29,11 +29,11 @@
         class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4 whitespace-nowrap">{{ i + 1 }}</td>
-        <td class="text-center py-4 whitespace-nowrap">{{ member.code }}</td>
+        <td class="text-center py-4 whitespace-nowrap">{{ member.customerId }}</td>
         <td class="text-center py-4 whitespace-nowrap">
-          {{ member.name }} {{ member.surname }}
+          {{ member.fname }} {{ member.lname }}
         </td>
-        <td class="text-center py-4 whitespace-nowrap">{{ member.date }}</td>
+        <!-- <td class="text-center py-4 whitespace-nowrap">{{ member.date }}</td> -->
         <td class="text-center py-4 whitespace-nowrap">{{ member.room }}</td>
         <td class="text-center py-4 whitespace-nowrap">
           <div v-for="(status, j) in statusList" :key="j">
@@ -131,7 +131,7 @@
           </div>
 
           <div class="text-2xl text-rangmod-purple mb-5">
-            ทำประวัติผู้พักอาศัย
+            ประวัติผู้พักอาศัย
           </div>
 
           <div class="mb-8">
@@ -288,7 +288,7 @@
         </div>
       </div>
     </transition>
-
+    <!-- Add --------------------------------------------------------------------------------------- -->
     <div
       :class="
         showAdd
@@ -334,13 +334,13 @@
             <div class="text-rangmod-black px-1">รหัสผู้ใช้งาน</div>
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
               <input
-                type="text"
-                v-model="addModal.code"
+                type="number" min="1"
+                v-model="addModal.customerId"
                 class="w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
 
               <div
-                @click = search(addModal.code)
+                @click = search()
                 class="absolute right-4 top-2 text-rangmod-purple cursor-pointer"
               >
                 <svg
@@ -453,10 +453,10 @@
               ห้องพัก
               <div class="border-rangmod-gray rounded-xl">
                 <input
-                  type="text"
-                  readonly
+                  type="number" min="1"
+
                   v-model="addModal.room"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="border border-rangmod-gray px-3 w-full text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -476,7 +476,7 @@
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="showModal = !showModal"
+              v-on:click="addCustomerToRoom()"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยืนยัน
@@ -509,20 +509,18 @@ export default {
         status: "2",
       },
       addModal: {
-        code: "",
-        name: "",
-        surname: "",
-        date: "",
+        customerId: 1,
+        fname: "",
+        lname: "",
+        dateOfBirth: "",
         age: "",
-        gender: "",
-        tel: "",
+        sex: "",
+        phone: "",
         address: "",
-        room: "",
+        room: 1,
         status: "",
       },
-      roomList: [],
-      dormList: [],
-      reportList: [],
+      searchCustomer: {},
       statusList: [
         {
           id: "1",
@@ -540,45 +538,45 @@ export default {
           title: "ย้ายออก",
         },
       ],
-
-      memberList: [
-        {
-          code: "00123",
-          name: "ธนวินท์",
-          surname: "วัตราเศรษฐ์",
-          date: "29/03/2565",
-          age: "24",
-          gender: "ชาย",
-          tel: "0809876543",
-          address: "Address A",
-          room: "201",
-          status: "1",
-        },
-        {
-          code: "00122",
-          name: "นพศร",
-          surname: "เตชะรุ่งเรืองวิทย์",
-          date: "29/03/2565",
-          age: "24",
-          gender: "หญิง",
-          tel: "0809876543",
-          address: "Address B",
-          room: "102",
-          status: "2",
-        },
-        {
-          code: "00121",
-          name: "อาทฤต",
-          surname: "วิจิตรพันธ์ไม้",
-          date: "29/03/2565",
-          age: "24",
-          gender: "ชาย",
-          tel: "0809876543",
-          address: "Address C",
-          room: "203",
-          status: "3",
-        }
-      ],
+      memberList:[],
+      // memberList: [
+      //   {
+      //     code: "00123",
+      //     name: "ธนวินท์",
+      //     surname: "วัตราเศรษฐ์",
+      //     date: "29/03/2565",
+      //     age: "24",
+      //     gender: "ชาย",
+      //     tel: "0809876543",
+      //     address: "Address A",
+      //     room: "201",
+      //     status: "1",
+      //   },
+      //   {
+      //     code: "00122",
+      //     name: "นพศร",
+      //     surname: "เตชะรุ่งเรืองวิทย์",
+      //     date: "29/03/2565",
+      //     age: "24",
+      //     gender: "หญิง",
+      //     tel: "0809876543",
+      //     address: "Address B",
+      //     room: "102",
+      //     status: "2",
+      //   },
+      //   {
+      //     code: "00121",
+      //     name: "อาทฤต",
+      //     surname: "วิจิตรพันธ์ไม้",
+      //     date: "29/03/2565",
+      //     age: "24",
+      //     gender: "ชาย",
+      //     tel: "0809876543",
+      //     address: "Address C",
+      //     room: "203",
+      //     status: "3",
+      //   }
+      // ],
       // username: "",
     };
   },
@@ -587,21 +585,35 @@ export default {
   },
   methods: {
     async create() {
-      this.token = localStorage.token
-      this.memberList = await this.getMembers();
+      this.token = localStorage.getItem("token");
+      this.memberList = await this.getCustomers();
       // this.roomList = await this.getRooms();
       // this.dormList = await this.getDorm();
       // this.reportList = await this.getReport();
-      console.log(this.memberList);
+      // console.log(this.memberList);
       // console.log(this.roomList);
       // console.log(this.dormList);
       // console.log(this.reportList);
       // this.username = localStorage.username;
       // console.log(this.username);
+      // this.searchCustomer = await this.getCustomerById();
+      // console.log(this.searchCustomer)
     },
-    async getMembers() {
+    async getCustomers() {
       try {
         const res = await fetch("https://dev.rungmod.com/api/employee/customer", {
+        method: "GET",
+        headers: { "Authorization" : `Bearer ${this.token}`}
+      })
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async getCustomerById() {
+      try {
+        const res = await fetch(`https://dev.rungmod.com/api/employee/customerById/?customerId=${this.addModal.customerId}`, {
         method: "GET",
         headers: { "Authorization" : `Bearer ${this.token}`}
       })
@@ -622,22 +634,61 @@ export default {
           this.modal.code = memberList[i].code;
           this.modal.name = memberList[i].name;
           this.modal.surname = memberList[i].surname;
-          this.modal.date = memberList[i].date;
+          // this.modal.date = memberList[i].date;
           this.modal.age = memberList[i].age;
           this.modal.gender = memberList[i].gender;
           this.modal.tel = memberList[i].tel;
           this.modal.address = memberList[i].address;
-          this.modal.room = memberList[i].room;
+          // this.modal.room = memberList[i].room;
           this.modal.status = memberList[i].status;
         }
       }
     },
-    search(customerCode) {
-      console.log(customerCode);
+    async search() {
+      this.searchCustomer = await this.getCustomerById()
+      if(!this.searchCustomer) {
+        alert('ไม่มีลูกค้าคนนี้')
+      } else {
+      this.addModal.customerId = this.searchCustomer.customerId;
+      this.addModal.fname = this.searchCustomer.fname;
+      this.addModal.lname = this.searchCustomer.lname;
+      this.addModal.dateOfBirth = this.dateFormat(this.searchCustomer.dateOfBirth);
+      this.addModal.age = this.searchCustomer.age;
+      this.addModal.sex = this.searchCustomer.sex;
+      this.addModal.phone = this.searchCustomer.phone;
+      this.addModal.address = this.searchCustomer.address;
+      // this.addModal.room = this.searchCustomer.room;
+      this.addModal.status = this.searchCustomer.status;
+      console.log(this.searchCustomer);
+    }
     },
     add() {
       this.showAdd = true;
       console.log("add");
+    },
+    addCustomerToRoom() {
+      // if (this.title == "" || this.description == "") {
+      //   alert("Please complete your report");
+      // } else {
+        fetch(`https://dev.rungmod.com/api/employee/roomAddCustomer`, {
+          method: "POST",
+          headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
+          body: JSON.stringify({
+            RoomId: this.addModal.room,
+            CustomerId: this.addModal.customerId,
+            DoomId: 1
+          }),
+        })
+          .then(() => {
+            alert('เพิ่มลูกค้าเข้าห้องพักแล้ว')
+            this.showAdd = !this.showAdd;
+          })
+          // .then(async () => {
+          //   this.reportList = await this.getReport();
+          //   console.log(this.reportList)
+          // });
+      // }
     },
     async getRooms() {
       try {
@@ -649,37 +700,17 @@ export default {
         console.log(e);
       }
     },
-    async getDorm() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/dorm");
-        // const res = await fetch("http://localhost:5000/api/dorm");
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
+    dateFormat(inputDate) {
+      // console.log(inputDate)
+      const date = new Date(inputDate);
+      // console.log(date.getDate())
+      // console.log(date.getMonth())
+      // console.log(date.getFullYear())
+      const formatedDate =
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+      return formatedDate;
     },
-    async getReport() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/report");
-        // const res = await fetch("http://localhost:5000/api/report");
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
-    },
-    // async getReportById() {
-    //   try {
-    //     const res = await fetch("https://dev.rungmod.com/api/reportById");
-    //     // const res = await fetch("http://localhost:5000/api/customer");
-    //     const data = res.json();
-    //     return data;
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
-  },
+  }
 };
 </script>
 
@@ -693,5 +724,11 @@ export default {
 .no-scrollbar {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
 }
 </style>

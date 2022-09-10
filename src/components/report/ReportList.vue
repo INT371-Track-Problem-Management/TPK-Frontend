@@ -78,17 +78,24 @@
         <td class="text-center py-4">{{ report.title }}</td>
         <td class="text-center py-4">{{ dateFormat(report.reportDate) }}</td>
         <td class="text-center py-4">
-          {{ dateFormat(report.reportDate) }}
+          <!-- {{ dateFormat(report.reportDate) }} -->
           <!-- <div v-for="(repair, j) in requreportest.repair_date" :key="j">
             <div v-if="repair.isActive">{{ repair.date }}</div>
           </div> -->
         </td>
         <td class="text-center py-4">
-          <div v-for="(status, i) in statusList" :key="i">
-            <div v-if="report.status == status.status" :class="status.color">
-              {{ report.status }}
+          <div
+            v-for="(status, j) in statusList"
+            :key="j"
+          >
+            <div 
+              v-if="this.checkThaiStatus(report.status) == status.title"
+              :class="status.color"
+            >
+              {{this.checkThaiStatus(report.status)}}
             </div>
           </div>
+
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
@@ -215,9 +222,9 @@ export default {
     return {
       token: "",
       title: "",
-      category: "", //mockup dont del
+      category: "test", //mockup dont del
       description: "",
-      status: "รอรับเรื่อง",
+      status: "S1",
       createdBy: 0,
       engage: {
         // formatedDate1: this.engageDates[0].date + " " + this.engageDates[0].time,
@@ -277,28 +284,51 @@ export default {
       statusList: [
         {
           id: "1",
-          color: "text-rangmod-green",
-          status: "เสร็จสิ้น",
+          color: "text-rangmod-blue",
+          bgcolor: "bg-rangmod-blue/20",
+          title: "รอรับเรื่อง"
         },
         {
           id: "2",
           color: "text-rangmod-yellow",
-          status: "รอซ่อม",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "รอเข้าซ่อม"
         },
         {
           id: "3",
-          color: "text-rangmod-red",
-          status: "ยกเลิกนัด",
+          color: "text-rangmod-green",
+          bgcolor: "bg-rangmod-green/20",
+          title: "เสร็จสิ้น"
         },
         {
           id: "4",
-          color: "text-rangmod-blue",
-          status: "เลื่อนนัด",
+          color: "text-rangmod-purple",
+          bgcolor: "bg-rangmod-purple/20",
+          title: "เลื่อนนัด"
         },
         {
           id: "5",
-          color: "text-rangmod-dark-blue",
-          status: "รอรับเรื่อง",
+          color: "text-rangmod-red",
+          bgcolor: "bg-rangmod-red/20",
+          title: "ยกเลิก"
+        },
+        {
+          id: "6",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "นัดวันเข้าซ่อม"
+        },
+        {
+          id: "7",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "รับเรื่อง"
+        },
+        {
+          id: "8",
+          color: "text-rangmod-black",
+          bgcolor: "bg-rangmod-black/20",
+          title: "ทั้งหมด"
         },
       ],
       requestList: [
@@ -428,21 +458,28 @@ export default {
         //   ],
         // },
       ],
-      reportList: [],
+      reportList: []
     };
   },
-  mounted() {
+  computed: {
+    // updateReport() {
+    //   return this.reportList = await this.getReport(); ;
+    // }
+    // reportList() {
+    //   return this.getReport();
+    // }
+  },
+  mounted() {   
     this.create();
+    // console.log(this.reportList.json())
   },
   methods: {
     async create() {
       this.token = localStorage.getItem("token");
       this.createdBy = parseInt(localStorage.getItem("id"));
-      console.log(this.createdBy)
+      console.log(this.createdBy);
       this.reportList = await this.getReport();
-      console.log(this.token);
       console.log(this.reportList);
-      // this.customers = await this.getCustomers();
       
     },
     doFilter(id) {
@@ -456,7 +493,7 @@ export default {
     },
     sendReport() {
       if (this.title == "" || this.description == "") {
-        alert("some form is empty");
+        alert("Please complete your report");
       } else {
         fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
@@ -470,52 +507,18 @@ export default {
             CreatedBy: this.createdBy,
           }),
         })
-          .then((response) => {
-            const res = response.json();
-            // console.log("Add report!");
-            return res;
-          })
-          .then((response) => {
-            this.sendEngageDate(response);
-            // console.log(response);
+          .then(() => {
             alert("Send report!");
             this.showModal = !this.showModal;
+          })
+          .then(async () => {
+            this.reportList = await this.getReport();
+            console.log(this.reportList)
           });
       }
     },
-    sendEngageDate(reportId) {
-      // if (reportId) {
-      //   for (let i = 0; i < this.engageDates.length; i++) {
-      //     if (
-      //       this.engageDates[i].date == "" ||
-      //       this.engageDates[i].time == ""
-      //     ) {
-      //       alert("some date or time is empty");
-      //       break;
-      //     }
-      //   }
-      // } else {
-        fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
-          // fetch(`http://localhost:5000/api/report`, {
-          method: "POST",
-          headers: { "content-Type": "application/json",
-                    "Authorization" : `Bearer ${this.token}` },
-          body: JSON.stringify({
-            Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
-            Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
-            Date3: this.engageDates[2].date + " " + this.engageDates[2].time,
-            Date4: this.engageDates[3].date + " " + this.engageDates[3].time,
-            ReportId: reportId,
-            SelectDate: 1,
-          }),
-        }).then((res) => {
-          console.log(res);
-          console.log("Add report!");
-        });
-      // }
-    },
     async getReport() {
-      fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
+      const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
         method: "POST",
         headers: { "content-Type": "application/json",
                     "Authorization" : `Bearer ${this.token}` },
@@ -523,11 +526,8 @@ export default {
           CreatedBy: this.createdBy
         }),
       })
-        .then((response) => {
-          const res = response.json();
-          console.log(res)
-          return res;
-        })
+        const data = res.json();
+        return data;
     },
     dateFormat(inputDate) {
       // console.log(inputDate)
@@ -538,6 +538,29 @@ export default {
       const formatedDate =
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
+    },
+    checkThaiStatus(status) {
+      if(status.toLowerCase() == 'waiting') {
+        return 'รอรับเรื่อง';
+      }
+      if(status.toLowerCase() == 'accept') {
+        return 'รับเรื่อง';
+      }
+      if(status.toLowerCase() == 'engage') {
+        return 'นัดวันเข้าซ่อม';
+      }
+      if(status.toLowerCase() == 'prepare') {
+        return 'รอเข้าซ่อม';
+      }
+      if(status.toLowerCase() == 'postpone') {
+        return 'เลื่อนนัด';
+      }
+      if(status.toLowerCase() == 'cancel') {
+        return 'ยกเลิก';
+      }
+      if(status.toLowerCase() == 'success') {
+        return 'เสร็จสิ้น'
+      }
     },
     // async getCustomers() {
     //   try {

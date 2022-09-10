@@ -114,9 +114,10 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       meta: { layout: 'AppLayoutAdmin' }
     },
     {
-      path: '/dashboard/report/:code',
+      path: '/dashboard/report/:id',
       name: 'dashboard-report-detail',
       component: DashboardReportDetailPage,
+      props: true ,
       meta: { layout: 'AppLayoutAdmin' }
     },
     {
@@ -158,7 +159,7 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
     //   meta: { layout: 'AppLayoutMember' }
     // },
     {
-      path: '/member/report/detail',
+      path: '/member/report/detail/:id',
       name: 'member-report-detail',
       component: MemberReportDetail,
       meta: { layout: 'AppLayoutMember' }
