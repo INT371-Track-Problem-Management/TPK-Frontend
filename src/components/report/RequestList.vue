@@ -9,25 +9,25 @@
       
       <div class="flex flex-wrap lg:flex-row justify-center lg:justify-start items-center">
         <div 
-          v-for="(status, i) in requestStatusList"
+          v-for="(status, i) in statusList"
           :key="i"
           :class="status.bgcolor"
           @click="doFilter(status.id)"
-          class="w-36 mr-2 mb-4 py-3 text-center rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90"
+          class="w-28 mr-2 mb-4 py-3 text-center rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90"
 
         >
           <div
             :class="status.color"
           >{{status.title}}</div>
         </div>
-        <div 
+        <!-- <div 
           @click="doFilter('')"
           class="w-36 mr-2 mb-4 py-3 text-center rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-black/20"
         >
           <div
             class="text-rangmod-black"
           >ทั้งหมด</div>
-        </div>
+        </div> -->
       </div>
 
       <div 
@@ -61,7 +61,7 @@
     <table class="w-full text-rangmod-black mb-10 hidden md:table">
       <tr class="bg-rangmod-light-pink">
         <th class="py-4">ลำดับ</th>
-        <th class="py-4">ห้อง</th>
+        <!-- <th class="py-4">ห้อง</th> -->
         <th class="py-4">รหัสรายงาน</th>
         <th class="py-4">หัวข้อปัญหา</th>
         <th class="py-4">ว/ด/ป แจ้งซ่อม</th>
@@ -76,10 +76,10 @@
         class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4">{{i+1}}</td>
-        <td class="text-center py-4">{{request.room}}</td>
-        <td class="text-center py-4">{{request.id}}   </td>
+        <!-- <td class="text-center py-4">{{request.room}}</td> -->
+        <td class="text-center py-4">{{request.reportId}}   </td>
         <td class="text-center py-4">{{request.title}}</td>
-        <td class="text-center py-4">{{request.request_date}}</td>
+        <td class="text-center py-4">{{dateFormat(request.reportDate)}}</td>
         <td class="text-center py-4">
           <div 
             v-for="(repair, j) in request.repair_date"
@@ -90,25 +90,28 @@
         </td>
         <td class="text-center py-4">
           <div
-            v-for="(status, j) in requestStatusList"
+            v-for="(status, j) in statusList"
             :key="j"
           >
             <div 
-              v-if="request.status == status.id"
+              v-if="this.checkThaiStatus(request.status) == status.title"
               :class="status.color"
             >
-              {{status.title}}
+              {{this.checkThaiStatus(request.status)}}
             </div>
           </div>
 
         </td>
-        <td class="text-center py-4">
-          <RouterLink 
-            :to="`/dashboard/report/${request.id}`"
-            class="text-rangmod-purple cursor-pointer transition-all hover:font-bold"
+        <td
+          class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
+        >
+          <RouterLink
+            :to="{
+              name: 'dashboard-report-detail',
+              params: { id: request.reportId , status: request.status },
+            }"
+            >รายละเอียด</RouterLink
           >
-            รายละเอียด
-          </RouterLink>
         </td>
       </tr>
 
@@ -122,10 +125,10 @@
         class="w-full rounded-xl shadow-md p-4 mb-4"
       >
 
-        <div class="flex flex-row justify-between">
+        <!-- <div class="flex flex-row justify-between">
           <div>ห้อง</div>
           <div>{{request.room}}</div>
-        </div>
+        </div> -->
         <div class="flex flex-row justify-between">
           <div>รหัสรายงาน</div>
           <div>{{request.id}}</div>
@@ -166,7 +169,7 @@
         </div>
 
         <RouterLink 
-          :to="`/dashboard/report/${request.id}`"
+          :to="`/dashboard/report/${request.reportId}`"
         >
           <div class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold">
             รายละเอียด
@@ -188,7 +191,8 @@ export default {
   data() {
     
     return {
-
+      token: "",
+      createdBy: 0,
       activeSortFilter: false,
 
       sortList: [
@@ -197,7 +201,7 @@ export default {
         { key: "request_date", name: "ว/ด/ป แจ้งซ่อม" },
       ],
 
-      requestStatusList: [
+      statusList: [
         {
           id: "1",
           color: "text-rangmod-blue",
@@ -208,13 +212,13 @@ export default {
           id: "2",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รอดำเนินการ"
+          title: "รอเข้าซ่อม"
         },
         {
           id: "3",
           color: "text-rangmod-green",
           bgcolor: "bg-rangmod-green/20",
-          title: "ดำเนินการแล้ว"
+          title: "เสร็จสิ้น"
         },
         {
           id: "4",
@@ -228,149 +232,230 @@ export default {
           bgcolor: "bg-rangmod-red/20",
           title: "ยกเลิก"
         },
-            
+        {
+          id: "6",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "นัดวันเข้าซ่อม"
+        },
+        {
+          id: "7",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "รับเรื่อง"
+        },
+        {
+          id: "8",
+          color: "text-rangmod-black",
+          bgcolor: "bg-rangmod-black/20",
+          title: "ทั้งหมด"
+        },
       ],
 
-      requestList: [ 
-        {
-          id: "ED123456",
-          room: "201",
-          title: "น้ำไม่ไหล",
-          desc: "น้ำไม่ไหล DESC ",
-          status: "3", 
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1"
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            }, 
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            },
-          ],
-        },
-        {
-          id: "ED654321",
-          room: "102",
-          title: "ไฟไม่ติด",
-          desc: "ไฟไม่ติด DESC ",
-          status: "2", 
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1"
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            }, 
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            },
-          ],
-        },
-        {
-          id: "ED789101",
-          room: "203",
-          title: "น้ำรั่ว",
-          desc: "น้ำรั่ว DESC ",
-          status: "5", 
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1"
-            },
-            { 
-              date: "",
-              isActive: false,
-              remark: ""
-            }, 
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            },
-          ],
-        },
-        {
-          id: "ED786123",
-          room: "203",
-          title: "ปลวกขึ้น",
-          desc: "ปลวกขึ้น DESC ",
-          status: "4", 
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1"
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            }, 
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            },
-          ],
-        },
-        {
-          id: "ED543210",
-          room: "201",
-          title: "โต๊ะพัง",
-          desc: "โต๊ะพัง DESC ",
-          status: "1", 
-          request_date: "29/03/2565",
-          repair_date: [
-            {
-              date: "31/03/2565",
-              isActive: true,
-              remark: "เหตุผลครั้งที่ 1"
-            },
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            }, 
-            {
-              date: "",
-              isActive: false,
-              remark: ""
-            },
-          ],
-        },
+      // requestList: [ 
+      //   {
+      //     id: "ED123456",
+      //     room: "201",
+      //     title: "น้ำไม่ไหล",
+      //     desc: "น้ำไม่ไหล DESC ",
+      //     status: "3", 
+      //     request_date: "29/03/2565",
+      //     repair_date: [
+      //       {
+      //         date: "31/03/2565",
+      //         isActive: true,
+      //         remark: "เหตุผลครั้งที่ 1"
+      //       },
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       }, 
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: "ED654321",
+      //     room: "102",
+      //     title: "ไฟไม่ติด",
+      //     desc: "ไฟไม่ติด DESC ",
+      //     status: "2", 
+      //     request_date: "29/03/2565",
+      //     repair_date: [
+      //       {
+      //         date: "31/03/2565",
+      //         isActive: true,
+      //         remark: "เหตุผลครั้งที่ 1"
+      //       },
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       }, 
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: "ED789101",
+      //     room: "203",
+      //     title: "น้ำรั่ว",
+      //     desc: "น้ำรั่ว DESC ",
+      //     status: "5", 
+      //     request_date: "29/03/2565",
+      //     repair_date: [
+      //       {
+      //         date: "31/03/2565",
+      //         isActive: true,
+      //         remark: "เหตุผลครั้งที่ 1"
+      //       },
+      //       { 
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       }, 
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: "ED786123",
+      //     room: "203",
+      //     title: "ปลวกขึ้น",
+      //     desc: "ปลวกขึ้น DESC ",
+      //     status: "4", 
+      //     request_date: "29/03/2565",
+      //     repair_date: [
+      //       {
+      //         date: "31/03/2565",
+      //         isActive: true,
+      //         remark: "เหตุผลครั้งที่ 1"
+      //       },
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       }, 
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       },
+      //     ],
+      //   },
+      //   {
+      //     id: "ED543210",
+      //     room: "201",
+      //     title: "โต๊ะพัง",
+      //     desc: "โต๊ะพัง DESC ",
+      //     status: "1", 
+      //     request_date: "29/03/2565",
+      //     repair_date: [
+      //       {
+      //         date: "31/03/2565",
+      //         isActive: true,
+      //         remark: "เหตุผลครั้งที่ 1"
+      //       },
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       }, 
+      //       {
+      //         date: "",
+      //         isActive: false,
+      //         remark: ""
+      //       },
+      //     ],
+      //   },
 
-      ]
+      // ]
+      requestList: [],
     }
     
   },
-
+  mounted() {   
+    this.create();
+  },
   methods: {
-    doFilter(id) {
-      console.log(`Filtered by ${id} !`)
+    async create() {
+      this.token = localStorage.getItem("token");
+      this.createdBy = parseInt(localStorage.getItem("id"));
+      // console.log(this.createdBy);
+      this.requestList = await this.getAllRequest();
+      // console.log(this.requestList);
+      
     },
-    doSort(id) {
-      console.log(`Sorted by ${id} !`)
+    // doFilter(id) {
+    //   console.log(`Filtered by ${id} !`);
+    // },
+    // doSort(id) {
+    //   console.log(`Sorted by ${id} !`);
+    // },
+    // showDetail(reportId) {
+    //   console.log(reportId);
+    // },
+    checkThaiStatus(status) {
+      if(status.toLowerCase() == 'waiting') {
+        return 'รอรับเรื่อง';
+      }
+      if(status.toLowerCase() == 'accept') {
+        return 'รับเรื่อง';
+      }
+      if(status.toLowerCase() == 'engage') {
+        return 'นัดวันเข้าซ่อม';
+      }
+      if(status.toLowerCase() == 'prepare') {
+        return 'รอเข้าซ่อม';
+      }
+      if(status.toLowerCase() == 'postpone') {
+        return 'เลื่อนนัด';
+      }
+      if(status.toLowerCase() == 'cancel') {
+        return 'ยกเลิก';
+      }
+      if(status.toLowerCase() == 'success') {
+        return 'เสร็จสิ้น'
+      }
     },
-  }
+    async getAllRequest() {
+      const res = await fetch(`https://dev.rungmod.com/api/employee/report`, {
+        method: "GET",
+        headers: { "Authorization" : `Bearer ${this.token}` },
+      })
+        const data = res.json();
+        return data;
+    },
+    dateFormat(inputDate) {
+      // console.log(inputDate)
+      const date = new Date(inputDate);
+      // console.log(date.getDate())
+      // console.log(date.getMonth())
+      // console.log(date.getFullYear())
+      const formatedDate =
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+      return formatedDate;
+    },
+    // async getAllRequest() {
+    //   try {
+    //     const res = await fetch("https://dev.rungmod.com/api/employee/report");
+    //     const data = res.json();
+    //     return data;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // },
+  },
 
 }
 </script>

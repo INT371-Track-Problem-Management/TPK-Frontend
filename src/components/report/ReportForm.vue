@@ -1,11 +1,11 @@
 <template>
   <div class="w-full xl:w-3/4 mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-6">
       <div class="flex md:hidden flex-col justify-start">
         <div class="text-rangmod-black">ชื่อ-นามสกุลช่าง</div>
         <div class="mb-5">
           <input
-            :value="report.reportId"
+
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -14,7 +14,7 @@
         <div class="text-rangmod-black">เบอร์ติดต่อช่าง</div>
         <div class="mb-5">
           <input
-            :value="report.reportId"
+
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -25,7 +25,7 @@
         <div class="text-rangmod-black">หัวข้อปัญหา</div>
         <div class="mb-5">
           <input
-            :value="report.title"
+            v-model="title"
             type="text"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
@@ -34,13 +34,52 @@
 
         <div class="text-rangmod-black">รายละเอียดปัญหา</div>
         <div class="mb-5">
-          <textarea v-model="description"
+          <textarea
+            v-model="description"
             class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
           ></textarea>
         </div>
+        
+        <div>
+          <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
-        <div class="text-rangmod-black">วันและเวลาที่นัด</div>
+          <div class="flex flex-col">
+            <div
+              v-for="(engageDate, i) in reportEngageDate"
+              :key="i"
+              class="flex flex-row space-x-4 justify-start items-center"
+            >
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
+                <input
+                  v-model="engageDate.datetime"
+                  type="text"
+                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                />
+              </div>
+
+              <!-- <div class="mb-5">
+                <div class="text-rangmod-black">เวลา</div>
+                <input
+                  v-model="engageDate.time"
+                  type="text"
+                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                />
+              </div> -->
+
+              <div class="w-7">
+                <div
+                  class="w-7 h-7 rounded-full"
+                  :class="
+                  engageDate.isActive ? 'bg-rangmod-green' : 'bg-rangmod-gray'
+                  "
+                ></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
         <div class="flex flex-col">
           <div
@@ -77,10 +116,10 @@
               ></div>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
 
-      <div class="hidden md:flex flex-col justify-start">
+      <!-- <div class="hidden md:flex flex-col justify-start">
         <div class="text-rangmod-black">ชื่อ-นามสกุลช่าง</div>
         <div class="mb-5">
           <input
@@ -98,67 +137,32 @@
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
         </div>
-      </div>
+      </div> -->
     </div>
-    <div class="flex flex-row justify-end space-x-4 mb-5">
-    <div
-        @click="showFinish = !showFinish"
-        disable="true"
-        class="bg-rangmod-green w-fit text-center text-white text-xl p-4 rounded-full transition-all cursor-pointer hover:brightness-90 "
-      >
-        แก้ไขปัญหาเสร็จสิ้น
-      </div>
-      </div>
-    <div class="flex flex-row justify-end space-x-4 mb-5">
+    <div class="flex justify-end space-x-4">
       <div
-        @click="showModal = !showModal"
-        disable="true"
-        class="bg-rangmod-blue w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-      >
-        เลื่อนนัด
-      </div>
-
-      <div
-        @click="showDelete = !showDelete"
-        class="bg-rangmod-dark-pink w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-      >
-        ยกเลิกนัด
-      </div>
-
-      <div
-        @click="save('save')"
-        class="bg-rangmod-purple w-40 text-center text-white text-xl py-4 rounded-full transition-all cursor-pointer hover:brightness-90"
-      >
-        บันทึก
-      </div>
-
-      <!-- status update mobile -->
-      <!-- <div
-        class="w-full md:w-2/5 mx-auto lg:hidden flex flex-col justify-start"
+        class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
       >
         <div
-          v-for="(status, i) in statusList"
-          :key="i"
-          class="flex flex-row items-center space-x-6 pb-8 -mb-1 relative"
-        >
-          <div
-            class="w-16 h-16 rounded-full"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
-          ></div>
-          <div class="text-base md:text-lg">{{ status.name }}</div>
 
-          <div
-            v-show="status.divider"
-            class="w-2 h-20 absolute left-1 bottom-1 z-20"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
-          ></div>
+        @click="showModal = !showModal"
+          class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-blue shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-blue hover:text-rangmod-light-blue hover:shadow-none"
+        >
+          เลื่อนนัด
         </div>
-      </div> -->
-    
+
+        <div
+
+
+          class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
+        >
+          ยกเลิกนัด
+        </div>
+
+      </div>
+
+    </div>
+
     <div
       :class="
         showModal
@@ -218,69 +222,57 @@
           </div>
 
           <div class="flex flex-col">
-          <div
-            class="flex flex-row space-x-4 justify-between items-center"
-          >
-            <div class="mb-5">
-              <div class="text-rangmod-black">ว/ด/ป</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
+            <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
 
-              />
+              <div class="mb-5">
+                <div class="text-rangmod-black">เวลา</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
             </div>
-
-            <div class="mb-5">
-              <div class="text-rangmod-black">เวลา</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-
-              />
-            </div>
-
-
           </div>
-        </div>
-        <div>วันเลื่อนนัดครั้งถัดไป</div>
-        <div class="flex flex-col">
-          <div
-            class="flex flex-row space-x-4 justify-between items-center"
-          >
-            <div class="mb-5">
-              <div class="text-rangmod-black">ว/ด/ป</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
+          <div>วันเลื่อนนัดครั้งถัดไป</div>
+          <div class="flex flex-col">
+            <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
 
-              />
+              <div class="mb-5">
+                <div class="text-rangmod-black">เวลา</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
             </div>
-
-            <div class="mb-5">
-              <div class="text-rangmod-black">เวลา</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-
-              />
-            </div>
-
-
           </div>
-        </div>
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="sendReport()"
+            @click="postpone()"
               class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-purple text-rangmod-purple hover:shadow-none"
             >
               ยกเลิก
             </div>
             <div
-              v-on:click="sendReport()"
+            @click="postpone()"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               เลื่อนนัด
@@ -348,33 +340,27 @@
           </div>
 
           <div class="flex flex-col">
-          <div
-            class="flex flex-row space-x-4 justify-between items-center"
-          >
-            <div class="mb-5">
-              <div class="text-rangmod-black">ว/ด/ป</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
+            <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
 
-              />
+              <div class="mb-5">
+                <div class="text-rangmod-black">เวลา</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
             </div>
-
-            <div class="mb-5">
-              <div class="text-rangmod-black">เวลา</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-
-              />
-            </div>
-
-
           </div>
-        </div>
-        
+
           <div class="flex flex-row space-x-4 justify-end">
             <div
               v-on:click="finish('finish')"
@@ -421,9 +407,7 @@
               </svg>
             </div>
           </div>
-          <div class="text-2xl text-rangmod-purple mb-5">
-            แจ้งยกเลิกนัด
-          </div>
+          <div class="text-2xl text-rangmod-purple mb-5">แจ้งยกเลิกนัด</div>
           <div class="text-rangmod-black">หัวข้อปัญหา</div>
           <div class="mb-5">
             <input
@@ -444,36 +428,30 @@
           </div>
 
           <div class="flex flex-col">
-          <div
-            class="flex flex-row space-x-4 justify-between items-center"
-          >
-            <div class="mb-5">
-              <div class="text-rangmod-black">ว/ด/ป</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
+            <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
 
-              />
+              <div class="mb-5">
+                <div class="text-rangmod-black">เวลา</div>
+                <input
+                  type="text"
+                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
             </div>
-
-            <div class="mb-5">
-              <div class="text-rangmod-black">เวลา</div>
-              <input
-                type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-
-              />
-            </div>
-
-
           </div>
-        </div>
-        
+
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="delete('delete')"
+              v-on:click="delete 'delete'"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยกเลิกนัด
@@ -481,8 +459,7 @@
           </div>
         </div>
       </div>
-      </transition>
-    </div>
+    </transition>
   </div>
 </template>
 
@@ -493,86 +470,100 @@ export default {
   props: ["report"],
   data() {
     return {
+      title: this.report.reportDes,
       description: this.report.reportDes,
-      engageDates: [
-        {
-          date: "2022-05-25",
-          time: "08:02:27",
-          // dateTime: '',
-          isActive: true,
-        },
-        {
-          date: "2022-07-26",
-          time: "09:04:27",
-          // dateTime: '',
-          isActive: true,
-        },
-        {
-          date: "2022-09-27",
-          time: "10:06:27",
-          // dateTime: '',
-          isActive: false,
-        },
-        {
-          date: "2022-11-28",
-          time: "11:08:27",
-          // dateTime: '',
-          isActive: false,
-        },
-      ],
       showModal: false,
       showFinish: false,
       showDelete: false,
+      
+      reportEngageDate: [
+        {
+          date: "date1",
+          // time: "",
+          datetime: "",
+          isActive: true
+        },
+        {
+          date: "date2",
+          // time: "",
+          datetime: "",
+          isActive: false
+        },
+        {
+          date: "date3",
+          // time: "",
+          datetime: "",
+          isActive: false
+        },
+        {
+          date: "date4",
+          // time: "",
+          datetime: "",
+          isActive: false
+        },
+      ],
     };
   },
-  mount() {
+  mounted() {
     this.create();
   },
   methods: {
     create() {
-      console.log(this.report);
+      console.log(this.$route.params.id);
     },
-    postpone(reportId) {
-      if (
-        this.report.status == "รอรับเรื่อง" ||
-        // this.report.status == "รอซ่อม" ||
-        this.report.status == "ยกเลิกนัด" ||
-        this.report.status == "เสร็จสิ้น"
-      ) {
-        alert("Can't change status");
-      } else {
-        fetch(`https://dev.rungmod.com/api/statusReport`, {
-          method: "PUT",
-          headers: { "content-Type": "application/json" },
-          body: JSON.stringify({
-            ReportId: reportId,
-            Status: "เลื่อนนัด",
-          }),
-        }).then(() => {
-          alert("Status change!");
-        });
-      }
-    },
-    cancel(reportId) {
-      fetch(`https://dev.rungmod.com/api/deleteReportById`, {
-        method: "DELETE",
-        headers: { "content-Type": "application/json" },
-        body: JSON.stringify({
-          ReportId: reportId,
-        }),
-      }).then(() => {
-        alert("Delete report!");
-        this.$router.push(`/member/report`);
-      });
-    },
-    save(action) {
-      console.log(action);
+    // postpone(reportId) {
+    //   if (
+    //     this.report.status == "รอรับเรื่อง" ||
+    //     // this.report.status == "รอซ่อม" ||
+    //     this.report.status == "ยกเลิกนัด" ||
+    //     this.report.status == "เสร็จสิ้น"
+    //   ) {
+    //     alert("Can't change status");
+    //   } else {
+    //     fetch(`https://dev.rungmod.com/api/statusReport`, {
+    //       method: "PUT",
+    //       headers: { "content-Type": "application/json" },
+    //       body: JSON.stringify({
+    //         ReportId: reportId,
+    //         Status: "เลื่อนนัด",
+    //       }),
+    //     }).then(() => {
+    //       alert("Status change!");
+    //     });
+    //   }
+    // },
+    // cancel(reportId) {
+    //   fetch(`https://dev.rungmod.com/api/deleteReportById`, {
+    //     method: "DELETE",
+    //     headers: { "content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       ReportId: reportId,
+    //     }),
+    //   }).then(() => {
+    //     alert("Delete report!");
+    //     this.$router.push(`/member/report`);
+    //   });
+    // },
+    postpone() {
+      console.log("postpone");
     },
     finish(action) {
       console.log(action);
     },
     delete(action) {
       console.log(action);
+    },
+    dateFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDate =
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+      return formatedDate;
+    },
+    dateTimeFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDateTime =
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+      return formatedDateTime;
     },
   },
 };

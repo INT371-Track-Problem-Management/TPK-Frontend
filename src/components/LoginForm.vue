@@ -5,12 +5,11 @@
     >
       <div class="text-rangmod-black text-2xl">เข้าสู่ระบบ</div>
       <hr class="my-4" />
-
       <div class="mb-4">
         <div class="text-rangmod-black px-1">อีเมล์</div>
         <div class="border border-rangmod-gray rounded-xl px-3">
           <input
-          v-model="email"
+            v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -21,7 +20,7 @@
         <div class="text-rangmod-black px-1">รหัสผ่าน</div>
         <div class="border border-rangmod-gray rounded-xl px-3 relative">
           <input
-          v-model="password"
+            v-model="password"
             :type="textPassword"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -99,7 +98,6 @@ export default {
     };
   },
   methods: {
-
     async doLogin() {
       fetch(`https://dev.rungmod.com/api/login`, {
         method: "POST",
@@ -143,17 +141,22 @@ export default {
             console.log("failed login");
           }
         });
-
     },
-    parseJwt (token) {
-    var base64Url = token.toString().split('.')[1];
-    var base64 = base64Url?.replace('-', '+')?.replace('_', '/');
-    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
-        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+    parseJwt(token) {
+      var base64Url = token.toString().split(".")[1];
+      var base64 = base64Url?.replace("-", "+")?.replace("_", "/");
+      var jsonPayload = decodeURIComponent(
+        window
+          .atob(base64)
+          .split("")
+          .map(function (c) {
+            return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+          })
+          .join("")
+      );
 
-    return JSON.parse(jsonPayload);
-},
+      return JSON.parse(jsonPayload);
+    },
   },
 };
 </script>
