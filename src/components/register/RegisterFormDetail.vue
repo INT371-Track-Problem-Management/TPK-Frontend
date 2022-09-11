@@ -267,9 +267,9 @@ export default {
         alert('เกิดข้อผิดพลาด')
       }
     },
-    registerCustomer() {
+    async registerCustomer() {
       if(!this.validation()) {
-      fetch(`https://dev.rungmod.com/api/registerCustomer`, {
+      const res = await fetch(`https://dev.rungmod.com/api/registerCustomer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -282,16 +282,25 @@ export default {
           Age: this.age,
           Phone: this.phone,
           Address: this.address,
-        }),
-      }).then(() => {
-        alert("ลงทะเบียนสำเร็จ!");
-        this.$router.push(`/login`);
-      });
+        })
+      }
+      )
+      const data = res.json()
+      return data
+      .then(async (res) => {
+        res = await data
+        if(res == 'this email can not use!!!') {
+          alert('อีเมลนี้ใช้ไม่ได้!!!')
+        } else {
+          alert("ลงทะเบียนสำเร็จ!");
+          this.$router.push(`/login`);
+        }
+      })
     }
     },
-    registerOwner() {
+    async registerOwner() {
       if(!this.validation()) {
-      fetch(`https://dev.rungmod.com/api/registerOwner`, {
+      const res = await fetch(`https://dev.rungmod.com/api/registerOwner`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -306,11 +315,20 @@ export default {
           Address: this.address,
           Position: ''
         }),
-      }).then(() => {
-        alert("ลงทะเบียนสำเร็จ!");
-        this.$router.push(`/login`);
-      });
       }
+      )
+      const data = res.json()
+      return data
+      .then(async (res) => {
+        res = await data
+        if(res == 'this email can not use!!!') {
+          alert('อีเมลนี้ใช้ไม่ได้!!!')
+        } else {
+          alert("ลงทะเบียนสำเร็จ!");
+          this.$router.push(`/login`);
+        }
+      })
+    }
     },
     calculateAge(dob) {
       let currentDate = new Date();
