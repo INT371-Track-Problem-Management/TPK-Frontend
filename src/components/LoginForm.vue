@@ -7,22 +7,26 @@
       <hr class="my-4" />
       <div class="mb-4">
         <div class="text-rangmod-black px-1">อีเมล์</div>
-        <div class="border border-rangmod-gray rounded-xl px-3">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.email ? 'border-red-500 border-2' : ''">
           <input
             v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-          />
+            :class="this.validate.email ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.email ? 'กรุณาใส่อีเมล' : ''"
+            />
         </div>
       </div>
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">รหัสผ่าน</div>
-        <div class="border border-rangmod-gray rounded-xl px-3 relative">
+        <div class="border border-rangmod-gray rounded-xl px-3 relative" :class="this.validate.password ? 'border-red-500 border-2' : ''">
           <input
             v-model="password"
             :type="textPassword"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="this.validate.password ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.password ? 'กรุณาใส่รหัสผ่าน' : ''"
           />
 
           <div
@@ -95,10 +99,20 @@ export default {
         role: "",
         status: "",
       },
+      validate: {
+        email: false,
+        password: false
+      }
     };
   },
   methods: {
+    validation() {
+      this.email == "" ? this.validate.email = true : this.validate.email = false
+      this.password == "" ? this.validate.password = true : this.validate.password = false
+    },
+
     async doLogin() {
+      if(!this.validation()) {
       fetch(`https://dev.rungmod.com/api/login`, {
         method: "POST",
         headers: { "content-Type": "application/json" },
@@ -135,12 +149,13 @@ export default {
             }
 
             if (this.userLogin.role == "C") {
-              this.$router.push(`/member/mydorm`);
+              this.$router.push(`/member/report`);
             }
           } else {
             console.log("failed login");
           }
         });
+      }
     },
     parseJwt(token) {
       var base64Url = token.toString().split(".")[1];

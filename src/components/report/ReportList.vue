@@ -130,7 +130,7 @@
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showModal = false" class="cursor-pointer">
+            <div @click="showModal = false, validate.title = false, validate.description = false" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -156,6 +156,8 @@
               v-model="title"
               type="text"
               class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              :class="this.validate.title ? 'placeholder-red-500 border-red-500 border-2' : ''"
+              :placeholder="this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''"
             />
           </div>
 
@@ -164,38 +166,10 @@
             <textarea
               v-model="description"
               class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              :class="this.validate.description ? 'placeholder-red-500 border-red-500 border-2' : ''"
+              :placeholder="this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''"
             ></textarea>
           </div>
-
-          <!-- <div class="text-rangmod-black">วันและเวลาที่นัด</div>
-
-          <div class="flex flex-col">
-            <div
-              v-for="(engageDate, i) in engageDates"
-              :key="i"
-              class="flex flex-row relative"
-            >
-              <div class="flex flex-row space-x-4">
-                <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป</div>
-                  <input
-                    type="text"
-                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    :value="engageDate.date"
-                  />
-                </div>
-
-                <div class="mb-5">
-                  <div class="text-rangmod-black">เวลา</div>
-                  <input
-                    type="text"
-                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    :value="engageDate.time"
-                  />
-                </div>
-              </div>
-            </div>
-          </div> -->
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
@@ -261,7 +235,7 @@ export default {
         },
       ],
 
-        showModal: false,
+      showModal: false,
       activeSortFilter: false,
       // modal: {
       //   code: "00000",
@@ -458,7 +432,11 @@ export default {
         //   ],
         // },
       ],
-      reportList: []
+      reportList: [],
+      validate: {
+        title: false,
+        description: false,
+      }
     };
   },
   computed: {
@@ -474,6 +452,11 @@ export default {
     // console.log(this.reportList.json())
   },
   methods: {
+    validation() {
+      this.title == "" ? this.validate.title = true : this.validate.title = false
+      this.description == "" ? this.validate.description = true : this.validate.description = false
+      return this.validate.title && this.validate.description
+    },
     async create() {
       this.token = localStorage.getItem("token");
       this.createdBy = parseInt(localStorage.getItem("id"));
@@ -492,9 +475,10 @@ export default {
       console.log(reportId);
     },
     sendReport() {
-      if (this.title == "" || this.description == "") {
-        alert("Please complete your report");
-      } else {
+      if (this.validation()) {
+        console.log(this.validation())
+        // alert('กรุณากรอกข้อมูลปัญหาให้ครบ')
+      } else if(!this.validation()){
         fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
           headers: { "content-Type": "application/json",
