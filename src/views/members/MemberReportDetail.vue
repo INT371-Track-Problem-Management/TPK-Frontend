@@ -100,7 +100,7 @@ export default {
         {
           id: 4,
           eng: "prepare",
-          name: "รอเข้าซ่อม",
+          name: "รอดำเนินการ",
           divider: false,
           isActive: true,
         },
@@ -139,7 +139,7 @@ export default {
   },
   methods: {
     async create() {
-      console.log(this.$route.params.id)
+      // console.log(this.$route.params.id)
       this.reportByCreatedBy = await this.getReportByCreatedBy();
       for(let i = 0; i < this.reportByCreatedBy.length; i++) {
         if(this.reportByCreatedBy[i].reportId == this.$route.params.id) {
@@ -148,7 +148,7 @@ export default {
           
         }
       }
-      console.log(this.reportByCreatedBy);
+      // console.log(this.reportByCreatedBy);
       // this.checkStatus(this.reportById);
     },
     async getReportByCreatedBy() {

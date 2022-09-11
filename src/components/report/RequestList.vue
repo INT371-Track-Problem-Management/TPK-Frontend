@@ -212,7 +212,7 @@ export default {
           id: "2",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รอเข้าซ่อม"
+          title: "รอดำเนินการ"
         },
         {
           id: "3",
@@ -416,7 +416,7 @@ export default {
         return 'นัดวันเข้าซ่อม';
       }
       if(status.toLowerCase() == 'prepare') {
-        return 'รอเข้าซ่อม';
+        return 'รอดำเนินการ';
       }
       if(status.toLowerCase() == 'postpone') {
         return 'เลื่อนนัด';

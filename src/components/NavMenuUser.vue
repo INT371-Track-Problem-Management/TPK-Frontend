@@ -116,7 +116,7 @@
 
         <div class="flex space-x-4 items-center">
           <div class="w-10 h-10 rounded-full bg-rangmod-gray"></div>
-          <div class="text-rangmod-black">ธนวินท์</div>
+          <div class="text-rangmod-black">{{ email }}</div>
         </div>
 
       </div>
@@ -142,7 +142,11 @@ export default {
 
     }
   },
-
+  computed: {
+    email() {
+      return localStorage.getItem('email')
+    }
+  },
   methods: {
     selectMenu(index, listIndex, isItemList){
 

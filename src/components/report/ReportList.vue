@@ -266,7 +266,7 @@ export default {
           id: "2",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รอเข้าซ่อม"
+          title: "รอดำเนินการ"
         },
         {
           id: "3",
@@ -460,9 +460,9 @@ export default {
     async create() {
       this.token = localStorage.getItem("token");
       this.createdBy = parseInt(localStorage.getItem("id"));
-      console.log(this.createdBy);
+      // console.log(this.createdBy);
       this.reportList = await this.getReport();
-      console.log(this.reportList);
+      // console.log(this.reportList);
       
     },
     doFilter(id) {
@@ -475,10 +475,7 @@ export default {
       console.log(reportId);
     },
     sendReport() {
-      if (this.validation()) {
-        console.log(this.validation())
-        // alert('กรุณากรอกข้อมูลปัญหาให้ครบ')
-      } else if(!this.validation()){
+      if (!this.validation()) {
         fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
           headers: { "content-Type": "application/json",
@@ -499,7 +496,30 @@ export default {
             this.reportList = await this.getReport();
             console.log(this.reportList)
           });
-      }
+      } 
+
+      // else {
+      //   fetch(`https://dev.rungmod.com/api/customer/report`, {
+      //     method: "POST",
+      //     headers: { "content-Type": "application/json",
+      //               "Authorization" : `Bearer ${this.token}` },
+      //     body: JSON.stringify({
+      //       Title: this.title,
+      //       CategoriesReport: this.category,
+      //       ReportDes: this.description,
+      //       Status: this.status,
+      //       CreatedBy: this.createdBy,
+      //     }),
+      //   })
+      //     .then(() => {
+      //       alert("Send report!");
+      //       this.showModal = !this.showModal;
+      //     })
+      //     .then(async () => {
+      //       this.reportList = await this.getReport();
+      //       console.log(this.reportList)
+      //     });
+      // }
     },
     async getReport() {
       const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
@@ -534,7 +554,7 @@ export default {
         return 'นัดวันเข้าซ่อม';
       }
       if(status.toLowerCase() == 'prepare') {
-        return 'รอเข้าซ่อม';
+        return 'รอดำเนินการ';
       }
       if(status.toLowerCase() == 'postpone') {
         return 'เลื่อนนัด';

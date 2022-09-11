@@ -97,7 +97,7 @@ export default {
         {
           id: 4,
           eng: "prepare",
-          name: "รอเข้าซ่อม",
+          name: "รอดำเนินการ",
           divider: false,
           isActive: true,
         },
