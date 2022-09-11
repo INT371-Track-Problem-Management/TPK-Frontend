@@ -36,18 +36,21 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       path: '/register',
       name: 'register',
       component: RegisterPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
       path: '/register/select',
       name: 'register-select',
       component: RegisterSelectPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
       path: '/register/form',
       name: 'register-form',
       component: RegisterFormPage,
+      props: true,
       meta: { layout: 'AppLayoutRegister' }
     },
     {
@@ -71,11 +74,13 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       path: '/apartments/add',
       name: 'apartments-add',
       component: ApartmentsAddPage,
+      meta: { layout: 'AppLayoutApartment' }
     },
     {
       path: '/apartments/set_room',
       name: 'apartments-set-room',
       component: ApartmentsSetRoomPage,
+      meta: { layout: 'AppLayoutApartment' }
     },
     
     {
@@ -109,9 +114,10 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       meta: { layout: 'AppLayoutAdmin' }
     },
     {
-      path: '/dashboard/report/:code',
+      path: '/dashboard/report/:id',
       name: 'dashboard-report-detail',
       component: DashboardReportDetailPage,
+      props: true ,
       meta: { layout: 'AppLayoutAdmin' }
     },
     {
@@ -144,12 +150,18 @@ import MemberReportDetail from '../views/members/MemberReportDetail.vue'
       component: MemberReport,
       meta: { layout: 'AppLayoutMember' }
     },
+    // {
+    //   path: '/member/report/detail/:id',
+    //   name: 'member-report-detail',
+    //   props: true ,
+    //   component: MemberReportDetail,
+
+    //   meta: { layout: 'AppLayoutMember' }
+    // },
     {
       path: '/member/report/detail/:id',
       name: 'member-report-detail',
-      props: true ,
       component: MemberReportDetail,
-
       meta: { layout: 'AppLayoutMember' }
     },
   ]

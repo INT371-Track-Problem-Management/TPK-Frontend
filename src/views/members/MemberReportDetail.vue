@@ -7,7 +7,7 @@
 
     <div class="w-full mx-auto my-12">
       <!-- status update -->
-      <div class="hidden lg:flex flex-row justify-center">
+      <!-- <div class="hidden lg:flex flex-row justify-center">
         <div
           v-for="(status, i) in statusList"
           :key="i"
@@ -31,37 +31,33 @@
             "
           ></div>
         </div>
-      </div>
+      </div> -->
 
       <!-- status update mobile -->
       <div
-        class="w-full md:w-2/5 mx-auto lg:hidden flex flex-col justify-start"
+        class="w-full ml-32 flex flex-col justify-start"
       >
         <div
-          v-for="(status, i) in statusList"
+          v-for="(status, i) in activateStatus"
           :key="i"
-          class="flex flex-row items-center space-x-6 pb-8 -mb-1 relative"
+          class="flex flex-row items-center pb-8 -mb-2 relative"
         >
-          <div
-            class="w-16 h-16 rounded-full"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
+        <!-- <div v-show="status.isActive"> -->
+          <div v-show="status.isActive"
+            class="w-5 h-5 rounded-full bg-rangmod-light-yellow"
           ></div>
-          <div class="text-base md:text-lg">{{ status.name }}</div>
+          <div v-show="status.isActive" class="px-3 text-base md:text-lg">{{ status.name }}</div>
+        <!-- </div> -->
 
           <div
             v-show="status.divider"
-            class="w-2 h-20 absolute left-1 bottom-1 z-20"
-            :class="
-              status.isActive ? 'bg-rangmod-light-yellow' : 'bg-rangmod-gray'
-            "
+            class="w-1 h-10 absolute ml-2 bottom-1 z-20 bg-rangmod-light-yellow"
           ></div>
         </div>
       </div>
     </div>
-
-    <ReportForm :report="reportById"/>
+    <hr class="my-12 border-rangmod-purple" />
+    <ReportForm :report="reportDetail"/>
   </div>
 </template>
 
@@ -78,39 +74,62 @@ export default {
   },
   data() {
     return {
+      token: localStorage.getItem("token"),
       statusList: [
         {
+          id: 1,
+          eng: "waiting",
           name: "รอรับเรื่อง",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
+          id: 2,
+          eng: "accept",
+          name: "รับเรื่อง",
+          divider: false,
+          isActive: true,
+        },
+        {
+          id: 3,
+          eng: "engage",
+          name: "นัดวันเข้าซ่อม",
+          divider: false,
+          isActive: true,
+        },
+        {
+          id: 4,
+          eng: "prepare",
           name: "รอดำเนินการ",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
-          name: "ดำเนินการแล้ว",
-          divider: true,
-          isActive: false,
-        },
-        {
+          id: 5,
+          eng: "postpone",
           name: "เลื่อนนัด",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
+          id: 6,
+          eng: "cancle",
           name: "ยกเลิกนัด",
-          divider: true,
-          isActive: false,
+          divider: false,
+          isActive: true,
         },
         {
+          id: 7,
+          eng: "success",
           name: "เสร็จสิ้น",
           divider: false,
-          isActive: false,
+          isActive: true,
         },
       ],
-      reportById: {},
+      activateStatus: [
+      ],
+      reportByCreatedBy:[],
+      reportDetail: {},
       reportId: parseInt(this.id),
     };
   },
@@ -120,20 +139,26 @@ export default {
   },
   methods: {
     async create() {
-      console.log(typeof(this.reportId))
-      this.reportById = await this.getReportById(this.reportId);
-      this.checkStatus(this.reportById);
-      // console.log(typeof(this.reportById))
+      // console.log(this.$route.params.id)
+      this.reportByCreatedBy = await this.getReportByCreatedBy();
+      for(let i = 0; i < this.reportByCreatedBy.length; i++) {
+        if(this.reportByCreatedBy[i].reportId == this.$route.params.id) {
+          this.reportDetail = this.reportByCreatedBy[i]
+          this.checkStatus(this.reportDetail.status)
+          
+        }
+      }
+      // console.log(this.reportByCreatedBy);
+      // this.checkStatus(this.reportById);
     },
-    async getReportById(reportId) {
-      // console.log(reportId)
+    async getReportByCreatedBy() {
       try {
-        const res = await fetch(`https://dev.rungmod.com/api/reportById`, {
-        // const res = await fetch(`http://localhost:5000/api/reportById`, {
+        const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
           method: "POST",
-          headers: { "content-Type": "application/json" },
+          headers: { "content-Type": "application/json" ,
+                     "Authorization": `Bearer ${this.token}`,},
           body: JSON.stringify({
-            ReportId: reportId
+            CreatedBy: parseInt(localStorage.getItem("id"))
           }),
         })
         // console.log(reportId)
@@ -143,40 +168,56 @@ export default {
         console.log(e);
       }
     },
-    checkStatus(report) {
-      if(report.status == 'รอรับเรื่อง') {
-        this.statusList[0].isActive = true
+    checkStatus(status) {
+      if(status == 'success') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.statusList[3].divider = true
+        // this.statusList[4].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+        // this.activateStatus.push(this.statusList[4])
+        // this.activateStatus.push(this.statusList[5])
+        this.activateStatus.push(this.statusList[6])
+      } else if(status == 'postpone') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.statusList[3].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+        this.activateStatus.push(this.statusList[4])
+      } else if(status == 'prepare') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.statusList[2].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+        this.activateStatus.push(this.statusList[3])
+      } else if(status == 'engage') {
+        this.statusList[0].divider = true
+        this.statusList[1].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+        this.activateStatus.push(this.statusList[2])
+      } else if(status == 'accept') {
+        this.statusList[0].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[1])
+      } else if(status == 'cancel') {
+        this.statusList[0].divider = true
+        this.activateStatus.push(this.statusList[0])
+        this.activateStatus.push(this.statusList[5])
+      } else if(status == 'waiting') {
+        this.activateStatus.push(this.statusList[0])
       }
-      if(report.status == 'รอดำเนินการ') {
-        this.statusList[0].isActive = true
-        this.statusList[1].isActive = true
-      }
-      if(report.status == 'รอซ่อม') {
-        this.statusList[0].isActive = true
-        this.statusList[1].isActive = true
-        this.statusList[2].isActive = true
-      }
-      if(report.status == 'เลื่อนนัด') {
-        this.statusList[0].isActive = true
-        this.statusList[1].isActive = true
-        this.statusList[2].isActive = true
-        this.statusList[3].isActive = true
-      }
-      if(report.status == 'ยกเลิกนัด') {
-        this.statusList[0].isActive = true
-        this.statusList[1].isActive = true
-        this.statusList[2].isActive = true
-        this.statusList[3].isActive = true
-        this.statusList[4].isActive = true
-      }
-      if(report.status == 'เสร็จสิ้น') {
-        this.statusList[0].isActive = true
-        this.statusList[1].isActive = true
-        this.statusList[2].isActive = true
-        this.statusList[3].isActive = true
-        this.statusList[4].isActive = true
-        this.statusList[5].isActive = true
-      }
+      // this.activateStatus.push()
     },
     postpone(action) {
       console.log(action);

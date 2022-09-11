@@ -1,7 +1,7 @@
 <template>
   
   <div>
-    <SearchPanel />
+    <!-- <SearchPanel /> -->
     <RequestDetail :code="$route.params.code" />
     
   </div>
@@ -10,12 +10,12 @@
 
 <script>
 
-import SearchPanel from "@/components/report/SearchPanel.vue"
+// import SearchPanel from "@/components/report/SearchPanel.vue"
 import RequestDetail from "@/components/report/RequestDetail.vue"
 
 export default {
 
-  components: { SearchPanel, RequestDetail }
+  components: { RequestDetail }
 
 }
 </script>

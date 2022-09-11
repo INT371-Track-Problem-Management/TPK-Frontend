@@ -123,9 +123,34 @@ export default {
         //   thumbnail: "",
         //   url: "/dashboard/config/apartment",
         // },
-      ]
+      ],
+      dormList : []
     }
-  }
+  },
+  mounted() {
+    this.create();
+  },
+  methods: {
+    async create() {
+      this.dormList = await this.getDorm();
+      console.log('dorm = '+this.dormList);
+    },
+    async getDorm() {
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/dorm", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            DormId: 1237 
+          }),
+        });
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  },
 }
 </script>
 

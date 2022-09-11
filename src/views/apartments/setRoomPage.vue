@@ -2,18 +2,18 @@
   <div class="font-primary">
     <div class="bg-rangmod-light-pink w-full h-16 absolute -z-10 top-0">&nbsp;</div>
 
-    <NavMenuUser />
+    <!-- <NavMenuUser /> -->
     <SetRoom />
     
   </div>
 </template>
 
 <script>
-import NavMenuUser from "../../components/NavMenuUser.vue"
+// import NavMenuUser from "../../components/NavMenuUser.vue"
 import SetRoom from "../../components/apartments/SetRoom.vue"
 export default {
     
-    components: { NavMenuUser, SetRoom }
+    components: { SetRoom }
 }
 </script>
 

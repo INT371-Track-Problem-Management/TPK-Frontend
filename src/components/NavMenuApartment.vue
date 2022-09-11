@@ -104,10 +104,10 @@
       <div class="flex flex-row justify-between py-2  pl-5 pr-10">
 
         <div class="w-40 xl:w-32 flex flex-row items-center space-x-4">
-          <div class="px-2 cursor-pointer xl:hidden" v-on:click="handleMenu = !handleMenu">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <div class="px-2">
+            <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            </svg> -->
           </div>
           <RouterLink to="/">
             <img src="@/assets/images/RangmodLogoName.webp" alt="">
@@ -135,48 +135,48 @@ export default {
   // components: { SideMenu },
 
   props: ["menuList"],
-
-  data() {
-    return {
-      handleMenu: false,
-
-    }
-  },
   computed: {
     email() {
       return localStorage.getItem('email')
     }
   },
-  methods: {
-    selectMenu(index, listIndex, isItemList){
+//   data() {
+//     return {
+//       handleMenu: false,
 
-      this.menuList.forEach((menu) => {
-        if (menu.isActive) { menu.isActive = false }
-        // if (menu.activeDropdown) { menu.activeDropdown = false }
-        menu.menuItems.forEach((item) => {
-          if (item.isActive) { item.isActive = false }
-        })
-      })
+//     }
+//   },
 
-      if(!isItemList) {
-        this.menuList.forEach((menu, i) => {
-          if(i == index){
-            menu.isActive = true
-          }
-        })
-      } else {
-        this.menuList.forEach((menu, i) => {
-          // if(i == index) { menu.activeDropdown = true }
-          menu.menuItems.forEach((item, j) => {
-            if(i == index && j == listIndex){
-              item.isActive = true
-            }
-          })
-        })
-      }
+//   methods: {
+//     selectMenu(index, listIndex, isItemList){
 
-    }
-  },
+//       this.menuList.forEach((menu) => {
+//         if (menu.isActive) { menu.isActive = false }
+//         // if (menu.activeDropdown) { menu.activeDropdown = false }
+//         menu.menuItems.forEach((item) => {
+//           if (item.isActive) { item.isActive = false }
+//         })
+//       })
+
+//       if(!isItemList) {
+//         this.menuList.forEach((menu, i) => {
+//           if(i == index){
+//             menu.isActive = true
+//           }
+//         })
+//       } else {
+//         this.menuList.forEach((menu, i) => {
+//           // if(i == index) { menu.activeDropdown = true }
+//           menu.menuItems.forEach((item, j) => {
+//             if(i == index && j == listIndex){
+//               item.isActive = true
+//             }
+//           })
+//         })
+//       }
+
+//     }
+//   },
     
 }
 </script>

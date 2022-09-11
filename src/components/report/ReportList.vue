@@ -78,17 +78,24 @@
         <td class="text-center py-4">{{ report.title }}</td>
         <td class="text-center py-4">{{ dateFormat(report.reportDate) }}</td>
         <td class="text-center py-4">
-          {{ dateFormat(report.reportDate) }}
+          <!-- {{ dateFormat(report.reportDate) }} -->
           <!-- <div v-for="(repair, j) in requreportest.repair_date" :key="j">
             <div v-if="repair.isActive">{{ repair.date }}</div>
           </div> -->
         </td>
         <td class="text-center py-4">
-          <div v-for="(status, i) in statusList" :key="i">
-            <div v-if="report.status == status.status" :class="status.color">
-              {{ report.status }}
+          <div
+            v-for="(status, j) in statusList"
+            :key="j"
+          >
+            <div 
+              v-if="this.checkThaiStatus(report.status) == status.title"
+              :class="status.color"
+            >
+              {{this.checkThaiStatus(report.status)}}
             </div>
           </div>
+
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
@@ -107,7 +114,7 @@
     <div
       :class="
         showModal
-          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
           : 'hidden opacity-0'
       "
       v-on:click="showModal = !showModal"
@@ -116,14 +123,14 @@
     <transition>
       <div
         v-show="showModal"
-        class="fixed w-full h-screen z-90 inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
       >
         <div
           class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showModal = false" class="cursor-pointer">
+            <div @click="showModal = false, validate.title = false, validate.description = false, clearData()" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -149,6 +156,8 @@
               v-model="title"
               type="text"
               class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              :class="this.validate.title ? 'placeholder-red-500 border-red-500 border-2' : ''"
+              :placeholder="this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''"
             />
           </div>
 
@@ -157,37 +166,9 @@
             <textarea
               v-model="description"
               class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              :class="this.validate.description ? 'placeholder-red-500 border-red-500 border-2' : ''"
+              :placeholder="this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''"
             ></textarea>
-          </div>
-
-          <div class="text-rangmod-black">วันและเวลาที่นัด</div>
-
-          <div class="flex flex-col">
-            <div
-              v-for="(engageDate, i) in engageDates"
-              :key="i"
-              class="flex flex-row relative"
-            >
-              <div class="flex flex-row space-x-4">
-                <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป</div>
-                  <input
-                    type="text"
-                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    :value="engageDate.date"
-                  />
-                </div>
-
-                <div class="mb-5">
-                  <div class="text-rangmod-black">เวลา</div>
-                  <input
-                    type="text"
-                    class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    :value="engageDate.time"
-                  />
-                </div>
-              </div>
-            </div>
           </div>
 
           <div class="flex flex-row space-x-4 justify-end">
@@ -213,10 +194,11 @@ export default {
   },
   data() {
     return {
-      title: "testFinal",
-      category: "test001", //mockup dont del
-      description: "testFinal",
-      status: "รอรับเรื่อง",
+      token: "",
+      title: "",
+      category: "test", //mockup dont del
+      description: "",
+      status: "S1",
       createdBy: 0,
       engage: {
         // formatedDate1: this.engageDates[0].date + " " + this.engageDates[0].time,
@@ -276,28 +258,51 @@ export default {
       statusList: [
         {
           id: "1",
-          color: "text-rangmod-green",
-          status: "เสร็จสิ้น",
+          color: "text-rangmod-blue",
+          bgcolor: "bg-rangmod-blue/20",
+          title: "รอรับเรื่อง"
         },
         {
           id: "2",
           color: "text-rangmod-yellow",
-          status: "รอซ่อม",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "รอดำเนินการ"
         },
         {
           id: "3",
-          color: "text-rangmod-red",
-          status: "ยกเลิกนัด",
+          color: "text-rangmod-green",
+          bgcolor: "bg-rangmod-green/20",
+          title: "เสร็จสิ้น"
         },
         {
           id: "4",
-          color: "text-rangmod-blue",
-          status: "เลื่อนนัด",
+          color: "text-rangmod-purple",
+          bgcolor: "bg-rangmod-purple/20",
+          title: "เลื่อนนัด"
         },
         {
           id: "5",
-          color: "text-rangmod-dark-blue",
-          status: "รอรับเรื่อง",
+          color: "text-rangmod-red",
+          bgcolor: "bg-rangmod-red/20",
+          title: "ยกเลิก"
+        },
+        {
+          id: "6",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "นัดวันเข้าซ่อม"
+        },
+        {
+          id: "7",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+          title: "รับเรื่อง"
+        },
+        {
+          id: "8",
+          color: "text-rangmod-black",
+          bgcolor: "bg-rangmod-black/20",
+          title: "ทั้งหมด"
         },
       ],
       requestList: [
@@ -428,19 +433,32 @@ export default {
         // },
       ],
       reportList: [],
+      validate: {
+        title: false,
+        description: false,
+      }
     };
   },
-  mounted() {
+  computed: {
+
+  },
+  mounted() {   
     this.create();
-    // this.dateFormat("2022-05-25 08:02:27");
+
   },
   methods: {
+    validation() {
+      this.title == "" ? this.validate.title = true : this.validate.title = false
+      this.description == "" ? this.validate.description = true : this.validate.description = false
+      return this.validate.title && this.validate.description
+    },
     async create() {
+      this.token = localStorage.getItem("token");
+      this.createdBy = parseInt(localStorage.getItem("id"));
+      // console.log(this.createdBy);
       this.reportList = await this.getReport();
-      this.customers = await this.getCustomers();
-      this.createdBy = this.getUserLogin();
-      console.log(this.createdBy);
-      console.log(this.reportList);
+      // console.log(this.reportList);
+      
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -452,13 +470,11 @@ export default {
       console.log(reportId);
     },
     sendReport() {
-      if (this.title == "" || this.description == "") {
-        alert("some form is empty");
-      } else {
-        fetch(`https://dev.rungmod.com/api/report`, {
-          // fetch(`http://localhost:5000/api/report`, {
+      if (!this.validation()) {
+        fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
           body: JSON.stringify({
             Title: this.title,
             CategoriesReport: this.category,
@@ -467,58 +483,32 @@ export default {
             CreatedBy: this.createdBy,
           }),
         })
-          .then((response) => {
-            const res = response.json();
-            // console.log("Add report!");
-            return res;
-          })
-          .then((response) => {
-            this.sendEngageDate(response);
-            // console.log(response);
+          .then(() => {
             alert("Send report!");
             this.showModal = !this.showModal;
+            this.clearData()
+          })
+          .then(async () => {
+            this.reportList = await this.getReport();
+            console.log(this.reportList)
           });
-      }
-    },
-    sendEngageDate(reportId) {
-      // if (reportId) {
-      //   for (let i = 0; i < this.engageDates.length; i++) {
-      //     if (
-      //       this.engageDates[i].date == "" ||
-      //       this.engageDates[i].time == ""
-      //     ) {
-      //       alert("some date or time is empty");
-      //       break;
-      //     }
-      //   }
-      // } else {
-        fetch(`https://dev.rungmod.com/api/CreateReportEngage`, {
-          // fetch(`http://localhost:5000/api/report`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            Date1: this.engageDates[0].date + " " + this.engageDates[0].time,
-            Date2: this.engageDates[1].date + " " + this.engageDates[1].time,
-            Date3: this.engageDates[2].date + " " + this.engageDates[2].time,
-            Date4: this.engageDates[3].date + " " + this.engageDates[3].time,
-            ReportId: reportId,
-            SelectDate: 1,
-          }),
-        }).then((res) => {
-          console.log(res);
-          console.log("Add report!");
-        });
-      // }
+      } 
     },
     async getReport() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/report");
-        // const res = await fetch("http://localhost:5000/api/report");
+      const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
+        method: "POST",
+        headers: { "content-Type": "application/json",
+                    "Authorization" : `Bearer ${this.token}` },
+        body: JSON.stringify({
+          CreatedBy: this.createdBy
+        }),
+      })
         const data = res.json();
         return data;
-      } catch (e) {
-        console.log(e);
-      }
+    },
+    clearData() {
+      this.title = ""
+      this.description = ""
     },
     dateFormat(inputDate) {
       // console.log(inputDate)
@@ -530,25 +520,38 @@ export default {
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
     },
-    async getCustomers() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/customer");
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
+    checkThaiStatus(status) {
+      if(status.toLowerCase() == 'waiting') {
+        return 'รอรับเรื่อง';
+      }
+      if(status.toLowerCase() == 'accept') {
+        return 'รับเรื่อง';
+      }
+      if(status.toLowerCase() == 'engage') {
+        return 'นัดวันเข้าซ่อม';
+      }
+      if(status.toLowerCase() == 'prepare') {
+        return 'รอดำเนินการ';
+      }
+      if(status.toLowerCase() == 'postpone') {
+        return 'เลื่อนนัด';
+      }
+      if(status.toLowerCase() == 'cancel') {
+        return 'ยกเลิก';
+      }
+      if(status.toLowerCase() == 'success') {
+        return 'เสร็จสิ้น'
       }
     },
-    getUserLogin() {
-      for (let i = 0; i < this.customers.length; i++) {
-        if (this.customers[i].email == localStorage.email) {
-          console.log(
-            this.engageDates[0].date + " " + this.engageDates[0].time
-          );
-          return this.customers[i].customerId;
-        }
-      }
-    },
+    // async getCustomers() {
+    //   try {
+    //     const res = await fetch("https://dev.rungmod.com/api/customer");
+    //     const data = res.json();
+    //     return data;
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // },
   },
 };
 </script>

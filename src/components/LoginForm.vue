@@ -5,25 +5,28 @@
     >
       <div class="text-rangmod-black text-2xl">เข้าสู่ระบบ</div>
       <hr class="my-4" />
-
       <div class="mb-4">
         <div class="text-rangmod-black px-1">อีเมล์</div>
-        <div class="border border-rangmod-gray rounded-xl px-3">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.email ? 'border-red-500 border-2' : ''">
           <input
-          v-model="email"
+            v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-          />
+            :class="this.validate.email ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.email ? 'กรุณาใส่อีเมล' : ''"
+            />
         </div>
       </div>
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">รหัสผ่าน</div>
-        <div class="border border-rangmod-gray rounded-xl px-3 relative">
+        <div class="border border-rangmod-gray rounded-xl px-3 relative" :class="this.validate.password ? 'border-red-500 border-2' : ''">
           <input
-          v-model="password"
+            v-model="password"
             :type="textPassword"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="this.validate.password ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.password ? 'กรุณาใส่รหัสผ่าน' : ''"
           />
 
           <div
@@ -89,19 +92,28 @@ export default {
       // type: "member",
       email: "",
       password: "",
-      // res: "",
+      token: "",
       userLogin: {
+        id: "",
         email: "",
         role: "",
         status: "",
       },
+      validate: {
+        email: false,
+        password: false
+      }
     };
   },
   methods: {
+    validation() {
+      this.email == "" ? this.validate.email = true : this.validate.email = false
+      this.password == "" ? this.validate.password = true : this.validate.password = false
+    },
 
     async doLogin() {
+      if(!this.validation()) {
       fetch(`https://dev.rungmod.com/api/login`, {
-        // fetch(`http://localhost:5000/api/login`, {
         method: "POST",
         headers: { "content-Type": "application/json" },
         body: JSON.stringify({
@@ -114,14 +126,17 @@ export default {
           return res;
         })
         .then((res) => {
-          // this.res = res;
-          this.userLogin.email = this.parseJwt(res).email;
-          this.userLogin.role = this.parseJwt(res).role;
-          this.userLogin.status = this.parseJwt(res).status;
+          this.token = res.token;
+          this.userLogin.id = this.parseJwt(this.token).id;
+          this.userLogin.email = this.parseJwt(this.token).email;
+          this.userLogin.role = this.parseJwt(this.token).role;
+          this.userLogin.status = this.parseJwt(this.token).status;
+          localStorage.setItem("id", this.userLogin.id);
           localStorage.setItem("email", this.userLogin.email);
           localStorage.setItem("role", this.userLogin.role);
+          localStorage.setItem("token", this.token);
           console.log(this.userLogin); //checkuserlogin
-          console.log(res); // checktoken
+          // console.log(this.token); // checktoken
         })
         .then(() => {
           if (this.userLogin.status == true) {
@@ -134,25 +149,27 @@ export default {
             }
 
             if (this.userLogin.role == "C") {
-              this.$router.push(`/member/mydorm`);
+              this.$router.push(`/member/report`);
             }
           } else {
             console.log("failed login");
           }
         });
-
+      }
     },
     parseJwt(token) {
-      var base64Url = token.split(".")[1];
-      var base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+      var base64Url = token.toString().split(".")[1];
+      var base64 = base64Url?.replace("-", "+")?.replace("_", "/");
       var jsonPayload = decodeURIComponent(
-        atob(base64)
+        window
+          .atob(base64)
           .split("")
           .map(function (c) {
             return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
           })
           .join("")
       );
+
       return JSON.parse(jsonPayload);
     },
   },
