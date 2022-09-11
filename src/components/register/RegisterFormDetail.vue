@@ -49,10 +49,11 @@
 
         <div class="text-rangmod-black px-1">
           อายุ
-          <div class="border border-rangmod-gray rounded-xl px-3">
+          <div class="border border-rangmod-gray bg-rangmod-gray rounded-xl px-3">
             <input v-model="age" min="1"
               type="number"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider bg-rangmod-gray"
+              readonly
             />
           </div>
         </div>
@@ -67,7 +68,7 @@
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               :class="this.validate.sex ? 'placeholder-red-500' : ''"
-              :placeholder="this.validate.sex ? 'กรุณาใส่เพศ' : ''"
+              :placeholder="this.validate.sex ? 'กรุณาใส่เพศ M / F' : 'M / F'"
             />
           </div>
         </div>
@@ -222,7 +223,7 @@ export default {
       lname: '',
       sex: '',
       dob: '',
-      age: 1,
+      // age: 1,
       phone: '',
       address: '',
       showModal: false,
@@ -235,6 +236,11 @@ export default {
         address: false,
       }
     };
+  },
+  computed: {
+    age() {
+      return this.calculateAge(this.dob)
+    }
   },
   mounted() {
     // console.log(this.email)
@@ -252,30 +258,11 @@ export default {
       return this.validate.fname && this.validate.lname && this.validate.sex && this.validate.dob && this.validate.phone &&   this.validate.address
     },
     checkRole() {
-      // console.log(this.role)
-      // console.log(this.email)
-      // console.log(this.password)
-      // console.log(this.fname)
-      // console.log(this.lname)
-      // console.log(this.sex)
-      // console.log(this.dob)
-      // console.log(this.age)
-      // console.log(this.phone)
-      // console.log(this.address)
+      // this.age = this.calculateAge(this.dob)
       if(this.role == 'customer') {
-        // if(this.validation()) {
-        //   return 
-        // } else {
           this.registerCustomer()
-          // console.log(this.role)
-        // }
       } else if(this.role == 'owner') {
-        // if(this.validation()) {
-        //   return 
-        // } else {
           this.registerOwner()
-          // console.log(this.role)
-        // }
       } else {
         alert('เกิดข้อผิดพลาด')
       }
@@ -323,8 +310,16 @@ export default {
         alert("ลงทะเบียนสำเร็จ!");
         this.$router.push(`/login`);
       });
-    }
+      }
     },
+    calculateAge(dob) {
+      let currentDate = new Date();
+      let birthDate = new Date(dob);
+      let difference = currentDate - birthDate;
+      let age = Math.floor(difference/31557600000);
+      console.log(age)
+      return age
+    }
   }
 };
 </script>
