@@ -174,13 +174,14 @@ export default {
         this.statusList[1].divider = true
         this.statusList[2].divider = true
         this.statusList[3].divider = true
-        this.statusList[4].divider = true
+        // this.statusList[4].divider = true
         this.activateStatus.push(this.statusList[0])
         this.activateStatus.push(this.statusList[1])
         this.activateStatus.push(this.statusList[2])
         this.activateStatus.push(this.statusList[3])
-        this.activateStatus.push(this.statusList[4])
-        this.activateStatus.push(this.statusList[5])
+        // this.activateStatus.push(this.statusList[4])
+        // this.activateStatus.push(this.statusList[5])
+        this.activateStatus.push(this.statusList[6])
       } else if(status == 'postpone') {
         this.statusList[0].divider = true
         this.statusList[1].divider = true
