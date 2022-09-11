@@ -6,7 +6,8 @@
         <div class="mb-5">
           <input
             v-model="this.maintainerId"
-            type="number" min="1"
+            type="number"
+            min="1"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
         </div>
@@ -40,7 +41,7 @@
           ></textarea>
         </div>
 
-        <div v-if="checkAccept()">
+        <div>
           <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
           <div class="flex flex-col">
@@ -53,8 +54,14 @@
                 <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
                 <input
                   v-model="engageDate.datetime"
-                  :type="this.reportDetail.status == 'engage' ? 'text' : 'datetime-local'"
+                  :type="
+                    this.reportDetail.status == 'waiting'
+                      ? 'datetime-local'
+                      : 'text'
+                  "
                   class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  :class="this.reportDetail.status != 'waiting' ? 'bg-rangmod-gray/40' : ''"
+                  :readonly = "this.reportDetail.status != 'waiting'"
                 />
               </div>
 
@@ -67,25 +74,24 @@
                 />
               </div> -->
 
-              <div class="w-7">
+              <div v-if="engageDate.date == this.reportEngageAll.selectedDate" class="w-7">
                 <div
-                  class="w-7 h-7 rounded-full "
-                  :class="
-                  engageDate.date == this.reportEngageAll.selectedDate ? 'bg-rangmod-green' : 'bg-rangmod-gray'
-                "
+                  class="w-7 h-7 rounded-full bg-rangmod-green"
                 ></div>
               </div>
             </div>
           </div>
         </div>
+        
       </div>
 
-      <div v-if="checkAccept()" class="hidden md:flex flex-col justify-start">
+      <div class="hidden md:flex flex-col justify-start">
         <div class="text-rangmod-black">รหัสช่างซ่อม</div>
         <div class="mb-5">
           <input
             v-model="this.maintainerId"
-            type="number" min="1"
+            type="number"
+            min="1"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
         </div>
@@ -100,7 +106,7 @@
         </div> -->
       </div>
     </div>
-    <div v-if="this.reportDetail.status != 'cancel'" class="flex flex-row space-x-4 justify-end">
+    <!-- <div v-if="this.reportDetail.status != 'cancel'" class="flex flex-row space-x-4 justify-end">
       <div
         v-if="checkAccept()"
         v-on:click="actionButton('finish')"
@@ -108,9 +114,10 @@
       >
         แก้ไขปัญหาเสร็จสิ้น
       </div>
-    </div>
+    </div> -->
     <div class="flex justify-end space-x-4">
-      <div v-if="this.reportDetail.status != 'cancel'"
+      <div
+        v-if="this.reportDetail.status != 'cancel'"
         class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
       >
         <!-- <div
@@ -153,14 +160,14 @@
       >
         ลบรายงาน
       </div>
+
       <div
         v-if="this.reportDetail.status == 'finish'"
-        @click="actionButton('delete')"
+        @click="actionButton('rating')"
         class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
       >
         คะแนนการรายงาน
       </div>
-      
     </div>
   </div>
 </template>
@@ -183,56 +190,63 @@ export default {
           date: "date1",
           // time: "",
           datetime: "",
-          isActive: true
+          isActive: true,
         },
         {
           date: "date2",
           // time: "",
           datetime: "",
-          isActive: false
+          isActive: false,
         },
         {
           date: "date3",
           // time: "",
           datetime: "",
-          isActive: false
+          isActive: false,
         },
         {
           date: "date4",
           // time: "",
           datetime: "",
-          isActive: false
+          isActive: false,
         },
       ],
-      dorms: []
-        
-    }
+      dorms: [],
+    };
   },
   mounted() {
     this.getData();
   },
   methods: {
     async getData() {
-      this.reportDetail = await this.getReportDetail()
+      this.reportDetail = await this.getReportDetail();
       this.reportEngageAll = await this.getAllReportEngage();
       console.log(this.reportEngageAll);
-      this.$parent.checkStatus(this.reportDetail.status)
-      this.status = this.reportDetail.status
-      this.reportEngageDate[0].datetime = this.dateTimeShowFormat(this.reportEngageAll.date1)
-      this.reportEngageDate[1].datetime = this.dateTimeShowFormat(this.reportEngageAll.date2)
-      this.reportEngageDate[2].datetime = this.dateTimeShowFormat(this.reportEngageAll.date3)
-      this.reportEngageDate[3].datetime = this.dateTimeShowFormat(this.reportEngageAll.date4)
+      this.$parent.checkStatus(this.reportDetail.status);
+      this.status = this.reportDetail.status;
+      this.reportEngageDate[0].datetime = this.dateTimeShowFormat(
+        this.reportEngageAll.date1
+      );
+      this.reportEngageDate[1].datetime = this.dateTimeShowFormat(
+        this.reportEngageAll.date2
+      );
+      this.reportEngageDate[2].datetime = this.dateTimeShowFormat(
+        this.reportEngageAll.date3
+      );
+      this.reportEngageDate[3].datetime = this.dateTimeShowFormat(
+        this.reportEngageAll.date4
+      );
       // console.log(this.reportEngageDate[0].datetime)
       // console.log(this.reportDetail);
       // for(let i = 0; i < this.reportEngageAll.length; i++) {
       //   alert('sad')
-        // console.log(parseInt(this.$route.params.id))
-        // console.log(this.reportEngageAll[i].reportId)
-        // if(this.reportEngageAll[i].reportId == parseInt(this.$route.params.id)) {
-        //   // console.log(this.reportEngageAll[i].reportId)
-        //   this.reportEngage = this.reportEngageAll[i]
-        //   console.log(this.reportEngage)
-        // }
+      // console.log(parseInt(this.$route.params.id))
+      // console.log(this.reportEngageAll[i].reportId)
+      // if(this.reportEngageAll[i].reportId == parseInt(this.$route.params.id)) {
+      //   // console.log(this.reportEngageAll[i].reportId)
+      //   this.reportEngage = this.reportEngageAll[i]
+      //   console.log(this.reportEngage)
+      // }
       // }
     },
 
@@ -241,13 +255,16 @@ export default {
     },
     actionButton(action) {
       if (action == "accept") {
-        console.log(this.checkAccept())
+        console.log(this.checkAccept());
+        if(this.reportEngageDate[0].datetime || this.reportEngageDate[1].datetime || this.reportEngageDate[2].datetime || this.reportEngageDate[3].datetime) {
+          alert('กรุณาใส่วันนัดซ่อมให้ครบ')
+        } else
         if (confirm("ต้องการรับเรื่องรายงานนี้ใช่หรือไม่")) {
           fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
-              "Authorization": `Bearer ${this.token}`,
+              Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify({
               ReportId: parseInt(this.$route.params.id),
@@ -255,74 +272,104 @@ export default {
               EmployeeId: parseInt(this.empId),
             }),
           })
-          .then(async() => {
-            this.reportDetail = await this.getReportDetail()
-            this.checkAccept()
-            console.log(this.reportDetail.status);
-            this.$parent.updateStatus(this.reportDetail.status)
-            console.log(this.checkAccept())
-          }
-          )
-          alert('ทำการรับเรื่องรายงานแล้ว')
+            .then(
+              fetch(`https://dev.rungmod.com/api/employee/CreateReportEngage`, {
+                method: "POST",
+                headers: {
+                  "content-Type": "application/json",
+                  Authorization: `Bearer ${this.token}`,
+                },
+                body: JSON.stringify({
+                  Date1: this.dateTimeFormat(this.reportEngageDate[0].datetime),
+                  Date2: this.dateTimeFormat(this.reportEngageDate[1].datetime),
+                  Date3: this.dateTimeFormat(this.reportEngageDate[2].datetime),
+                  Date4: this.dateTimeFormat(this.reportEngageDate[3].datetime),
+                  ReportId: parseInt(this.$route.params.id),
+                  DormId: 1,
+                  UpdatedBy: parseInt(this.empId),
+                  SelectedBy: this.reportDetail.createdBy,
+                }),
+              })
+            )
+            .then(
+              fetch(`https://dev.rungmod.com/api/employee/assignFixReport`, {
+                method: "POST",
+                headers: {
+                  "content-Type": "application/json",
+                  Authorization: `Bearer ${this.token}`,
+                },
+                body: JSON.stringify({
+                  AssignDate: this.dateTimeFormat(Date.now()),
+                  MaintainerId: this.maintainerId,
+                  EmployeeId: parseInt(this.empId),
+                  ReportId: parseInt(this.$route.params.id),
+                }),
+              })
+            )
+            .then(async () => {
+              this.reportDetail = await this.getReportDetail();
+              this.checkAccept();
+              console.log(this.reportDetail.status);
+              this.$parent.updateStatus(this.reportDetail.status);
+              console.log(this.checkAccept());
+            });
+          alert("ทำการรับเรื่องรายงานแล้ว");
         }
       }
 
-
-      if (action == "save") {
-        if(confirm("ต้องการบันทึกการนัดเข้าซ่อมใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/CreateReportEngage`, {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            Date1: this.dateTimeFormat(this.reportEngageDate[0].datetime),
-            Date2: this.dateTimeFormat(this.reportEngageDate[1].datetime),
-            Date3: this.dateTimeFormat(this.reportEngageDate[2].datetime),
-            Date4: this.dateTimeFormat(this.reportEngageDate[3].datetime),
-            ReportId: parseInt(this.$route.params.id),
-            DormId: 1,
-            UpdatedBy: parseInt(this.empId),
-            SelectedBy: this.reportDetail.createdBy
-          }),
-        })
-        fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
-            method: "PUT",
-            headers: {
-              "content-Type": "application/json",
-              "Authorization": `Bearer ${this.token}`,
-            },
-            body: JSON.stringify({
-              ReportId: parseInt(this.$route.params.id),
-              Status: "S3",
-              EmployeeId: parseInt(this.empId),
-            }),
-          })
-          .then(async() => {
-            this.reportDetail = await this.getReportDetail()
-            this.checkAccept()
-            console.log(this.reportDetail.status);
-            this.$parent.updateStatus(this.reportDetail.status)
-            console.log(this.checkAccept())
-          }
-          )
-          fetch(`https://dev.rungmod.com/api/employee/assignFixReport`, {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            AssignDate: this.dateTimeFormat(Date.now()),
-            MaintainerId: this.maintainerId,
-            EmployeeId: parseInt(this.empId),
-            ReportId: parseInt(this.$route.params.id)
-          }),
-        })
-          alert("ทำการบันทึกการนัดเข้าซ่อมแล้ว");
-        }
-      }
+      // if (action == "save") {
+      //   if (confirm("ต้องการบันทึกการนัดเข้าซ่อมใช่หรือไม่")) {
+      //     fetch(`https://dev.rungmod.com/api/employee/CreateReportEngage`, {
+      //       method: "POST",
+      //       headers: {
+      //         "content-Type": "application/json",
+      //         Authorization: `Bearer ${this.token}`,
+      //       },
+      //       body: JSON.stringify({
+      //         Date1: this.dateTimeFormat(this.reportEngageDate[0].datetime),
+      //         Date2: this.dateTimeFormat(this.reportEngageDate[1].datetime),
+      //         Date3: this.dateTimeFormat(this.reportEngageDate[2].datetime),
+      //         Date4: this.dateTimeFormat(this.reportEngageDate[3].datetime),
+      //         ReportId: parseInt(this.$route.params.id),
+      //         DormId: 1,
+      //         UpdatedBy: parseInt(this.empId),
+      //         SelectedBy: this.reportDetail.createdBy,
+      //       }),
+      //     });
+      //     fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+      //       method: "PUT",
+      //       headers: {
+      //         "content-Type": "application/json",
+      //         Authorization: `Bearer ${this.token}`,
+      //       },
+      //       body: JSON.stringify({
+      //         ReportId: parseInt(this.$route.params.id),
+      //         Status: "S3",
+      //         EmployeeId: parseInt(this.empId),
+      //       }),
+      //     }).then(async () => {
+      //       this.reportDetail = await this.getReportDetail();
+      //       this.checkAccept();
+      //       console.log(this.reportDetail.status);
+      //       this.$parent.updateStatus(this.reportDetail.status);
+      //       console.log(this.checkAccept());
+      //     });
+      //     fetch(`https://dev.rungmod.com/api/employee/assignFixReport`, {
+      //       method: "POST",
+      //       headers: {
+      //         "content-Type": "application/json",
+      //         Authorization: `Bearer ${this.token}`,
+      //       },
+      //       body: JSON.stringify({
+      //         AssignDate: this.dateTimeFormat(Date.now()),
+      //         MaintainerId: this.maintainerId,
+      //         EmployeeId: parseInt(this.empId),
+      //         ReportId: parseInt(this.$route.params.id),
+      //       }),
+      //     });
+      //     alert("ทำการบันทึกการนัดเข้าซ่อมแล้ว");
+      //   }
+      // }
 
       if (action == "cancel") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
@@ -330,83 +377,81 @@ export default {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
-              "Authorization": `Bearer ${this.token}`,
+              Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify({
               ReportId: parseInt(this.$route.params.id),
-              Status: 'S6',
-              EmployeeId: parseInt(this.empId)
+              Status: "S6",
+              EmployeeId: parseInt(this.empId),
             }),
           });
           this.$parent.updateCancelStatus();
-          alert("ทำการยกเลิกนัดรายงานแล้ว")
+          alert("ทำการยกเลิกนัดรายงานแล้ว");
         }
       }
 
-
       if (action == "postpone") {
         if (confirm("ต้องการเลื่อนนัดรายงานนี้ใช่หรือไม่")) {
-        fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            ReportId: parseInt(this.$route.params.id),
-            Status: "S5",
-            EmployeeId: parseInt(this.empId),
-          }),
-        });
-        fetch(`https://dev.rungmod.com/api/employee/selectedPlanFixDate`, {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            EngageId: parseInt(this.$route.params.id),
-            SelectedDate: "date2",
-          }),
-        });
-        alert("ทำการเลื่อนนัดรายงานแล้ว")
+          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+            method: "PUT",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              ReportId: parseInt(this.$route.params.id),
+              Status: "S5",
+              EmployeeId: parseInt(this.empId),
+            }),
+          });
+          fetch(`https://dev.rungmod.com/api/employee/selectedPlanFixDate`, {
+            method: "PUT",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              EngageId: parseInt(this.$route.params.id),
+              SelectedDate: "date2",
+            }),
+          });
+          alert("ทำการเลื่อนนัดรายงานแล้ว");
+        }
       }
-      }
-
 
       if (action == "finish") {
         if (confirm("ต้องการสำเร็จรายงานนี้ใช่หรือไม่")) {
-        fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
-          method: "PUT",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            ReportId: parseInt(this.$route.params.id),
-            Status: "S7",
-            EmployeeId: parseInt(this.empId),
-          }),
-        });
-        alert("รายงานนี้เสร็จสิ้นแล้ว!!")
-      }
+          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+            method: "PUT",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              ReportId: parseInt(this.$route.params.id),
+              Status: "S7",
+              EmployeeId: parseInt(this.empId),
+            }),
+          });
+          alert("รายงานนี้เสร็จสิ้นแล้ว!!");
+        }
       }
 
       if (action == "delete") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-        fetch(`https://dev.rungmod.com/api/employee/deleteReportById`, {
-          method: "DELETE",
-          headers: {
-            "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            ReportId: this.reportDetail.reportId,
-          }),
-        });
-        alert("ทำการลบรายงานแล้ว")
-        // this.$router.push(`/dashboard/report`);
-      }
+          fetch(`https://dev.rungmod.com/api/employee/deleteReportById`, {
+            method: "DELETE",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              ReportId: this.reportDetail.reportId,
+            }),
+          });
+          alert("ทำการลบรายงานแล้ว");
+          // this.$router.push(`/dashboard/report`);
+        }
       }
     },
     async getReportDetail() {
@@ -416,7 +461,7 @@ export default {
           method: "POST",
           headers: {
             "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
           },
           body: JSON.stringify({
             ReportId: parseInt(this.$route.params.id),
@@ -433,12 +478,12 @@ export default {
           method: "GET",
           headers: {
             "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         }
       );
       const data = res.json();
-      return data
+      return data;
     },
     // async getDorm() {
     //   const res = await fetch(
@@ -463,13 +508,31 @@ export default {
     dateTimeFormat(inputDate) {
       const date = new Date(inputDate);
       const formatedDateTime =
-        date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        date.getFullYear() +
+        "-" +
+        (date.getMonth() + 1) +
+        "-" +
+        date.getDate() +
+        " " +
+        date.getHours() +
+        ":" +
+        date.getMinutes() +
+        ":" +
+        date.getSeconds();
       return formatedDateTime;
     },
     dateTimeShowFormat(inputDate) {
       const date = new Date(inputDate);
+      const split = inputDate.split("T");
+      const time = split[1].slice(0, 8);
       const formatedDateTime =
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "   " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        date.getDate() +
+        "/" +
+        (date.getMonth() + 1) +
+        "/" +
+        date.getFullYear() +
+        "   " +
+        time
       return formatedDateTime;
     },
   },

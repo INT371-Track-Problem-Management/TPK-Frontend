@@ -50,12 +50,18 @@
               :key="i"
               class="flex flex-row space-x-4 justify-start items-center"
             >
-              <div class="mb-5">
+            <div class="mb-5">
                 <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
                 <input
                   v-model="engageDate.datetime"
-                  type="text"
+                  :type="
+                    this.reportWithEngage.status == 'waiting'
+                      ? 'datetime-local'
+                      : 'text'
+                  "
                   class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  :class="this.reportWithEngage.status != 'waiting' ? 'bg-rangmod-gray/40' : ''"
+                  :readonly = "this.reportWithEngage.status != 'waiting'"
                 />
               </div>
 
@@ -138,6 +144,13 @@
           />
         </div>
       </div> -->
+    </div>
+    <div class="flex flex-row space-x-4 justify-end">
+      <div
+        class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
+      >
+        แก้ไขปัญหาเสร็จสิ้น
+      </div>
     </div>
     <div class="flex justify-end space-x-4">
       <div
@@ -569,8 +582,16 @@ export default {
     },
     dateTimeShowFormat(inputDate) {
       const date = new Date(inputDate);
+      const split = inputDate.split("T");
+      const time = split[1].slice(0, 8);
       const formatedDateTime =
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear() + "   " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+        date.getDate() +
+        "/" +
+        (date.getMonth() + 1) +
+        "/" +
+        date.getFullYear() +
+        "   " +
+        time
       return formatedDateTime;
     },
   },

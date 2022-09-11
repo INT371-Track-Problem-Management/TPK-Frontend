@@ -12,20 +12,24 @@
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ชื่อ</div>
-        <div class="border border-rangmod-gray rounded-xl px-3">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.fname ? 'border-red-500 border-2' : ''">
           <input v-model="fname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="this.validate.fname ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.fname ? 'กรุณาใส่ชื่อ' : ''"
           />
         </div>
       </div>
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">นามสกุล</div>
-        <div class="border border-rangmod-gray rounded-xl px-3">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.lname ? 'border-red-500 border-2' : ''">
           <input v-model="lname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="this.validate.lname ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.lname ? 'กรุณาใส่นามสกุล' : ''"
           />
         </div>
       </div>
@@ -33,10 +37,12 @@
       <div class="mb-4 grid grid-cols-2 gap-2">
         <div class="text-rangmod-black px-1">
           วันเกิด
-          <div class="border border-rangmod-gray rounded-xl px-3">
+          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.dob ? 'border-red-500 border-2' : ''">
             <input v-model="dob"
               type="date"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="this.validate.dob ? 'placeholder-red-500' : ''"
+              :placeholder="this.validate.dob ? 'กรุณาใส่วันเกิด' : ''"
             />
           </div>
         </div>
@@ -44,7 +50,7 @@
         <div class="text-rangmod-black px-1">
           อายุ
           <div class="border border-rangmod-gray rounded-xl px-3">
-            <input v-model="age"
+            <input v-model="age" min="1"
               type="number"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             />
@@ -55,22 +61,26 @@
       <div class="mb-4 grid grid-cols-2 gap-2">
         <div class="text-rangmod-black px-1">
           เพศ
-          <div class="border border-rangmod-gray rounded-xl px-3">
+          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.sex ? 'border-red-500 border-2' : ''">
             <input v-model="sex"
               maxlength="1"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="this.validate.sex ? 'placeholder-red-500' : ''"
+              :placeholder="this.validate.sex ? 'กรุณาใส่เพศ' : ''"
             />
           </div>
         </div>
 
         <div class="text-rangmod-black px-1">
           เบอร์มือถือ
-          <div class="border border-rangmod-gray rounded-xl px-3">
+          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.phone ? 'border-red-500 border-2' : ''">
             <input v-model="phone"
               maxlength="10"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="this.validate.phone ? 'placeholder-red-500' : ''"
+              :placeholder="this.validate.phone ? 'กรุณาใส่เบอร์โทรศัพท์' : ''"
             />
           </div>
         </div>
@@ -78,9 +88,11 @@
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ที่อยู่</div>
-        <div class="border border-rangmod-gray rounded-xl px-3">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.address ? 'border-red-500 border-2' : ''">
           <textarea v-model="address"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="this.validate.address ? 'placeholder-red-500' : ''"
+            :placeholder="this.validate.address ? 'กรุณาใส่ที่อยู่' : ''"
           ></textarea>
         </div>
       </div>
@@ -210,40 +222,66 @@ export default {
       lname: '',
       sex: '',
       dob: '',
-      age: 0,
+      age: 1,
       phone: '',
       address: '',
       showModal: false,
+      validate: {
+        fname: false,
+        lname: false,
+        sex: false,
+        dob: false,
+        phone: false,
+        address: false,
+      }
     };
   },
   mounted() {
-    console.log(this.email)
-    console.log(this.password)
-    console.log(this.role)
+    // console.log(this.email)
+    // console.log(this.password)
+    // console.log(this.role)
   },
   methods: {
+    validation() {
+      this.fname == "" ? this.validate.fname = true : this.validate.fname = false
+      this.lname == "" ? this.validate.lname = true : this.validate.lname = false
+      this.sex == "" ? this.validate.sex = true : this.validate.sex = false
+      this.dob == "" ? this.validate.dob = true : this.validate.dob = false
+      this.phone == "" ? this.validate.phone = true : this.validate.phone = false
+      this.address == "" ? this.validate.address = true : this.validate.address = false
+      return this.validate.fname && this.validate.lname && this.validate.sex && this.validate.dob && this.validate.phone &&   this.validate.address
+    },
     checkRole() {
-      console.log(this.role)
-      console.log(this.email)
-      console.log(this.password)
-      console.log(this.fname)
-      console.log(this.lname)
-      console.log(this.sex)
-      console.log(this.dob)
-      console.log(this.age)
-      console.log(this.phone)
-      console.log(this.address)
+      // console.log(this.role)
+      // console.log(this.email)
+      // console.log(this.password)
+      // console.log(this.fname)
+      // console.log(this.lname)
+      // console.log(this.sex)
+      // console.log(this.dob)
+      // console.log(this.age)
+      // console.log(this.phone)
+      // console.log(this.address)
       if(this.role == 'customer') {
-        this.registerCustomer()
-        console.log(this.role)
+        // if(this.validation()) {
+        //   return 
+        // } else {
+          this.registerCustomer()
+          // console.log(this.role)
+        // }
       } else if(this.role == 'owner') {
-        this.registerOwner()
-        console.log(this.role)
+        // if(this.validation()) {
+        //   return 
+        // } else {
+          this.registerOwner()
+          // console.log(this.role)
+        // }
       } else {
-        alert('error')
+        alert('เกิดข้อผิดพลาด')
       }
     },
     registerCustomer() {
+      if(!this.validation()) {
       fetch(`https://dev.rungmod.com/api/registerCustomer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -258,12 +296,14 @@ export default {
           Phone: this.phone,
           Address: this.address,
         }),
-      }).then((res) => {
-        console.log(res);
-        alert("Register success!");
+      }).then(() => {
+        alert("ลงทะเบียนสำเร็จ!");
+        this.$router.push(`/login`);
       });
+    }
     },
     registerOwner() {
+      if(!this.validation()) {
       fetch(`https://dev.rungmod.com/api/registerOwner`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -279,10 +319,11 @@ export default {
           Address: this.address,
           Position: ''
         }),
-      }).then((res) => {
-        console.log(res);
-        alert("Register success!");
+      }).then(() => {
+        alert("ลงทะเบียนสำเร็จ!");
+        this.$router.push(`/login`);
       });
+    }
     },
   }
 };

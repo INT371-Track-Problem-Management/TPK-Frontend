@@ -8,7 +8,7 @@
     <div class="flex flex-col lg:flex-row justify-between items-center">
       
       <div class="flex flex-wrap lg:flex-row justify-center lg:justify-start items-center">
-        <div 
+        <!-- <div 
           v-for="(status, i) in statusList"
           :key="i"
           :class="status.bgcolor"
@@ -19,7 +19,7 @@
           <div
             :class="status.color"
           >{{status.title}}</div>
-        </div>
+        </div> -->
         <!-- <div 
           @click="doFilter('')"
           class="w-36 mr-2 mb-4 py-3 text-center rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-black/20"
