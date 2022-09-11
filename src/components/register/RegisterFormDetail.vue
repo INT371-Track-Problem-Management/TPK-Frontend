@@ -49,10 +49,10 @@
 
         <div class="text-rangmod-black px-1">
           อายุ
-          <div class="border border-rangmod-gray bg-rangmod-gray rounded-xl px-3">
+          <div class="border border-rangmod-gray bg-rangmod-light-gray rounded-xl px-3">
             <input v-model="age" min="1"
               type="number"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider bg-rangmod-gray"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider bg-rangmod-light-gray"
               readonly
             />
           </div>

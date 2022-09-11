@@ -26,7 +26,7 @@
       <tr
         v-for="(member, i) in memberList"
         :key="i"
-        class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
+        class="border-b border-rangmod-light-gray transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4 whitespace-nowrap">{{ i + 1 }}</td>
         <td class="text-center py-4 whitespace-nowrap">{{ member.customerId }}</td>
@@ -171,7 +171,7 @@
                 type="text"
                 readonly
                 v-model="modal.fname"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
           </div>
@@ -183,7 +183,7 @@
                 type="text"
                 readonly
                 v-model="modal.lname"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
           </div>
@@ -196,7 +196,7 @@
                   type="text"
                   readonly
                   v-model="modal.dateOfBirth"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -208,7 +208,7 @@
                   type="text"
                   readonly
                   v-model="modal.age"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -222,7 +222,7 @@
                   type="text"
                   readonly
                   v-model="modal.sex"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -234,7 +234,7 @@
                   type="text"
                   readonly
                   v-model="modal.phone"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -246,7 +246,7 @@
               <textarea
                 readonly
                 v-model="modal.address"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               ></textarea>
             </div>
           </div>
@@ -259,7 +259,7 @@
                   type="text"
                   readonly
                   v-model="modal.room"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -271,7 +271,7 @@
                   type="text"
                   readonly
                   v-model="modal.status"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -308,7 +308,7 @@
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showAdd = false" class="cursor-pointer">
+            <div @click="showAdd = false, clearData()" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -368,7 +368,7 @@
                 type="text"
                 readonly
                 v-model="addModal.fname"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
           </div>
@@ -380,7 +380,7 @@
                 type="text"
                 readonly
                 v-model="addModal.lname"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
           </div>
@@ -393,7 +393,7 @@
                   type="text"
                   readonly
                   v-model="addModal.dateOfBirth"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -405,7 +405,7 @@
                   type="text"
                   readonly
                   v-model="addModal.age"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -419,7 +419,7 @@
                   type="text"
                   readonly
                   v-model="addModal.sex"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -431,7 +431,7 @@
                   type="text"
                   readonly
                   v-model="addModal.phone"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -443,7 +443,7 @@
               <textarea
                 readonly
                 v-model="addModal.address"
-                class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               ></textarea>
             </div>
           </div>
@@ -468,7 +468,7 @@
                   type="text"
                   readonly
                   v-model="addModal.status"
-                  class="bg-rangmod-gray/40 px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
             </div>
@@ -513,7 +513,7 @@ export default {
         fname: "",
         lname: "",
         dateOfBirth: "",
-        age: "",
+        age: 1,
         sex: "",
         phone: "",
         address: "",
@@ -640,7 +640,7 @@ export default {
           this.modal.tel = memberList[i].tel;
           this.modal.address = memberList[i].address;
           // this.modal.room = memberList[i].room;
-          this.modal.status = memberList[i].status;
+          this.modal.status = memberList[i].status == 'I' ? 'ยังไม่ได้เข้าพัก' : 'เข้าพักแล้ว';
         }
       }
     },
@@ -658,13 +658,25 @@ export default {
       this.addModal.phone = this.searchCustomer.phone;
       this.addModal.address = this.searchCustomer.address;
       // this.addModal.room = this.searchCustomer.room;
-      this.addModal.status = this.searchCustomer.status;
+      this.addModal.status = this.searchCustomer.status == 'I' ? 'ยังไม่ได้เข้าพัก' : 'เข้าพักแล้ว';
       console.log(this.searchCustomer);
     }
     },
     add() {
       this.showAdd = true;
       console.log("add");
+    },
+    clearData() {
+      this.addModal.customerId = 1
+      this.addModal.fname = ""
+      this.addModal.lname = ""
+      this.addModal.dateOfBirth = ""
+      this.addModal.age = 1
+      this.addModal.sex = ""
+      this.addModal.phone = ""
+      this.addModal.address = ""
+      this.addModal.room = 1
+      this.addModal.status = ""
     },
     addCustomerToRoom() {
       // if (this.title == "" || this.description == "") {

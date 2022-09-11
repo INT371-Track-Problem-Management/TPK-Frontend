@@ -25,9 +25,9 @@
         <div class="text-rangmod-black">หัวข้อปัญหา</div>
         <div class="mb-5">
           <input
-            v-model="this.reportWithEngage.title"
+          v-model="this.reportById.title"
             type="text"
-            class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+            class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
           />
         </div>
@@ -35,13 +35,13 @@
         <div class="text-rangmod-black">รายละเอียดปัญหา</div>
         <div class="mb-5">
           <textarea
-            v-model="this.reportWithEngage.reportDes"
-            class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+            v-model="this.reportById.reportDes"
+            class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
             readonly
           ></textarea>
         </div>
         
-        <div>
+        <div v-if="this.reportWithEngage.engageId">
           <div class="text-rangmod-black">วันและเวลาที่นัด</div>
 
           <div class="flex flex-col">
@@ -60,7 +60,7 @@
                       : 'text'
                   "
                   class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  :class="this.reportWithEngage.status != 'waiting' ? 'bg-rangmod-gray/40' : ''"
+                  :class="this.reportWithEngage.status != 'waiting' ? 'bg-rangmod-light-gray' : ''"
                   :readonly = "this.reportWithEngage.status != 'waiting'"
                 />
               </div>
@@ -76,9 +76,9 @@
 
               <div class="w-7">
                 <div @click="postpone(engageDate.date)"
-                  class="w-7 h-7 rounded-full cursor-pointer"
+                  class="w-7 h-7 rounded-full"
                   :class="
-                  engageDate.date == this.reportWithEngage.selectedDate ? 'bg-rangmod-green' : 'bg-rangmod-gray'
+                  engageDate.date == this.reportWithEngage.selectedDate ? 'bg-rangmod-green' : 'bg-rangmod-gray cursor-pointer transition-all hover:border-rangmod-green hover:border-4 hover:bg-rangmod-green/75'
                   "
                 ></div>
               </div>
@@ -97,7 +97,7 @@
               <div class="text-rangmod-black">ว/ด/ป</div>
               <input
                 type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
                 :value="engageDate.date"
               />
@@ -107,7 +107,7 @@
               <div class="text-rangmod-black">เวลา</div>
               <input
                 type="text"
-                class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
                 :value="engageDate.time"
               />
@@ -145,7 +145,7 @@
         </div>
       </div> -->
     </div>
-    <div class="flex flex-row space-x-4 justify-end">
+    <div v-if="this.reportWithEngage.status == 'success'" class="flex flex-row space-x-4 justify-end">
       <div
         class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
       >
@@ -156,13 +156,13 @@
       <div
         class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
       >
-        <div
+        <!-- <div
 
         @click="showModal = !showModal"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-blue shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-blue hover:text-rangmod-light-blue hover:shadow-none"
         >
           เลื่อนนัด
-        </div>
+        </div> -->
 
         <div
 
@@ -220,7 +220,7 @@
             <input
               v-model="title"
               type="text"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             />
           </div>
@@ -229,7 +229,7 @@
           <div class="mb-5">
             <textarea
               v-model="description"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             ></textarea>
           </div>
@@ -240,7 +240,7 @@
                 <div class="text-rangmod-black">ว/ด/ป</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -249,7 +249,7 @@
                 <div class="text-rangmod-black">เวลา</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -262,7 +262,7 @@
                 <div class="text-rangmod-black">ว/ด/ป</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -271,7 +271,7 @@
                 <div class="text-rangmod-black">เวลา</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -338,7 +338,7 @@
             <input
               v-model="title"
               type="text"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             />
           </div>
@@ -347,7 +347,7 @@
           <div class="mb-5">
             <textarea
               v-model="description"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             ></textarea>
           </div>
@@ -358,7 +358,7 @@
                 <div class="text-rangmod-black">ว/ด/ป</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -367,7 +367,7 @@
                 <div class="text-rangmod-black">เวลา</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -376,7 +376,7 @@
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="finish('finish')"
+              v-on:click="finish('success')"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               แก้ไขปัญหาเสร็จสิ้น
@@ -426,7 +426,7 @@
             <input
               v-model="title"
               type="text"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             />
           </div>
@@ -435,7 +435,7 @@
           <div class="mb-5">
             <textarea
               v-model="description"
-              class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
               readonly
             ></textarea>
           </div>
@@ -446,7 +446,7 @@
                 <div class="text-rangmod-black">ว/ด/ป</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -455,7 +455,7 @@
                 <div class="text-rangmod-black">เวลา</div>
                 <input
                   type="text"
-                  class="w-full bg-rangmod-gray/40 border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   readonly
                 />
               </div>
@@ -490,7 +490,7 @@ export default {
       showFinish: false,
       showDelete: false,
       token: localStorage.getItem("token"),
-      
+      reportById: {},
       reportEngageDate: [
         {
           date: "date1",
@@ -520,18 +520,17 @@ export default {
     };
   },
   mounted() {
-    this.create();
+    this.create()
   },
   methods: {
     async create() {
-      // console.log(localStorage.getItem('id'));
+      this.reportById = await this.getReportById()
       this.reportWithEngage = await this.getReportDetailWithEngage();
       this.reportEngageDate[0].datetime = this.dateTimeShowFormat(this.reportWithEngage.date1)
       this.reportEngageDate[1].datetime = this.dateTimeShowFormat(this.reportWithEngage.date2)
       this.reportEngageDate[2].datetime = this.dateTimeShowFormat(this.reportWithEngage.date3)
       this.reportEngageDate[3].datetime = this.dateTimeShowFormat(this.reportWithEngage.date4)
-      console.log(this.reportWithEngage);
-      // console.log(this.$route.params.id);
+      console.log(this.reportById)
     },
     postpone(selectedDate) {
       if(confirm('คุณต้องการเลื่อนการนัดวันซ่อมใช่หรือไม่')) {
@@ -545,7 +544,7 @@ export default {
               EngageId: parseInt(this.reportWithEngage.engageId),
               SelectedDate: selectedDate
             }),
-          }).then(alert('ทำการเลื่อนนัดวันเข้าซ่อมแล้ว')).then(async() => this.reportWithEngage = await this.getReportDetailWithEngage())
+          }).then(alert('ทำการเลือกนัดวันเข้าซ่อมแล้ว')).then(async() => this.reportWithEngage = await this.getReportDetailWithEngage())
         }
     },
     finish(action) {
@@ -567,6 +566,22 @@ export default {
       );
       const data = res.json();
       return data;
+    },
+    async getReportById() {
+      try {
+        const res = await fetch(`https://dev.rungmod.com/api/customer/reportById`, {
+          method: "POST",
+          headers: { "content-Type": "application/json" ,
+                     "Authorization": `Bearer ${this.token}`,},
+          body: JSON.stringify({
+            ReportId: parseInt(this.$route.params.id)
+          }),
+        })
+        const data = res.json();
+        return data;
+      } catch (e) {
+        console.log(e);
+      }
     },
     dateFormat(inputDate) {
       const date = new Date(inputDate);
