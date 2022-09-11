@@ -120,7 +120,7 @@
       >
 
         <div
-          v-if="checkAccept()"
+          v-if="checkAccept() && this.reportDetail.status != 'cancel'"
           @click="actionButton('cancel')"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
         >
@@ -214,21 +214,14 @@ export default {
       this.reportEngageDate[3].datetime = this.dateTimeShowFormat(
         this.reportEngageAll.date4
       );
-      if(this.reportEngageAll.selectedDate != "") {
-        this.updateStatusFromSelectedDate().then(this.$parent.checkStatus(this.reportDetail.status))
+      if(this.reportDetail.status == 'success') {
+        return
+      } else {
+        if(this.reportEngageAll.selectedDate != "") {
+          this.updateStatusFromSelectedDate().then(this.$parent.checkStatus(this.reportDetail.status))
+        }
       }
-      // console.log(this.reportEngageDate[0].datetime)
-      // console.log(this.reportDetail);
-      // for(let i = 0; i < this.reportEngageAll.length; i++) {
-      //   alert('sad')
-      // console.log(parseInt(this.$route.params.id))
-      // console.log(this.reportEngageAll[i].reportId)
-      // if(this.reportEngageAll[i].reportId == parseInt(this.$route.params.id)) {
-      //   // console.log(this.reportEngageAll[i].reportId)
-      //   this.reportEngage = this.reportEngageAll[i]
-      //   console.log(this.reportEngage)
-      // }
-      // }
+      
     },
 
     checkAccept() {
