@@ -114,7 +114,7 @@
     <div
       :class="
         showModal
-          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
           : 'hidden opacity-0'
       "
       v-on:click="showModal = !showModal"
@@ -123,7 +123,7 @@
     <transition>
       <div
         v-show="showModal"
-        class="fixed w-full h-screen z-90 inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
       >
         <div
           class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"

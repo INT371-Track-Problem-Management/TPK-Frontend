@@ -81,7 +81,7 @@ export default {
       if(this.role != "" && this.isConfirm) {
         this.$router.push({name:'register-form', params:{ email: this.email, password: this.password, role: this.role}})
       } else {
-        alert("กรุณากดเลือกตำแหน่งและกดยอมรับ")
+        alert("กรุณากดเลือกประเภทผู้ใช้และกดยอมรับ")
       }
     }
   }
