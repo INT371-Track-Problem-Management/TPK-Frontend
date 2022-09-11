@@ -130,7 +130,7 @@
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showModal = false, validate.title = false, validate.description = false" class="cursor-pointer">
+            <div @click="showModal = false, validate.title = false, validate.description = false, clearData()" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -440,16 +440,11 @@ export default {
     };
   },
   computed: {
-    // updateReport() {
-    //   return this.reportList = await this.getReport(); ;
-    // }
-    // reportList() {
-    //   return this.getReport();
-    // }
+
   },
   mounted() {   
     this.create();
-    // console.log(this.reportList.json())
+
   },
   methods: {
     validation() {
@@ -491,35 +486,13 @@ export default {
           .then(() => {
             alert("Send report!");
             this.showModal = !this.showModal;
+            this.clearData()
           })
           .then(async () => {
             this.reportList = await this.getReport();
             console.log(this.reportList)
           });
       } 
-
-      // else {
-      //   fetch(`https://dev.rungmod.com/api/customer/report`, {
-      //     method: "POST",
-      //     headers: { "content-Type": "application/json",
-      //               "Authorization" : `Bearer ${this.token}` },
-      //     body: JSON.stringify({
-      //       Title: this.title,
-      //       CategoriesReport: this.category,
-      //       ReportDes: this.description,
-      //       Status: this.status,
-      //       CreatedBy: this.createdBy,
-      //     }),
-      //   })
-      //     .then(() => {
-      //       alert("Send report!");
-      //       this.showModal = !this.showModal;
-      //     })
-      //     .then(async () => {
-      //       this.reportList = await this.getReport();
-      //       console.log(this.reportList)
-      //     });
-      // }
     },
     async getReport() {
       const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
@@ -532,6 +505,10 @@ export default {
       })
         const data = res.json();
         return data;
+    },
+    clearData() {
+      this.title = ""
+      this.description = ""
     },
     dateFormat(inputDate) {
       // console.log(inputDate)

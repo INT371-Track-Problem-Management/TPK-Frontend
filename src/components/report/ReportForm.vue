@@ -77,7 +77,7 @@
               </div> -->
 
               <div class="w-7">
-                <div
+                <div v-if="this.reportWithEngage.status != 'S6' && this.reportWithEngage.status != 'S7'"
                   @click="postpone(engageDate.date)"
                   class="w-7 h-7 rounded-full"
                   :class="
@@ -142,12 +142,12 @@
           เลื่อนนัด
         </div> -->
 
-        <div
+        <!-- <div
           v-if="!this.isEngageDateNow"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
         >
           ยกเลิกนัด
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -492,7 +492,7 @@
             </div>
           </div>
 
-          <div class="text-rangmod-black">รายละเอียดปัญหา</div>
+          <div class="text-rangmod-black">ความคิดเห็น</div>
           <div class="mb-5">
             <textarea
               v-model="review.description"
