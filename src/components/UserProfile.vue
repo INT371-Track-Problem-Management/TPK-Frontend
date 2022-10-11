@@ -1,0 +1,494 @@
+<template>
+  <div
+    class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
+  >
+    <div class="text-xl">โปรไฟล์</div>
+    <hr class="my-4 border-rangmod-purple" />
+
+    <div class="md:w-2/3 lg:w-1/3 mx-auto">
+      <div class="flex flex-col">
+        <div
+          class="w-32 h-32 rounded-full bg-rangmod-light-gray mx-auto my-2"
+        ></div>
+        <div class="mx-auto my-2">รหัสผู้ใช้งาน : {{ this.id }}</div>
+      </div>
+      <div class="mb-4">
+        <div class="text-rangmod-black px-1">ชื่อ</div>
+        <div
+          class="border border-rangmod-gray rounded-xl px-3"
+          :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+        >
+          <input
+            v-model="userProfile.fname"
+            type="text"
+            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+            :readonly="!isEditForm"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="text-rangmod-black px-1">นามสกุล</div>
+        <div
+          class="border border-rangmod-gray rounded-xl px-3"
+          :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+        >
+          <input
+            v-model="userProfile.lname"
+            type="text"
+            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+            :readonly="!isEditForm"
+          />
+        </div>
+      </div>
+
+      <div class="mb-4 grid se:grid-cols-2 grid-cols-1 gap-2">
+        <div class="text-rangmod-black px-1">
+          วันเกิด
+          <div
+            class="border border-rangmod-gray rounded-xl px-3"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+          >
+            <input
+              v-model="userProfile.dob"
+              :type="isEditForm ? 'date' : 'date'"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+              :readonly="!isEditForm"
+            />
+          </div>
+        </div>
+
+        <div class="text-rangmod-black px-1">
+          อายุ
+          <div
+            class="border border-rangmod-gray rounded-xl px-3"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+          >
+            <input
+              v-model="userProfile.age"
+              min="1"
+              type="number"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+              :readonly="!isEditForm"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
+        <div class="text-rangmod-black px-1">
+          เพศ
+          <div
+            class="border border-rangmod-gray rounded-xl px-3"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+          >
+            <input
+              v-model="userProfile.sex"
+              type="text"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+              :readonly="!isEditForm"
+            />
+          </div>
+        </div>
+
+        <div class="text-rangmod-black px-1">
+          เบอร์มือถือ
+          <div
+            class="border border-rangmod-gray rounded-xl px-3"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+          >
+            <input
+              v-model="userProfile.phone"
+              type="text"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+              :readonly="!isEditForm"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <div class="text-rangmod-black px-1">ที่อยู่</div>
+        <div
+          class="border border-rangmod-gray rounded-xl px-3"
+          :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+        >
+          <textarea
+            v-model="userProfile.address"
+            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+            :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+            :readonly="!isEditForm"
+          ></textarea>
+        </div>
+      </div>
+
+      <div v-show="!isEditForm" class="flex flex-col">
+        <div
+          @click="showChangePwdModal = !showChangePwdModal"
+          class="cursor-pointer mx-auto my-2 text-lg text-rangmod-light-blue"
+        >
+          เปลี่ยนรหัสผ่าน
+        </div>
+        <div
+          @click="isEditForm = !isEditForm"
+          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+        >
+          แก้ไขโปรไฟล์
+        </div>
+      </div>
+      <div v-show="isEditForm" class="flex flex-row">
+        <div
+          @click="cancel()"
+          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-rangmod-red border-2 border-rangmod-red bg-white shadow-sm transition-all hover:bg-transparent hover:border-rangmod-red hover:text-white hover:shadow-none hover:bg-rangmod-red"
+        >
+          ยกเลิก
+        </div>
+        <div
+          @click="editProfile()"
+          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+        >
+          บันทึก
+        </div>
+      </div>
+    </div>
+    <div
+      :class="
+        showChangePwdModal
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
+          : 'hidden opacity-0'
+      "
+      @click="showChangePwdModal = false"
+    ></div>
+    <transition name="bounce">
+      <div
+        v-show="showChangePwdModal"
+        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-11/12 lg:w-1/4 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <!-- Closed -->
+          <div class="flex justify-end">
+            <div
+              @click="(showChangePwdModal = false), clearPasswordData()"
+              class="cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="text-2xl text-rangmod-purple mb-5">เปลี่ยนรหัสผ่าน</div>
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">รหัสผ่านเก่า</div>
+            <div class="border border-rangmod-gray rounded-xl px-3 relative">
+              <input
+                v-model="changePwdModal.oldPassword"
+                :type="textPasswordOld"
+                class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+              <div
+                @click="
+                  textPasswordOld == 'password'
+                    ? (textPasswordOld = 'text')
+                    : (textPasswordOld = 'password')
+                "
+                class="absolute right-4 top-2 text-rangmod-gray cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">รหัสผ่านใหม่</div>
+            <div class="border border-rangmod-gray rounded-xl px-3 relative">
+              <input
+                v-model="changePwdModal.newPassword"
+                :type="textPasswordNew"
+                class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+              <div
+                @click="
+                  textPasswordNew == 'password'
+                    ? (textPasswordNew = 'text')
+                    : (textPasswordNew = 'password')
+                "
+                class="absolute right-4 top-2 text-rangmod-gray cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
+            <div class="border border-rangmod-gray rounded-xl px-3 relative">
+              <input
+                v-model="changePwdModal.confirmPassword"
+                :type="textPasswordConfirm"
+                class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              />
+              <div
+                @click="
+                  textPasswordConfirm == 'password'
+                    ? (textPasswordConfirm = 'text')
+                    : (textPasswordConfirm = 'password')
+                "
+                class="absolute right-4 top-2 text-rangmod-gray cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-row space-x-4 justify-end">
+            <div
+              @click="changePassword()"
+              class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              ยืนยัน
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="changedPassword"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+      >
+        <div
+          class="w-1/6 h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            เปลี่ยนรหัสผ่านสำเร็จ
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="editedProfile"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+      >
+        <div
+          class="w-1/6 h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            แก้ไขโปรไฟล์สำเร็จ
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      token: "",
+      id: localStorage.getItem("id"),
+      userProfile: {
+        fname: "ธนวินท์",
+        lname: "วัตราเศรษฐ์",
+        dob: "21/08/2000",
+        age: "22",
+        sex: "ชาย",
+        phone: "0804341156",
+        address: "บ้าน",
+      },
+      beforeEdit: {},
+      showChangePwdModal: false,
+      changePwdModal: {
+        oldPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+      },
+      changedPassword: false,
+      editedProfile: false,
+      isEditForm: false,
+      textPasswordOld: "password",
+      textPasswordNew: "password",
+      textPasswordConfirm: "password",
+    };
+  },
+  computed: {},
+  mounted() {
+    this.create();
+  },
+  methods: {
+    async create() {
+      this.token = localStorage.getItem("token");
+      //   this.userProfile = await this.getUserProfile();
+      this.beforeEdit = Object.assign({}, this.userProfile);
+    },
+    async getUserProfile() {
+      const res = await fetch(`https://dev.rungmod.com/api/service/profile`, {
+        method: "POST",
+        headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+        body: JSON.stringify({
+          Id: this.id,
+        }),
+      });
+      const data = res.json();
+      return data;
+    },
+    clearPasswordData() {
+      this.changePwdModal.oldPassword = "";
+      this.changePwdModal.newPassword = "";
+      this.changePwdModal.confirmPassword = "";
+    },
+    cancel() {
+      this.userProfile = this.beforeEdit;
+      this.isEditForm = !this.isEditForm;
+    },
+    async changePassword() {
+      //   const res = await fetch(
+      //     `https://dev.rungmod.com/api/service/reportByCreatedBy`,
+      //     {
+      //       method: "PUT",
+      //       headers: {
+      //         "content-Type": "application/json",
+      //         Authorization: `Bearer ${this.token}`,
+      //       },
+      //       body: JSON.stringify({
+      //         OldPassword: this.changePwdModal.oldPassword,
+      //         NewPassword: this.changePwdModal.newPassword,
+      //       }),
+      //     }
+      //   );
+      //   const data = res.json();
+      //   return data.then(async (res) => {
+      //     res = await data;
+      //     if (res == "this email can not use!!!") {
+      //       alert("อีเมลนี้ใช้ไม่ได้!!!");
+      //     } else {
+      //       alert("ลงทะเบียนสำเร็จ!");
+      //       this.$router.push(`/login`);
+      //     }
+      //   });
+      this.changedPassword = true;
+      setTimeout(() => {
+        this.changedPassword = false;
+      }, 1500)
+      setTimeout(() => {
+        this.showChangePwdModal = false;
+      }, 2500)
+    },
+    async editProfile() {
+      //   const res = await fetch(
+      //     `https://dev.rungmod.com/api/service/reportByCreatedBy`,
+      //     {
+      //       method: "PUT",
+      //       headers: {
+      //         "content-Type": "application/json",
+      //         Authorization: `Bearer ${this.token}`,
+      //       },
+      //       body: JSON.stringify({
+      //         OldPassword: this.changePwdModal.oldPassword,
+      //         NewPassword: this.changePwdModal.newPassword,
+      //       }),
+      //     }
+      //   );
+      //   const data = res.json();
+      //   return data.then(async (res) => {
+      //     res = await data;
+      //     if (res == "this email can not use!!!") {
+      //       alert("อีเมลนี้ใช้ไม่ได้!!!");
+      //     } else {
+      //       alert("ลงทะเบียนสำเร็จ!");
+      //       this.$router.push(`/login`);
+      //     }
+      //   });
+      this.editedProfile = true;
+      setTimeout(() => {
+        this.editedProfile = false;
+      }, 1500)
+      setTimeout(() => {
+        this.isEditForm = false;
+      }, 2500)
+    },
+  },
+};
+</script>
+
+<style>
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

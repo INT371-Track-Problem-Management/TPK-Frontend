@@ -1,7 +1,7 @@
 <template>
   <div class="font-primary">
 
-    <NavMenuUser class="w-full fixed z-50" :menuList="menuList"/>
+    <NavMenuUser class="w-full fixed z-[60]" :menuList="menuList"/>
     <SideMenu class="w-72 h-full fixed pt-16 hidden xl:block z-50" :menuList="menuList" />
     <div class="pl-8 xl:pl-80 pt-20 pr-8">
       <slot />
@@ -68,6 +68,14 @@
             isDropdown: true,
             isActive: false,
             menuItems: [
+              {
+                name: "แดชบอร์ด",
+                url: "/dashboard/content",
+              },
+              {
+                name: "พนักงาน",
+                url: "/dashboard/staff",
+              },
               {
                 name: "อาพาร์ตเม้นต์",
                 url: "/dashboard/config/apartment",

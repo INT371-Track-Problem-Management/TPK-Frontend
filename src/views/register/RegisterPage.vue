@@ -5,7 +5,7 @@
 
     <div class="flex flex-col space-y-4 my-10">
 
-      <div class="flex flex-row mx-auto items-center">
+      <div class="flex flex-row mx-auto items-center cursor-pointer">
         <RouterLink to="/">
           <img src="@/assets/images/RangmodLogoName.webp" class="w-48">
         </RouterLink>

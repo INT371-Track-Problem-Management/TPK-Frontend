@@ -5,7 +5,7 @@
     <div class="text-xl">ข้อมูลผู้พัก</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="w-32 my-10 cursor-pointer" @click="add()">
+    <div class="w-32 my-5 cursor-pointer" @click="add()">
       <div
         class="flex flex-row justify-start items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
       >

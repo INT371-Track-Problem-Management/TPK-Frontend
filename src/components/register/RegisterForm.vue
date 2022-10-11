@@ -161,7 +161,7 @@ export default {
 
     register() {
       if (!this.validation()) {
-          this.$router.push({ name: "register-select", params: { email: this.email, password: this.password },
+          this.$router.push({ name: "register-form", params: { email: this.email, password: this.password },
         });
       }
     },
