@@ -84,18 +84,14 @@
           </div> -->
         </td>
         <td class="text-center py-4">
-          <div
-            v-for="(status, j) in statusList"
-            :key="j"
-          >
-            <div 
+          <div v-for="(status, j) in statusList" :key="j">
+            <div
               v-if="this.checkThaiStatus(report.status) == status.title"
               :class="status.color"
             >
-              {{this.checkThaiStatus(report.status)}}
+              {{ this.checkThaiStatus(report.status) }}
             </div>
           </div>
-
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
@@ -120,7 +116,7 @@
       v-on:click="showModal = !showModal"
     ></div>
 
-    <transition>
+    <transition name="bounce">
       <div
         v-show="showModal"
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
@@ -130,7 +126,15 @@
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showModal = false, validate.title = false, validate.description = false, clearData()" class="cursor-pointer">
+            <div
+              @click="
+                (showModal = false),
+                  (validate.title = false),
+                  (validate.description = false),
+                  clearData()
+              "
+              class="cursor-pointer"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -150,24 +154,99 @@
           <div class="text-2xl text-rangmod-purple mb-5">
             รายละเอียดแจ้งซ่อม
           </div>
-          <div class="text-rangmod-black">หัวข้อปัญหา</div>
-          <div class="mb-5">
-            <input
-              v-model="title"
-              type="text"
-              class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-              :class="this.validate.title ? 'placeholder-red-500 border-red-500 border-2' : ''"
-              :placeholder="this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''"
-            />
+          <div class="grid grid-cols-2 space-x-2">
+            <div>
+              <div class="text-rangmod-black">หัวข้อปัญหา</div>
+              <div class="mb-5">
+                <input
+                  v-model="title"
+                  type="text"
+                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  :class="
+                    this.validate.title
+                      ? 'placeholder-red-500 border-red-500 border-2'
+                      : ''
+                  "
+                  :placeholder="
+                    this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''
+                  "
+                />
+              </div>
+            </div>
+            <div>
+              <div class="text-rangmod-black">ประเภทปัญหา</div>
+              <div
+                @click="isActivateCategory = !isActivateCategory"
+                class="rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-col w-full mb-5 text-rangmod-black border border-rangmod-gray transition-all"
+              >
+                <div
+                  class="flex items-center justify-between cursor-pointer px-4"
+                >
+                  <div>
+                    <div v-if="this.category != ''">
+                      {{ this.category.name }}
+                    </div>
+                    <div v-else class="text-rangmod-gray">เลือกประเภท</div>
+                  </div>
+                  <!-- <div>เลือกประเภทปัญหา</div> -->
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-caret-down-fill"
+                    viewBox="0 0 16 16"
+                    :class="
+                      isActivateCategory
+                        ? 'transition-all rotate-180'
+                        : 'transition-all'
+                    "
+                  >
+                    <path
+                      d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                    />
+                  </svg>
+                </div>
+                <transition name="bounce">
+                  <div
+                    v-show="isActivateCategory"
+                    class="flex flex-row-reverse"
+                  >
+                    <div
+                      class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
+                    >
+                      <div v-for="(category, i) in categoryLists" :key="i">
+                        <div
+                          class="py-2 hover:font-bold text-right cursor-pointer"
+                          @click="
+                            (this.category = category),
+                              (isActivateCategory = true)
+                          "
+                        >
+                          {{ category.name }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </transition>
+              </div>
+            </div>
           </div>
 
           <div class="text-rangmod-black">รายละเอียดปัญหา</div>
           <div class="mb-5">
             <textarea
               v-model="description"
-              class="w-full text-xl border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-              :class="this.validate.description ? 'placeholder-red-500 border-red-500 border-2' : ''"
-              :placeholder="this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''"
+              class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              :class="
+                this.validate.description
+                  ? 'placeholder-red-500 border-red-500 border-2'
+                  : ''
+              "
+              :placeholder="
+                this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''
+              "
             ></textarea>
           </div>
 
@@ -195,11 +274,55 @@ export default {
   data() {
     return {
       token: "",
+      // report -------------------
       title: "",
-      category: "test", //mockup dont del
+      category: "",
       description: "",
       status: "S1",
-      createdBy: 0,
+      createdBy: localStorage.getItem("id"),
+      isActivateCategory: false,
+      categoryLists: [
+        // {
+        //   id: 0,
+        //   name: "เลือกประเภทปัญหา",
+        //   engName: "",
+        // },
+        {
+          id: 1,
+          name: "ไฟฟ้า",
+          engName: "electric",
+        },
+        {
+          id: 2,
+          name: "น้ำ",
+          engName: "water",
+        },
+        {
+          id: 3,
+          name: "อุปกรณ์ไฟฟ้า",
+          engName: "electric device",
+        },
+        {
+          id: 4,
+          name: "อุปกรณ์เกี่ยวกับน้ำ",
+          engName: "water machine",
+        },
+        {
+          id: 5,
+          name: "เฟอร์นิเจอร์",
+          engName: "furniture",
+        },
+        {
+          id: 6,
+          name: "อาคารชำรุด",
+          engName: "building",
+        },
+        {
+          id: 7,
+          name: "อื่น ๆ",
+          engName: "other",
+        },
+      ],
       engage: {
         // formatedDate1: this.engageDates[0].date + " " + this.engageDates[0].time,
         // formatedDate2: this.engageDates[1].date + " " + this.engageDates[1].time,
@@ -260,49 +383,49 @@ export default {
           id: "1",
           color: "text-rangmod-blue",
           bgcolor: "bg-rangmod-blue/20",
-          title: "รอรับเรื่อง"
+          title: "รอรับเรื่อง",
         },
         {
           id: "2",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รอดำเนินการ"
+          title: "รอดำเนินการ",
         },
         {
           id: "3",
           color: "text-rangmod-green",
           bgcolor: "bg-rangmod-green/20",
-          title: "เสร็จสิ้น"
+          title: "เสร็จสิ้น",
         },
         {
           id: "4",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
-          title: "เลื่อนนัด"
+          title: "เลื่อนนัด",
         },
         {
           id: "5",
           color: "text-rangmod-red",
           bgcolor: "bg-rangmod-red/20",
-          title: "ยกเลิก"
+          title: "ยกเลิก",
         },
         {
           id: "6",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "นัดวันเข้าซ่อม"
+          title: "นัดวันเข้าซ่อม",
         },
         {
           id: "7",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รับเรื่อง"
+          title: "รับเรื่อง",
         },
         {
           id: "8",
           color: "text-rangmod-black",
           bgcolor: "bg-rangmod-black/20",
-          title: "ทั้งหมด"
+          title: "ทั้งหมด",
         },
       ],
       requestList: [
@@ -436,21 +559,22 @@ export default {
       validate: {
         title: false,
         description: false,
-      }
+      },
     };
   },
-  computed: {
-
-  },
-  mounted() {   
+  computed: {},
+  mounted() {
     this.create();
-
   },
   methods: {
     validation() {
-      this.title == "" ? this.validate.title = true : this.validate.title = false
-      this.description == "" ? this.validate.description = true : this.validate.description = false
-      return this.validate.title && this.validate.description
+      this.title == ""
+        ? (this.validate.title = true)
+        : (this.validate.title = false);
+      this.description == ""
+        ? (this.validate.description = true)
+        : (this.validate.description = false);
+      return this.validate.title && this.validate.description;
     },
     async create() {
       this.token = localStorage.getItem("token");
@@ -458,7 +582,6 @@ export default {
       // console.log(this.createdBy);
       this.reportList = await this.getReport();
       // console.log(this.reportList);
-      
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -473,8 +596,10 @@ export default {
       if (!this.validation()) {
         fetch(`https://dev.rungmod.com/api/customer/report`, {
           method: "POST",
-          headers: { "content-Type": "application/json",
-                    "Authorization" : `Bearer ${this.token}` },
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
           body: JSON.stringify({
             Title: this.title,
             CategoriesReport: this.category,
@@ -486,29 +611,35 @@ export default {
           .then(() => {
             alert("Send report!");
             this.showModal = !this.showModal;
-            this.clearData()
+            this.clearData();
           })
           .then(async () => {
             this.reportList = await this.getReport();
-            console.log(this.reportList)
+            console.log(this.reportList);
           });
-      } 
+      }
     },
     async getReport() {
-      const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
-        method: "POST",
-        headers: { "content-Type": "application/json",
-                    "Authorization" : `Bearer ${this.token}` },
-        body: JSON.stringify({
-          CreatedBy: this.createdBy
-        }),
-      })
-        const data = res.json();
-        return data;
+      const res = await fetch(
+        `https://dev.rungmod.com/api/customer/reportByCreatedBy`,
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            CreatedBy: this.createdBy,
+          }),
+        }
+      );
+      const data = res.json();
+      return data;
     },
     clearData() {
-      this.title = ""
-      this.description = ""
+      this.title = "";
+      this.description = "";
+      this.category = "";
     },
     dateFormat(inputDate) {
       // console.log(inputDate)
@@ -521,26 +652,26 @@ export default {
       return formatedDate;
     },
     checkThaiStatus(status) {
-      if(status.toLowerCase() == 'waiting') {
-        return 'รอรับเรื่อง';
+      if (status.toLowerCase() == "waiting") {
+        return "รอรับเรื่อง";
       }
-      if(status.toLowerCase() == 'accept') {
-        return 'รับเรื่อง';
+      if (status.toLowerCase() == "accept") {
+        return "รับเรื่อง";
       }
-      if(status.toLowerCase() == 'engage') {
-        return 'นัดวันเข้าซ่อม';
+      if (status.toLowerCase() == "engage") {
+        return "นัดวันเข้าซ่อม";
       }
-      if(status.toLowerCase() == 'prepare') {
-        return 'รอดำเนินการ';
+      if (status.toLowerCase() == "prepare") {
+        return "รอดำเนินการ";
       }
-      if(status.toLowerCase() == 'postpone') {
-        return 'เลื่อนนัด';
+      if (status.toLowerCase() == "postpone") {
+        return "เลื่อนนัด";
       }
-      if(status.toLowerCase() == 'cancel') {
-        return 'ยกเลิก';
+      if (status.toLowerCase() == "cancel") {
+        return "ยกเลิก";
       }
-      if(status.toLowerCase() == 'success') {
-        return 'เสร็จสิ้น'
+      if (status.toLowerCase() == "success") {
+        return "เสร็จสิ้น";
       }
     },
     // async getCustomers() {
@@ -556,4 +687,22 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

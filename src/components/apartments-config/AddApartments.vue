@@ -1,19 +1,8 @@
 <template>
-  <div class="font-primary text-rangmod-black container mx-auto px-5">
-      
-    <div class="flex space-x-2 items-center my-5 text-rangmod-purple">
-
-      <div>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-        </svg>
-      </div>
-
-      <div>
-        อาพาร์ตเม้นต์
-      </div>
-    
-    </div>
+  <div class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2">
+  
+    <div class="text-xl">ติดตั้งหอพัก</div>
+    <hr class="my-4 border-rangmod-purple" />
 
     <div class="w-full lg:w-2/3 mx-auto">
 
@@ -26,7 +15,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 lg:gap-10 my-5">
 
         <div class="">
-          <div class="my-2">ชื่ออพาร์ตเม้นต์</div>
+          <div class="my-2">ชื่อหอพัก</div>
           <div class="border border-rangmod-gray rounded-xl px-3">
             <input type="text" class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide">
             
