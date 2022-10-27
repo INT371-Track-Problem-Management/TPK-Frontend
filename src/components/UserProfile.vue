@@ -5,7 +5,7 @@
     <div class="text-xl">โปรไฟล์</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="md:w-2/3 lg:w-1/3 mx-auto">
+    <div class="max-w-md mx-auto">
       <div class="flex flex-col">
         <div
           class="w-32 h-32 rounded-full bg-rangmod-light-gray mx-auto my-2"
@@ -44,31 +44,46 @@
         </div>
       </div>
 
-      <div class="mb-4 grid se:grid-cols-2 grid-cols-1 gap-2">
-        <div class="text-rangmod-black px-1">
+      <div class="xse:mb-4 mb-0 xse:grid xse:grid-cols-2 xse:gap-2">
+        <div class="text-rangmod-black px-1 xse:mb-0 mb-4">
           วันเกิด
           <div
             class="border border-rangmod-gray rounded-xl px-3"
             :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
           >
-            <input
-              v-model="userProfile.dob"
-              :type="isEditForm ? 'date' : 'date'"
+            <input v-if="!isEditForm"
+              v-model="userProfile.dateOfBirth"
+              type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
               :readonly="!isEditForm"
             />
+            <input v-else
+              v-model="userProfile.dateOfBirth"
+              type="date"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+            />
           </div>
         </div>
+        
 
-        <div class="text-rangmod-black px-1">
+        <div class="text-rangmod-black px-1 xse:mb-0 mb-4">
           อายุ
           <div
             class="border border-rangmod-gray rounded-xl px-3"
             :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
           >
-            <input
+            <input v-if="!isEditForm"
               v-model="userProfile.age"
+              min="1"
+              type="number"
+              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
+              :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
+              :readonly="!isEditForm"
+            />
+            <input v-else
+              v-model="age"
               min="1"
               type="number"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
@@ -79,8 +94,8 @@
         </div>
       </div>
 
-      <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
-        <div class="text-rangmod-black px-1">
+      <div class="xse:mb-4 mb-0 xse:grid xse:grid-cols-2 xse:gap-2">
+        <div class="text-rangmod-black px-1 xse:mb-0 mb-4">
           เพศ
           <div
             class="border border-rangmod-gray rounded-xl px-3"
@@ -96,7 +111,7 @@
           </div>
         </div>
 
-        <div class="text-rangmod-black px-1">
+        <div class="text-rangmod-black px-1 xse:mb-0 mb-4">
           เบอร์มือถือ
           <div
             class="border border-rangmod-gray rounded-xl px-3"
@@ -105,6 +120,7 @@
             <input
               v-model="userProfile.phone"
               type="text"
+              maxlength="10"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               :class="isEditForm ? 'bg-white' : 'bg-rangmod-light-gray'"
               :readonly="!isEditForm"
@@ -145,13 +161,13 @@
       <div v-show="isEditForm" class="flex flex-row">
         <div
           @click="cancel()"
-          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-rangmod-red border-2 border-rangmod-red bg-white shadow-sm transition-all hover:bg-transparent hover:border-rangmod-red hover:text-white hover:shadow-none hover:bg-rangmod-red"
+          class="cursor-pointer w-32 xse:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-rangmod-red border-2 border-rangmod-red bg-white shadow-sm transition-all hover:bg-transparent hover:border-rangmod-red hover:text-white hover:shadow-none hover:bg-rangmod-red"
         >
           ยกเลิก
         </div>
         <div
           @click="editProfile()"
-          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+          class="cursor-pointer w-32 xse:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
         >
           บันทึก
         </div>
@@ -168,10 +184,10 @@
     <transition name="bounce">
       <div
         v-show="showChangePwdModal"
-        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10"
+        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="w-11/12 lg:w-1/4 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <!-- Closed -->
           <div class="flex justify-end">
@@ -197,7 +213,11 @@
           </div>
           <div class="text-2xl text-rangmod-purple mb-5">เปลี่ยนรหัสผ่าน</div>
           <div class="mb-4">
-            <div class="text-rangmod-black px-1">รหัสผ่านเก่า</div>
+            <div class="flex flex-row">
+              <div class="text-rangmod-black px-1">รหัสผ่านเก่า</div>
+              <div v-show="changePwdModal.ivlOldPassword" class="text-rangmod-red px-1"> * กรุณาใส่รหัสผ่านเก่า</div>
+            </div>
+            
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
               <input
                 v-model="changePwdModal.oldPassword"
@@ -231,7 +251,10 @@
           </div>
 
           <div class="mb-4">
-            <div class="text-rangmod-black px-1">รหัสผ่านใหม่</div>
+            <div class="flex flex-row">
+              <div class="text-rangmod-black px-1">รหัสผ่านใหม่</div>
+              <div v-show="changePwdModal.ivlNewPassword" class="text-rangmod-red px-1"> * กรุณาใส่รหัสผ่านใหม่</div>
+            </div>
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
               <input
                 v-model="changePwdModal.newPassword"
@@ -265,7 +288,11 @@
           </div>
 
           <div class="mb-4">
-            <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
+            <div class="flex flex-row">
+              <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
+              <div v-show="changePwdModal.ivlConfirmPassword" class="text-rangmod-red px-1"> * กรุณายืนยันรหัสผ่าน</div>
+              <div v-show="changePwdModal.ivlSamePassword" class="text-rangmod-red px-1"> * รหัสผ่านไม่ตรงกัน</div>
+            </div>
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
               <input
                 v-model="changePwdModal.confirmPassword"
@@ -312,10 +339,10 @@
     <transition name="bounce">
       <div
         v-if="changedPassword"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto px-6"
       >
         <div
-          class="w-1/6 h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          class="max-w-fit min-w-[300px] h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="text-2xl text-rangmod-purple my-5 text-center">
             เปลี่ยนรหัสผ่านสำเร็จ
@@ -344,23 +371,21 @@
 export default {
   data() {
     return {
-      token: "",
+      token: localStorage.getItem("token"),
+      email: localStorage.getItem("email"),
+      role: localStorage.getItem("role"),
       id: localStorage.getItem("id"),
-      userProfile: {
-        fname: "ธนวินท์",
-        lname: "วัตราเศรษฐ์",
-        dob: "21/08/2000",
-        age: "22",
-        sex: "ชาย",
-        phone: "0804341156",
-        address: "บ้าน",
-      },
+      userProfile: {},
       beforeEdit: {},
       showChangePwdModal: false,
       changePwdModal: {
         oldPassword: "",
         newPassword: "",
         confirmPassword: "",
+        ivlOldPassword: false,
+        ivlNewPassword: false,
+        ivlConfirmPassword: false,
+        ivlSamePassword: false,
       },
       changedPassword: false,
       editedProfile: false,
@@ -370,29 +395,39 @@ export default {
       textPasswordConfirm: "password",
     };
   },
-  computed: {},
+  computed: {
+    age() {
+      return this.calculateAge(this.userProfile.dateOfBirth)
+    }
+  },
   mounted() {
     this.create();
   },
   methods: {
     async create() {
-      this.token = localStorage.getItem("token");
-      //   this.userProfile = await this.getUserProfile();
-      this.beforeEdit = Object.assign({}, this.userProfile);
+      await this.getUserProfile(this.role);
+      this.beforeEdit = structuredClone(this.userProfile)
     },
-    async getUserProfile() {
-      const res = await fetch(`https://dev.rungmod.com/api/service/profile`, {
-        method: "POST",
-        headers: {
-          "content-Type": "application/json",
-          Authorization: `Bearer ${this.token}`,
-        },
-        body: JSON.stringify({
-          Id: this.id,
-        }),
-      });
+    async getUserProfile(userRole) {
+      const role = userRole == "E" || userRole == "A" ? "employee" : "customer";
+      const res = await fetch(
+        `https://dev.rungmod.com/api/${role}/FetchProfile/${this.email}`,
+        {
+          method: "GET",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
       const data = res.json();
-      return data;
+      return data.then((data) => {
+        if (data.Profile != null) {
+          this.userProfile = data.Profile;
+          this.userProfile.sex = data.Profile.sex == "M" ? "ชาย" : "หญิง";
+          this.userProfile.dateOfBirth = this.dateShowFormat(data.Profile.dateOfBirth)
+        }
+      });
     },
     clearPasswordData() {
       this.changePwdModal.oldPassword = "";
@@ -400,75 +435,116 @@ export default {
       this.changePwdModal.confirmPassword = "";
     },
     cancel() {
-      this.userProfile = this.beforeEdit;
+      this.userProfile = structuredClone(this.beforeEdit)
       this.isEditForm = !this.isEditForm;
     },
     async changePassword() {
-      //   const res = await fetch(
-      //     `https://dev.rungmod.com/api/service/reportByCreatedBy`,
-      //     {
-      //       method: "PUT",
-      //       headers: {
-      //         "content-Type": "application/json",
-      //         Authorization: `Bearer ${this.token}`,
-      //       },
-      //       body: JSON.stringify({
-      //         OldPassword: this.changePwdModal.oldPassword,
-      //         NewPassword: this.changePwdModal.newPassword,
-      //       }),
-      //     }
-      //   );
-      //   const data = res.json();
-      //   return data.then(async (res) => {
-      //     res = await data;
-      //     if (res == "this email can not use!!!") {
-      //       alert("อีเมลนี้ใช้ไม่ได้!!!");
-      //     } else {
-      //       alert("ลงทะเบียนสำเร็จ!");
-      //       this.$router.push(`/login`);
-      //     }
-      //   });
-      this.changedPassword = true;
+      if (this.checkChangePwd()) {
+        const res = await fetch(
+          `https://dev.rungmod.com/api/service/changePassword`,
+          {
+            method: "POST",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              Email: this.email,
+              OldPassword: this.changePwdModal.oldPassword,
+              NewPassword: this.changePwdModal.newPassword,
+            }),
+          }
+        );
+        const data = res.json();
+        return data.then((data) => {
+          if(data.message == 'success') {
+            console.log('เปลี่ยนรหัสผ่านสำเร็จ');
+            this.changedPassword = true;
       setTimeout(() => {
         this.changedPassword = false;
       }, 1500)
       setTimeout(() => {
         this.showChangePwdModal = false;
       }, 2500)
+          }
+        });
+      }
+
     },
     async editProfile() {
-      //   const res = await fetch(
-      //     `https://dev.rungmod.com/api/service/reportByCreatedBy`,
-      //     {
-      //       method: "PUT",
-      //       headers: {
-      //         "content-Type": "application/json",
-      //         Authorization: `Bearer ${this.token}`,
-      //       },
-      //       body: JSON.stringify({
-      //         OldPassword: this.changePwdModal.oldPassword,
-      //         NewPassword: this.changePwdModal.newPassword,
-      //       }),
-      //     }
-      //   );
-      //   const data = res.json();
-      //   return data.then(async (res) => {
-      //     res = await data;
-      //     if (res == "this email can not use!!!") {
-      //       alert("อีเมลนี้ใช้ไม่ได้!!!");
-      //     } else {
-      //       alert("ลงทะเบียนสำเร็จ!");
-      //       this.$router.push(`/login`);
-      //     }
-      //   });
-      this.editedProfile = true;
-      setTimeout(() => {
-        this.editedProfile = false;
-      }, 1500)
-      setTimeout(() => {
-        this.isEditForm = false;
-      }, 2500)
+        const res = await fetch(
+          `https://dev.rungmod.com/api/customer/editProfile/?email=${this.email}`,
+          {
+            method: "PUT",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              Fname: this.userProfile.fname,
+              Lname: this.userProfile.lname,
+              Sex: this.userProfile.sex,
+              DateOfBirth: this.userProfile.dateOfBirth,
+              Age: this.age,
+              Phone: this.userProfile.phone,
+              Address: this.userProfile.address,
+              UpdateBy: parseInt(this.id),
+            }),
+          }
+        );
+        const data = res.json();
+        return data.then((data) => {
+          console.log(data);
+        });
+      // this.editedProfile = true;
+      // setTimeout(() => {
+      //   this.editedProfile = false;
+      // }, 1500);
+      // setTimeout(() => {
+      //   this.isEditForm = false;
+      // }, 2500);
     },
+    checkChangePwd() {
+      this.changePwdModal.ivlOldPassword = this.changePwdModal.oldPassword == '' ? true : false
+      this.changePwdModal.ivlNewPassword = this.changePwdModal.newPassword == '' ? true : false
+      this.changePwdModal.ivlConfirmPassword = this.changePwdModal.confirmPassword == '' ? true : false
+      if(this.changePwdModal.ivlOldPassword || this.changePwdModal.ivlNewPassword || this.changePwdModal.ivlConfirmPassword) {
+        setTimeout(() => {
+          this.changePwdModal.ivlOldPassword = false
+          this.changePwdModal.ivlNewPassword = false
+          this.changePwdModal.ivlConfirmPassword = false
+        }, 3000)
+        console.log("false1");
+        return false
+      } else if(this.changePwdModal.newPassword != this.changePwdModal.confirmPassword) {
+        this.changePwdModal.ivlSamePassword = true
+        setTimeout(() => {
+          this.changePwdModal.ivlSamePassword = false
+        }, 3000)
+        console.log("false2");
+        return false
+      } else {
+        console.log("true");
+        return true
+      }
+      
+    },
+    dateShowFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDate = date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      return formatedDate;
+    },
+    calculateAge(dob) {
+      let currentDate = new Date();
+      let birthDate = new Date(dob);
+      let difference = currentDate - birthDate;
+      let age = Math.floor(difference/31557600000);
+      return age
+    }
   },
 };
 </script>

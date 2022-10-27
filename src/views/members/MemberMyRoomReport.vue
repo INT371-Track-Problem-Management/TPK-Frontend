@@ -2,7 +2,7 @@
   
   <div>
     <!-- <SearchPanel /> -->
-    <ReportList />
+    <RoomReportList />
   </div>
 
 </template>
@@ -10,11 +10,11 @@
 <script>
 
 // import SearchPanel from "@/components/report/SearchPanel.vue"
-import ReportList from "@/components/report/ReportList.vue"
+import RoomReportList from "@/components/member/RoomReportList.vue"
 
 export default {
 
-  components: { ReportList }
+  components: { RoomReportList }
 
 }
 </script>

@@ -1,28 +1,8 @@
 <template>
   <div class="w-full xl:w-4/5 mx-auto mb-24">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-20 mb-10">
-      <div class="flex md:hidden flex-col justify-start">
-        <div class="text-rangmod-black">รหัสช่างซ่อม</div>
-        <div class="mb-5">
-          <input
-            v-model="this.maintainerId"
-            type="number"
-            min="1"
-            class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-          />
-        </div>
-
-        <!-- <div class="text-rangmod-black">เบอร์ติดต่อช่าง</div>
-        <div class="mb-5">
-          <input
-            type="text"
-            class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-          />
-        </div> -->
-      </div>
-
       <div class="flex flex-col justify-start">
-        <div class="text-rangmod-black">หัวข้อปัญหา</div>
+        <div class="text-rangmod-black">หัวข้อปัญหา sad</div>
         <div class="mb-5">
           <input
             v-model="this.reportDetail.title"
@@ -126,14 +106,16 @@
             />
           </div>
         </div>
-        <div v-if="!isEdit"
+        <div
+          v-if="!isEdit"
           @click="isEdit = !isEdit"
           class="float-right w-28 mb-5 py-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
         >
           แก้ไข
         </div>
-        <div v-if="isEdit"
-          @click="isEdit = !isEdit"
+        <div
+          v-if="isEdit"
+          @click="(isEdit = !isEdit), addMaintainer()"
           class="float-right w-28 mb-5 py-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
         >
           บันทึก
@@ -187,6 +169,7 @@
 </template>
 
 <script>
+
 export default {
   // props: ["id"],
   data() {
@@ -241,20 +224,21 @@ export default {
   methods: {
     async getData() {
       this.reportDetail = await this.getReportDetail();
+      // console.log(this.reportDetail);
       this.reportEngageAll = await this.getAllReportEngage();
-      console.log(this.reportEngageAll);
+      // console.log(this.reportEngageAll);
       this.$parent.checkStatus(this.reportDetail.status);
       this.status = this.reportDetail.status;
       this.reportEngageDate[0].datetime = this.dateTimeShowFormat(
         this.reportEngageAll.date1
       );
-      this.reportEngageDate[1].datetime = this.dateTimeShowFormat(
+      this.reportEngageDate[1].datetime = this.dateTimeTH(
         this.reportEngageAll.date2
       );
       this.reportEngageDate[2].datetime = this.dateTimeShowFormat(
         this.reportEngageAll.date3
       );
-      this.reportEngageDate[3].datetime = this.dateTimeShowFormat(
+      this.reportEngageDate[3].datetime = this.dateTimeTH(
         this.reportEngageAll.date4
       );
       if (this.reportDetail.status == "success") {
@@ -454,6 +438,27 @@ export default {
       const data = res.json();
       return data;
     },
+    async addMaintainer() {
+      const res = await fetch(
+        `https://dev.rungmod.com/api/employee/maintainer`,
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            Fname: this.maintainer.fname,
+            Lname: this.maintainer.lname,
+            Phone: this.maintainer.phone,
+            UpdateBy: parseInt(this.empId),
+          }),
+        }
+      );
+      const data = res.json();
+      // console.log(data);
+      return data.then(() => {});
+    },
     updateStatusFromSelectedDate() {
       fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
         method: "PUT",
@@ -502,6 +507,15 @@ export default {
         date.getFullYear() +
         "   " +
         time;
+      return formatedDateTime;
+    },
+    dateTimeTH(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDateTime = date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
       return formatedDateTime;
     },
   },

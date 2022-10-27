@@ -10,7 +10,7 @@
 <script>
 
 // import SearchPanel from "@/components/report/SearchPanel.vue"
-import ReportList from "@/components/report/ReportList.vue"
+import ReportList from "@/components/member/ReportList.vue"
 
 export default {
 

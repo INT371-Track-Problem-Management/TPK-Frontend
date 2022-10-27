@@ -2,7 +2,7 @@
   <div
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
-    <div class="text-xl">รายละเอียดและสถานะ</div>
+    <div class="text-xl">รายละเอียดและสถานะ report folder</div>
     <hr class="my-4 border-rangmod-purple" />
 
     <div class="w-full mx-auto my-12">
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import RepairForm from "@/components/report/RepairForm.vue";
+import RepairForm from "@/components/report/RequestForm.vue";
 
 export default {
   components: { RepairForm },

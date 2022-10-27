@@ -7,11 +7,11 @@
 
       <div class="flex flex-row mx-auto items-center">
         <RouterLink to="/">
-          <img src="@/assets/images/RangmodLogoName.webp" class="w-48">
+          <img src="@/assets/images/LOGO-rangmod.png" class="w-48">
         </RouterLink>
       </div>
 
-      <RegisterFormDetail :type="type" />
+      <RegisterFormDetail />
 
     </div>
     
@@ -28,7 +28,7 @@ export default {
 
   data() {
     return {
-      type : this.$route.query.type,
+      
     }
   }
 

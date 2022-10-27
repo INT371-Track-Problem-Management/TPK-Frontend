@@ -2,8 +2,7 @@
   
   <div>
     <!-- <SearchPanel /> -->
-    <ReportDetail :code="$route.params.code" />
-    
+    <MemberRoomList />
   </div>
 
 </template>
@@ -11,11 +10,11 @@
 <script>
 
 // import SearchPanel from "@/components/report/SearchPanel.vue"
-import ReportDetail from "@/components/member/ReportDetail.vue"
+import MemberRoomList from "@/components/member/MemberRoomList.vue"
 
 export default {
 
-  components: { ReportDetail }
+  components: { MemberRoomList }
 
 }
 </script>
