@@ -5,7 +5,7 @@
     <div class="text-xl">ข้อมูลผู้ดูแล</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div
+    <div v-if="this.role == 'A'"
       class="w-44 my-5 cursor-pointer"
       @click="(showAddStaff1 = !showAddStaff1), (modalBg = !modalBg)"
     >
@@ -21,9 +21,8 @@
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัส</th>
         <th class="py-4">ชื่อ-นามสกุล</th>
-        <!-- <th class="py-4">ว/ด/ป ลงทะเบียน</th> -->
         <th class="py-4">อีเมล</th>
-        <th class="py-4">บทบาท</th>
+        <!-- <th class="py-4">บทบาท</th> -->
         <th class="py-4"></th>
         <th class="py-4"></th>
       </tr>
@@ -34,21 +33,21 @@
       >
         <td class="text-center py-4 whitespace-nowrap">{{ i + 1 }}</td>
         <td class="text-center py-4 whitespace-nowrap">
-          {{ staff.customerId }}
+          {{ staff.employeeId }}
         </td>
         <td class="text-center py-4 whitespace-nowrap">
           {{ staff.fname }} {{ staff.lname }}
         </td>
         <!-- <td class="text-center py-4 whitespace-nowrap">{{ staff.date }}</td> -->
         <td class="text-center py-4 whitespace-nowrap">{{ staff.email }}</td>
-        <td class="text-center py-4 whitespace-nowrap">
+        <!-- <td class="text-center py-4 whitespace-nowrap">
           <div v-for="(status, j) in statusList" :key="j">
             <div v-if="staff.status == status.id" :class="status.color">
               {{ status.title }}
             </div>
           </div>
-        </td>
-        <td
+        </td> -->
+        <td v-if="this.role == 'A'"
           class="text-center py-4 text-rangmod-red cursor-pointer transition-all hover:font-bold"
           @click="deleteStaff(staff.employeeId), (modalBg = !modalBg)"
         >
@@ -56,7 +55,7 @@
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="(showStaffDetail = !showStaffDetail), (modalBg = !modalBg)"
+          @click="(showStaffDetail = !showStaffDetail), (modalBg = !modalBg), showDetail(staff)"
         >
           <div>รายละเอียด</div>
         </td>
@@ -126,10 +125,10 @@
     <transition name="bounce">
       <div
         v-show="showAddStaff1"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="font-primary bg-white w-4/5 md:w-2/3 lg:w-1/3 mx-auto my-4 p-10 rounded-xl shadow-md"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="flex justify-end">
             <div
@@ -254,10 +253,10 @@
     <transition name="bounce">
       <div
         v-show="showAddStaff2"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="font-primary bg-white w-4/5 md:w-3/4 lg:w-1/3 mx-auto my-4 px-10 pt-10 pb-5 rounded-xl shadow-md"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="flex justify-end">
             <div
@@ -309,12 +308,12 @@
             <!-- </div> -->
           </div>
 
-          <div class="mb-4 grid se:grid-cols-2 grid-cols-1 gap-2">
+          <div class="mb-4 grid xse:grid-cols-2 grid-cols-1 gap-2">
             <div class="text-rangmod-black px-1">
               วันเกิด
               <!-- <div class=""> -->
               <input
-                v-model="addModal2.dob"
+                v-model="addModal2.DateOfBirth"
                 type="date"
                 class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
               />
@@ -337,7 +336,7 @@
             </div>
           </div>
 
-          <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
+          <div class="mb-4 grid xse:grid-cols-2 gap-2 grid-cols-1">
             <div class="text-rangmod-black px-1">
               เพศ
               <!-- <div class="border border-rangmod-gray rounded-xl px-3"> -->
@@ -346,18 +345,54 @@
               > -->
 
               <div>
-                <select
-                  v-model="addModal2.sex"
-                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider cursor-pointer"
+                <div
+                  @click="isActivateSex = !isActivateSex"
+                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider transition-all"
                 >
-                  <option disabled value="">เลือกเพศ</option>
-                  <option value="ชาย">ชาย</option>
-                  <option value="หญิง">หญิง</option>
-                </select>
+                  <div class="flex items-center justify-between cursor-pointer">
+                    <!-- <div v-if="this.selectedMonth.id != 0 && this.selectedSex.id == 0" class="text-rangmod-red transition-all">*กรุณาเลือกเพศ</div> -->
+                    <div class="transition-all">
+                      {{ this.selectedSex.sexTH }}
+                    </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-caret-down-fill"
+                      viewBox="0 0 16 16"
+                      :class="
+                        isActivateSex
+                          ? 'transition-all rotate-180'
+                          : 'transition-all'
+                      "
+                    >
+                      <path
+                        d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+                      />
+                    </svg>
+                  </div>
+                  <transition name="bounce">
+                    <div v-show="isActivateSex" class="flex flex-row-reverse">
+                      <div
+                        class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
+                      >
+                        <div v-for="(sex, i) in sexes" :key="i">
+                          <div
+                            class="py-2 hover:font-bold text-right cursor-pointer"
+                            @click="
+                              (this.selectedSex = sex), (isActivateSex = true)
+                            "
+                          >
+                            {{ sex.sexTH }}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </transition>
+                </div>
               </div>
-
             </div>
-
             <div class="text-rangmod-black px-1">
               เบอร์มือถือ
               <!-- <div class=""> -->
@@ -419,10 +454,10 @@
     <transition name="bounce">
       <div
         v-show="showStaffDetail"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="overflow-auto no-scrollbar h-[600px] font-primary bg-white w-4/5 md:w-3/4 lg:w-1/3 mx-auto my-4 px-10 pt-10 pb-5 rounded-xl shadow-md"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="flex justify-end">
             <div
@@ -495,7 +530,7 @@
                 class="border border-rangmod-gray rounded-xl px-3 bg-rangmod-light-gray"
               >
                 <input
-                  v-model="staffDetailModal.dob"
+                  v-model="staffDetailModal.dateOfBirth"
                   type="text"
                   class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider bg-rangmod-light-gray"
                 />
@@ -580,7 +615,9 @@
           <div class="flex justify-end">
             <div class="w-1/4">
               <div
-                @click="showStaffDetail = !showStaffDetail"
+                @click="
+                  (showStaffDetail = !showStaffDetail), (modalBg = !modalBg)
+                "
                 class="cursor-pointer w-full py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 ยืนยัน
@@ -597,22 +634,23 @@
 export default {
   data() {
     return {
-      token: "",
+      token: localStorage.getItem("token"),
+      role: localStorage.getItem("role"),
       showStaffDetail: false,
       showAddStaff1: false,
       showAddStaff2: false,
       modalBg: false,
 
       staffDetailModal: {
-        employeeId: 1,
-        fname: "ธนวินท์",
-        lname: "วัตราเศรษฐ์",
-        dob: "21/08/2000",
-        age: 22,
-        sex: "ชาย",
-        phone: "0804341156",
-        address: "บ้าน",
-        email: "thanawin.wnz@gmail.com",
+        // employeeId: 1,
+        // fname: "ธนวินท์",
+        // lname: "วัตราเศรษฐ์",
+        // DateOfBirth: "21/08/2000",
+        // age: 22,
+        // sex: "ชาย",
+        // phone: "0804341156",
+        // address: "บ้าน",
+        // email: "thanawin.wnz@gmail.com",
       },
       addModal1: {
         email: "",
@@ -623,30 +661,35 @@ export default {
         employeeId: 1,
         fname: "",
         lname: "",
-        dob: "",
+        DateOfBirth: "",
         // age: 1,
         sex: "",
         phone: "",
         address: "",
       },
-      searchCustomer: {},
-      statusList: [
+      sexes: [
         {
-          id: "1",
-          color: "text-rangmod-green",
-          title: "พักอาศัย",
+          id: 0,
+          sexTH: "เลือกเพศ",
+          sexEN: "selectSex",
         },
         {
-          id: "2",
-          color: "text-rangmod-yellow",
-          title: "รอเข้าพัก",
+          id: 1,
+          sexTH: "ชาย",
+          sexEN: "male",
         },
         {
-          id: "3",
-          color: "text-rangmod-red",
-          title: "ย้ายออก",
+          id: 2,
+          sexTH: "หญิง",
+          sexEN: "female",
         },
       ],
+      selectedSex: {
+        id: 0,
+        sexTH: "เลือกเพศ",
+        sexEN: "selectSex",
+      },
+      isActivateSex: false,
       staffList: [],
       textPassword: "password",
       textPasswordConfirm: "password",
@@ -658,28 +701,29 @@ export default {
   },
   computed: {
     age() {
-      return this.calculateAge(this.addModal2.dob);
+      return this.calculateAge(this.addModal2.DateOfBirth);
     },
   },
   methods: {
     async create() {
-      this.token = localStorage.getItem("token");
-      this.staffList = await this.getCustomers();
+      await this.getStaffs();
     },
-    async getCustomers() {
-      try {
-        const res = await fetch(
-          "https://dev.rungmod.com/api/employee/customer",
-          {
-            method: "GET",
-            headers: { Authorization: `Bearer ${this.token}` },
-          }
-        );
-        const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
+    async getStaffs() {
+      const res = await fetch(
+        "https://dev.rungmod.com/api/employee/listEmployee",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((data) => {
+        this.staffList = data.Employees
+        // console.log(data.Employees);
+      });
     },
     backStep() {
       this.showAddStaff2 = !this.showAddStaff2;
@@ -700,56 +744,68 @@ export default {
       if (step == 2) {
         this.showAddStaff2 = false;
       }
-      this.clearData()
+      this.clearData();
     },
     async registerStaff() {
-    //   if(!this.validation()) {
-    //   const res = await fetch(`https://dev.rungmod.com/api/registerOwner`, {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       Email: this.addModal1.email,
-    //       Password: this.addModal1.password,
-    //       Fname: this.addModal2.fname,
-    //       Lname: this.addModal2.lname,
-    //       Sex: this.addModal2.sex,
-    //       DateOfBirth: this.addModal2.dob,
-    //       Age: this.age,
-    //       Phone: this.addModal2.phone,
-    //       Address: this.addModal2.address,
-    //     }),
-    //   }
-    //   )
-    //   const data = res.json()
-    //   return data
-    //   .then(async (res) => {
-    //     res = await data
-    //     if(res == 'this email can not use!!!') {
-    //       alert('อีเมลนี้ใช้ไม่ได้!!!')
-    //     } else {
-    //       alert("ลงทะเบียนสำเร็จ!");
-    //       this.$router.push(`/login`);
-    //     }
-    //   })
-    // }
-    this.registeredStaff = true;
-      setTimeout(() => {
-        this.registeredStaff = false;
-      }, 1500)
-      setTimeout(() => {
-        this.showAddStaff2 = false;
-      }, 2500)
-      this.modalBg = false
-    this.clearData()
+
+      const res = await fetch(`https://dev.rungmod.com/api/registerOwner`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          Email: this.addModal1.email,
+          Password: this.addModal1.password,
+          Fname: this.addModal2.fname,
+          Lname: this.addModal2.lname,
+          Sex: this.addModal2.sex,
+          DateOfBirth: this.addModal2.DateOfBirth,
+          Age: this.age,
+          Phone: this.addModal2.phone,
+          Address: this.addModal2.address,
+        }),
+      });
+      const data = res.json();
+      console.log(data);
+      return data.then((res) => {
+
+        if (res == "this email can not use!!!") {
+          alert("อีเมลนี้ใช้ไม่ได้!!!");
+        } else {
+          alert("ลงทะเบียนสำเร็จ!");
+          this.registeredStaff = true;
+          setTimeout(() => {
+            this.registeredStaff = false;
+          }, 1500);
+          setTimeout(() => {
+            this.showAddStaff2 = false;
+          }, 2500);
+          this.modalBg = false;
+          this.clearData();
+        }
+      });
     },
-    showDetail() {},
+    showDetail(staff) {
+      this.staffDetailModal = staff
+      this.staffDetailModal.dateOfBirth = this.dateShowFormat(staff.dateOfBirth)
+      this.staffDetailModal.sex = staff.sex == 'M' ? 'ชาย' : 'หญิง'
+      // staffDetailModal: {
+      //   employeeId: 1,
+      //   fname: "ธนวินท์",
+      //   lname: "วัตราเศรษฐ์",
+      //   dateOfBirth: "21/08/2000",
+      //   age: 22,
+      //   sex: "ชาย",
+      //   phone: "0804341156",
+      //   address: "บ้าน",
+      //   email: "thanawin.wnz@gmail.com",
+      // }
+    },
     clearData() {
       this.addModal1.email = "";
       this.addModal1.password = "";
       this.addModal1.confirmPassword = "";
       this.addModal2.fname = "";
       this.addModal2.lname = "";
-      this.addModal2.dob = "";
+      this.addModal2.DateOfBirth = "";
       this.age = "";
       this.addModal2.sex = "";
       this.addModal2.phone = "";
@@ -760,17 +816,26 @@ export default {
       const date = new Date(inputDate);
       // console.log(date.getDate())
       // console.log(date.getMonth())
-      // console.log(date.getFullYear())
+      // console.log(date.getFullSex())
       const formatedDate =
-        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+        date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullSex();
       return formatedDate;
     },
-    calculateAge(dob) {
+    calculateAge(DateOfBirth) {
       let currentDate = new Date();
-      let birthDate = new Date(dob);
+      let birthDate = new Date(DateOfBirth);
       let difference = currentDate - birthDate;
       let age = Math.floor(difference / 31557600000);
       return age;
+    },
+    dateShowFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDate = date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      return formatedDate;
     },
   },
 };

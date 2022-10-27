@@ -13,22 +13,26 @@
         v-show="buildingLists.length > 0"
         class="flex justify-start px-2 md:px-12"
       >
-        <!-- <RouterLink to="/dashboard/config/apartment/add"> -->
         <div
           @click="(showAddModal = !showAddModal), (modalBg = !modalBg)"
           class="cursor-pointer w-20 bg-rangmod-purple text-white border-2 border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
         >
           + เพิ่ม
         </div>
-        <!-- </RouterLink> -->
       </div>
 
       <div
         v-if="buildingLists.length > 0"
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1 md:gap-5 my-5 px-0 md:px-12 py-2"
+        class="grid grid-cols-1 xse:grid-cols-2 sm:grid-cols-3 2xmd:grid-cols-4 lg:grid-cols-5 gap-5 my-5 px-0 py-2"
       >
-        <div v-for="(ap, i) in buildingLists" :key="i">
-          <transition name="bounce">
+        <div v-for="(building, i) in buildingLists" :key="i">
+          <transition name="bounce" appear>
+            <RouterLink
+            :to="{
+              name: 'dashboard-apartment-room',
+              params: { buildingId: building.buildingId, buildingName: building.buildingName},
+            }"
+            >
             <div
               class="cursor-pointer w-full border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
             >
@@ -48,10 +52,11 @@
                   />
                 </svg>
               </div>
-              <div class="text-center my-2 text-sm md:text-base">
-                {{ ap.name }}
+              <div class="text-center my-2 text-base">
+                {{ building.buildingName }}
               </div>
             </div>
+            </RouterLink>
           </transition>
         </div>
       </div>
@@ -83,7 +88,7 @@
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
       >
         <div
-          class="font-primary bg-white w-4/5 lg:w-1/2 mx-auto my-4 p-10 rounded-xl shadow-md"
+          class="overflow-auto no-scrollbar h-[600px] font-primary bg-white w-4/5 lg:w-1/2 mx-auto my-4 p-10 rounded-xl shadow-md"
         >
           <div class="flex justify-end">
             <div
@@ -138,7 +143,7 @@
                 </div>
                 <div class="flex flex-row space-x-2 mx-2 text-rangmod-gray">
                   <div
-                    @click="addBuilding.floor-- , delFloor()"
+                    @click="delFloor()"
                     class="cursor-pointer items-center my-auto transition-all hover:text-rangmod-purple"
                   >
                     <svg
@@ -155,7 +160,7 @@
                     </svg>
                   </div>
                   <div
-                    @click="addBuilding.floor++ , addFloor()"
+                    @click="addFloor()"
                     class="cursor-pointer items-center my-auto transition-all hover:text-rangmod-purple"
                   >
                     <svg
@@ -189,7 +194,8 @@
                 </div>
                 <input
                   v-model="floor.rooms"
-                  type="number" min="0"
+                  type="number"
+                  min="0"
                   class="w-full border-1 border-black text-rangmod-black text-lg rounded-xl outline-none leading-8 tracking-wide px-3"
                 />
                 <div
@@ -203,7 +209,7 @@
 
           <div class="my-5 flex justify-end">
             <div
-              @click="add()"
+              @click="insertBuildingAndRoom()"
               class="cursor-pointer w-fit py-2 px-5 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ต่อไป
@@ -217,71 +223,137 @@
 
 <script>
 export default {
+  props: {
+    building: {
+      type: Number,
+    },
+  },
   data() {
     return {
+      token: localStorage.getItem("token"),
       modalBg: false,
       showAddModal: false,
       addBuilding: {
         name: "",
         floor: 1,
       },
-      buildingLists: [
-        {
-          index: 1,
-          name: "ตึก 1",
-         
-        },
-        {
-          index: 2,
-          name: "ตึก 2",
-         
-        },
-      ],
+      buildingLists: [],
       floorRooms: [
         {
           floor: 1,
           rooms: 10,
         },
       ],
+      rooms: [],
+      // buildingId: 1,
+      // allBuilding: [],
     };
   },
+  computed: {},
   mounted() {
     this.create();
   },
   methods: {
     async create() {
-      // this.dormList = await this.getDorm();
-      // console.log('dorm = '+this.dormList);
+      this.buildingLists = await this.getBuildings();
+      console.log(this.buildingLists);
     },
-    // async getDorm() {
-    //   try {
-    //     const res = await fetch("https://dev.rungmod.com/api/dorm", {
-    //       method: "GET",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         DormId: 1237
-    //       }),
-    //     });
-    //     const data = res.json();
-    //     return data;
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
-    add() {
-      this.buildingLists.push({
-        index: this.buildingLists.length + 1,
-        name: this.addBuilding.name,
+    async getBuildings() {
+      try {
+        const res = await fetch(
+          "https://dev.rungmod.com/api/employee/allBuilding",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+        const data = res.json();
+        return data.then((data) => {
+          return data.AllBuilding
+        })
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async insertBuildingAndRoom() {
+      const res = await fetch("https://dev.rungmod.com/api/employee/building", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${this.token}`,
+        },
+        body: JSON.stringify({
+          buildingName: this.addBuilding.name,
+          createBy: parseInt(localStorage.getItem("id")),
+        }),
+      });
+      const data = res.json();
+      return data.then(async (res) => {
+        if (res.message == "Insert success") {
+          await this.insertRooms(res.BuildingId);
+        }
       });
     },
+    async insertRooms(buildingId) { //////////////////////////////
+      this.add(buildingId)
+      try {
+        const res = await fetch("https://dev.rungmod.com/api/employee/rooms", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            BuildingId: buildingId,
+            Rooms: this.rooms,
+            UpdateBy: parseInt(localStorage.getItem("id")),
+          }),
+        });
+        const data = res.json();
+        console.log(data);
+        return data.then(async(res) => {
+          console.log(res);
+          if(res.message == "success") {
+            alert('เพิ่มหอพักเสร็จสิ้น!!')
+          } else {
+            alert('การเพิ่มหอพักผิดพลาด')
+          }
+        })
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    add(buildingId) {
+      for (let i in this.floorRooms) {
+        for (let j = 1; j <= this.floorRooms[i].rooms; j++) {
+          this.rooms.push({
+            RoomNum: `${buildingId}${this.floorRooms[i].floor}${this.pad(
+              j
+            )}`,
+            Description: "ห้องธรรมดา",
+            Floors: this.floorRooms[i].floor,
+          });
+        }
+      }
+      console.log(this.rooms);
+    },
     addFloor() {
+      this.addBuilding.floor++;
       this.floorRooms.push({
-        floor: this.floorRooms.length+1,
+        floor: this.floorRooms.length + 1,
         rooms: 0,
       });
     },
     delFloor() {
-      this.floorRooms.pop()
+      if (this.floorRooms.length == 1) {
+        console.log("ไม่สามารถลดจำนวนชั้นหอพักได้แล้ว");
+      } else {
+        this.addBuilding.floor--;
+        this.floorRooms.pop();
+      }
     },
     clearData() {
       this.addBuilding.name = "";
@@ -291,13 +363,27 @@ export default {
           floor: 1,
           rooms: 10,
         },
-      ]
+      ];
+    },
+    pad(number) {
+      return number < 10 ? "0" + number.toString() : number.toString();
     },
   },
 };
 </script>
 
 <style>
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
 .bounce-enter-active {
   animation: bounce-in 0.5s;
 }

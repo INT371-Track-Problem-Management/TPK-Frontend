@@ -11,9 +11,10 @@ module.exports = {
         'sm': '650px',
         'md': '768px',
         'xmd': '830px',
+        '2xmd': '850px',
         'lg': '1024px',
         'xl': '1280px',
-        '2xl': '1440x',
+        '2xl': '1440px',
       },
     extend: {
       fontFamily: {

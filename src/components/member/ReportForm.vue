@@ -548,7 +548,7 @@ export default {
       showModal: false,
       showFinish: false,
       showDelete: false,
-      showReviewModal: true,
+      showReviewModal: false,
       token: localStorage.getItem("token"),
       reportById: {},
       reportEngageDate: [

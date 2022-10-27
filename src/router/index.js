@@ -14,7 +14,7 @@ import ApartmentsSetRoomPage from "../views/apartments/setRoomPage.vue";
 import DashBoardPage from "../views/DashBoardPage.vue";
 import DashboardMemberPage from "../views/dashboard/ManageMember.vue";
 import DashboardRoomStatusPage from "../views/dashboard/RoomStatus.vue";
-import DashboardRoomConfigPage from "../views/dashboard/RoomConfig.vue";
+import DashboardRoomListPage from "../views/apartments-config/RoomList.vue";
 
 import DashboardReportPage from "../views/dashboard/ReportList.vue";
 import DashboardReportDetailPage from "../views/dashboard/ReportDetail.vue";
@@ -22,7 +22,8 @@ import DashboardConfigApertmentsPage from "../views/apartments-config/Apartments
 import DashboardConfigApertmentsAddPage from "../views/apartments-config/addPage.vue";
 import DashboardConfigApertmentsSetRoomPage from "../views/apartments-config/setRoomPage.vue";
 
-import MemberMydorm from "../views/members/MemberMydorm.vue";
+import MemberMyRoom from "../views/members/MemberMyRoom.vue";
+import MemberMyRoomReport from "../views/members/MemberMyRoomReport.vue";
 import MemberReport from "../views/members/MemberReport.vue";
 import MemberReportDetail from "../views/members/MemberReportDetail.vue";
 
@@ -130,7 +131,7 @@ const routes = [
   {
     path: "/dashboard/room/config",
     name: "dashboard-room-config",
-    component: DashboardRoomConfigPage,
+    component: DashboardRoomListPage,
     meta: {
       requiresAuth: true,
       adminAuth: true,
@@ -195,9 +196,31 @@ const routes = [
     },
   },
   {
-    path: "/member/mydorm",
-    name: "member-mydorm",
-    component: MemberMydorm,
+    path: "/dashboard/apartment/:buildingId",
+    name: "dashboard-apartment-room",
+    component: DashboardRoomListPage,
+    meta: {
+      requiresAuth: true,
+      adminAuth: true,
+      userAuth: false,
+      layout: "AppLayoutAdmin",
+    },
+  },
+  {
+    path: "/member/myroom",
+    name: "member-myroom",
+    component: MemberMyRoom,
+    meta: {
+      requiresAuth: true,
+      adminAuth: false,
+      userAuth: true,
+      layout: "AppLayoutMember",
+    },
+  },
+  {
+    path: "/member/myroom/room/:roomNum/:id",
+    name: "member-myroom-room-report",
+    component: MemberMyRoomReport,
     meta: {
       requiresAuth: true,
       adminAuth: false,
@@ -276,7 +299,7 @@ router.beforeEach((to, from, next) => {
       router.push({ path: "/unauth" });
     } else {
       if (to.meta.adminAuth) {
-        if (role === "E") {
+        if (role === "E" || role === "A") {
           return next();
         } else {
           router.push({ path: "/unauth" });

@@ -94,11 +94,11 @@
       <div
         @click="isActivateYear = !isActivateYear"
         class="h-auto flex flex-col sm:w-1/4 ssm:w-1/3 w-1/2 my-4 py-2 rounded-3xl text-rangmod-black border-2 border-rangmod-light-gray transition-all"
-        :class="isActivateYear ? '' : 'hover:bg-rangmod-light-gray'"
+        :class="isActivateYear ? '' : 'hover:bg-rangmod-light-gray' && this.selectedMonth.id != 0 && this.selectedYear.id == 0 ? 'border-rangmod-light-red' : ''"
       >
         <div class="flex items-center justify-between cursor-pointer px-4">
-          <div>{{ this.selectedYear.year }}</div>
-
+          <div v-if="this.selectedMonth.id != 0 && this.selectedYear.id == 0" class="text-rangmod-red transition-all">*กรุณาเลือกปี</div>
+          <div v-else class="transition-all">{{ this.selectedYear.year }}</div>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
@@ -157,7 +157,7 @@
                 :class="category.count > 0 ? 'min-h-[32px]' : 'h-0'"
                 :style="`height:${category.count*25}%`"
               >
-                <div class="w-8 rounded-full h-full" :class="category.bg"></div>
+                <div class="se:w-6 xse:w-8 w-4 rounded-full h-full transition-all" :class="category.bg"></div>
               </transition>
             </div>
             <!-- <div class="mt-2 w-8 mx-auto text-center">
@@ -251,7 +251,7 @@ export default {
         },
         {
           id: 6,
-          name: "มิถุยน"
+          name: "มิถุนายน"
         },
         {
           id: 7,

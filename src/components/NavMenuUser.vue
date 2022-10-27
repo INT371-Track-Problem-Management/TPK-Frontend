@@ -155,21 +155,24 @@
               />
             </svg>
           </div>
-          <div class="rounded-full cursor-pointer py-1 px-2 hover:scale-110 transition ease-in-out delay-150 hover:bg-rangmod-pink">
-            <RouterLink to="/">
-            <img src="@/assets/images/RangmodLogoName.webp" alt="" />
-          </RouterLink>
+          <div
+            class="rounded-full cursor-pointer py-1 px-2 hover:scale-110 transition ease-in-out delay-150 hover:bg-rangmod-pink"
+          >
+            <RouterLink :to="this.role == 'E' ? '/dashboard/member' : '/member/myroom'" @click="closeMenu()" class="mx-auto items-center lg:mx-0">
+              <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-fit" />
+            </RouterLink>
           </div>
-          
         </div>
-        
+
         <div
           @click="showProfileMenu = !showProfileMenu"
           class="flex space-x-4 items-center rounded-full py-1 px-2 cursor-pointer hover:scale-110 transition ease-in-out delay-150 hover:bg-rangmod-pink"
-          :class="showProfileMenu ? 'scale-110 bg-rangmod-pink': 'scale-100 bg-none'"
+          :class="
+            showProfileMenu ? 'scale-110 bg-rangmod-pink' : 'scale-100 bg-none'
+          "
         >
           <div class="w-10 h-10 rounded-full bg-rangmod-gray"></div>
-          <div class="text-rangmod-black">{{ email }}</div>
+          <div class="text-rangmod-black">{{ username }}</div>
         </div>
       </div>
     </div>
@@ -183,7 +186,9 @@
           class="bg-rangmod-fog w-fit flex flex-col h-full rounded-b-lg z-20 top-0 px-1 shadow-md"
         >
           <div
-            @click="toProfilePage(this.role),showProfileMenu = !showProfileMenu"
+            @click="
+              toProfilePage(this.role), (showProfileMenu = !showProfileMenu)
+            "
             class="p-2 flex flex-row items-center cursor-pointer hover:font-bold transition-all"
           >
             <svg
@@ -221,7 +226,10 @@
                 id="mainIconPathAttribute"
               ></path>
             </svg>
-            <div class="px-2 text-rangmod-red" @click="logout(),showProfileMenu = !showProfileMenu">
+            <div
+              class="px-2 text-rangmod-red"
+              @click="logout(), (showProfileMenu = !showProfileMenu)"
+            >
               ออกจากระบบ
             </div>
           </div>
@@ -243,7 +251,7 @@ export default {
 
   data() {
     return {
-      token: localStorage.getItem('token'),
+      token: localStorage.getItem("token"),
       handleMenu: false,
       showProfileMenu: false,
     };
@@ -255,20 +263,13 @@ export default {
     role() {
       return localStorage.getItem("role");
     },
+    username() {
+      return localStorage.getItem("username");
+    },
   },
   methods: {
     selectMenu(index, listIndex, isItemList) {
-      this.menuList.forEach((menu) => {
-        if (menu.isActive) {
-          menu.isActive = false;
-        }
-        // if (menu.activeDropdown) { menu.activeDropdown = false }
-        menu.menuItems.forEach((item) => {
-          if (item.isActive) {
-            item.isActive = false;
-          }
-        });
-      });
+      this.closeMenu()
 
       if (!isItemList) {
         this.menuList.forEach((menu, i) => {
@@ -296,33 +297,14 @@ export default {
         },
       });
       // const data = res.json();
-      this.$router.push('/login')
+      localStorage.clear()
+      this.$router.push("/login");
       // return res
-      // this.menuList.forEach((menu) => {
-      //   if (menu.isActive) {
-      //     menu.isActive = false;
-      //   }
-      //   // if (menu.activeDropdown) { menu.activeDropdown = false }
-      //   menu.menuItems.forEach((item) => {
-      //     if (item.isActive) {
-      //       item.isActive = false;
-      //     }
-      //   });
-      // });
+      // this.closeMenu()
     },
     toProfilePage(role) {
-      this.menuList.forEach((menu) => {
-        if (menu.isActive) {
-          menu.isActive = false;
-        }
-        // if (menu.activeDropdown) { menu.activeDropdown = false }
-        menu.menuItems.forEach((item) => {
-          if (item.isActive) {
-            item.isActive = false;
-          }
-        });
-      });
-      if (role == "E") {
+      this.closeMenu()
+      if (role == "E" || role == "A") {
         this.$router.push(`/owner/profile`);
       }
 
@@ -330,6 +312,18 @@ export default {
         this.$router.push(`/member/profile`);
       }
     },
+    closeMenu() {
+      this.menuList.forEach((menu) => {
+        if (menu.isActive) {
+          menu.isActive = false;
+        }
+        menu.menuItems.forEach((item) => {
+          if (item.isActive) {
+            item.isActive = false;
+          }
+        });
+      });
+    }
   },
 };
 </script>

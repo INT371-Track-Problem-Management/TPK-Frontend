@@ -5,16 +5,15 @@
     <div class="text-xl">รายงานปัญหา</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="flex flex-row justify-between items-center">
-      <div class="flex flex-row space-x-2 items-center mb-4">
-        <!-- <router-link to="/member/report"> -->
+    <div class="flex flex-row justify-end items-center">
+      <!-- <div class="flex flex-row space-x-2 items-center mb-4">
         <div
           @click="showModal = !showModal"
           class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
         >
           <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
         </div>
-      </div>
+      </div> -->
 
       <div
         @click="activeSortFilter = !activeSortFilter"
@@ -58,7 +57,7 @@
     <table class="w-full text-rangmod-black mb-10">
       <tr class="bg-rangmod-light-pink">
         <th class="py-4">ลำดับ</th>
-        <!-- <th class="py-4">ห้อง</th> -->
+        <th class="py-4">ห้อง</th>
         <th class="py-4">รหัสรายงาน</th>
         <th class="py-4">หัวข้อปัญหา</th>
         <th class="py-4">ว/ด/ป แจ้งซ่อม</th>
@@ -73,20 +72,16 @@
         class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4">{{ i + 1 }}</td>
-        <!-- <td class="text-center py-4">{{request.room}}</td> -->
+        <td class="text-center py-4">{{report.roomNum}}</td>
         <td class="text-center py-4">{{ report.reportId }}</td>
-        <td class="text-center py-4">{{ report.title }}</td>
-        <td class="text-center py-4">{{ dateFormat(report.reportDate) }}</td>
-        <td class="text-center py-4">
-          <!-- {{ dateFormat(report.reportDate) }} -->
-          <!-- <div v-for="(repair, j) in requreportest.repair_date" :key="j">
-            <div v-if="repair.isActive">{{ repair.date }}</div>
-          </div> -->
+        <td class="text-center py-4 truncate max-w-[120px]">{{ report.reportDes }}</td>
+        <td class="text-center py-4">{{ dateShowFormat(report.createdAt) }}</td>
+        <td class="text-center py-4">{{ report.selectedDate == '' ? '-' : engageDateShowFormat(report.selectedDate) }}
         </td>
         <td class="text-center py-4">
           <div v-for="(status, j) in statusList" :key="j">
             <div
-              v-if="this.checkThaiStatus(report.status) == status.title"
+              v-if="this.checkThaiStatus(report.status) == status.name"
               :class="status.color"
             >
               {{ this.checkThaiStatus(report.status) }}
@@ -380,52 +375,67 @@ export default {
       ],
       statusList: [
         {
-          id: "1",
+          id: 1,
+          eng: "waiting",
+          name: "รอรับเรื่อง",
           color: "text-rangmod-blue",
           bgcolor: "bg-rangmod-blue/20",
-          title: "รอรับเรื่อง",
         },
         {
-          id: "2",
+          id: 2,
+          eng: "accept",
+          name: "รับเรื่อง",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
-          title: "รอดำเนินการ",
         },
         {
-          id: "3",
-          color: "text-rangmod-green",
-          bgcolor: "bg-rangmod-green/20",
-          title: "เสร็จสิ้น",
+          id: 3,
+          eng: "engage",
+          name: "นัดวันเข้าซ่อม",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: "4",
+          id: 4,
+          eng: "prepare",
+          name: "รอดำเนินการ",
+          color: "text-rangmod-yellow",
+          bgcolor: "bg-rangmod-yellow/20",
+        },
+        {
+          id: 5,
+          eng: "postpone",
+          name: "เลื่อนนัด",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
-          title: "เลื่อนนัด",
         },
         {
-          id: "5",
+          id: 6,
+          eng: "cancel",
+          name: "ยกเลิกนัด",
           color: "text-rangmod-red",
           bgcolor: "bg-rangmod-red/20",
-          title: "ยกเลิก",
         },
         {
-          id: "6",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
-          title: "นัดวันเข้าซ่อม",
+          id: 7,
+          eng: "success",
+          name: "เสร็จสิ้น",
+          color: "text-rangmod-green",
+          bgcolor: "bg-rangmod-green/20",
         },
         {
-          id: "7",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
-          title: "รับเรื่อง",
+          id: 8,
+          eng: "defer",
+          name: "รอยืนยันเลื่อนนัด",
+          color: "text-rangmod-purple",
+          bgcolor: "bg-rangmod-purple/20",
         },
         {
-          id: "8",
-          color: "text-rangmod-black",
-          bgcolor: "bg-rangmod-black/20",
-          title: "ทั้งหมด",
+          id: 9,
+          eng: "pending",
+          name: "รอยืนยันการยกเลิก",
+          color: "text-rangmod-red",
+          bgcolor: "bg-rangmod-red/20",
         },
       ],
       requestList: [
@@ -602,7 +612,7 @@ export default {
           },
           body: JSON.stringify({
             Title: this.title,
-            CategoriesReport: this.category,
+            CategoriesReport: this.category.engName,
             ReportDes: this.description,
             Status: this.status,
             CreatedBy: this.createdBy,
@@ -621,19 +631,18 @@ export default {
     },
     async getReport() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/reportByCreatedBy`,
+        `https://dev.rungmod.com/api/customer/reportByCreatedBy/${this.createdBy}`,
         {
-          method: "POST",
+          method: "GET",
           headers: {
             "content-Type": "application/json",
             Authorization: `Bearer ${this.token}`,
           },
-          body: JSON.stringify({
-            CreatedBy: this.createdBy,
-          }),
+
         }
       );
       const data = res.json();
+      console.log(data);
       return data;
     },
     clearData() {
@@ -642,47 +651,37 @@ export default {
       this.category = "";
     },
     dateFormat(inputDate) {
-      // console.log(inputDate)
       const date = new Date(inputDate);
-      // console.log(date.getDate())
-      // console.log(date.getMonth())
-      // console.log(date.getFullYear())
       const formatedDate =
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
     },
     checkThaiStatus(status) {
-      if (status.toLowerCase() == "waiting") {
-        return "รอรับเรื่อง";
-      }
-      if (status.toLowerCase() == "accept") {
-        return "รับเรื่อง";
-      }
-      if (status.toLowerCase() == "engage") {
-        return "นัดวันเข้าซ่อม";
-      }
-      if (status.toLowerCase() == "prepare") {
-        return "รอดำเนินการ";
-      }
-      if (status.toLowerCase() == "postpone") {
-        return "เลื่อนนัด";
-      }
-      if (status.toLowerCase() == "cancel") {
-        return "ยกเลิก";
-      }
-      if (status.toLowerCase() == "success") {
-        return "เสร็จสิ้น";
+      console.log(status);
+      for(let i in this.statusList) {
+        if(status.toLowerCase() == this.statusList[i].eng) {
+          return this.statusList[i].name
+        }
       }
     },
-    // async getCustomers() {
-    //   try {
-    //     const res = await fetch("https://dev.rungmod.com/api/customer");
-    //     const data = res.json();
-    //     return data;
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // },
+    dateShowFormat(inputDate) {
+      const date = new Date(inputDate);
+      const formatedDate = date.toLocaleDateString("th-TH", {
+        year: "numeric",
+        month: "numeric",
+        day: "numeric",
+      });
+      return formatedDate;
+    },
+    engageDateShowFormat(engage) {
+      const res = engage.split('T')
+      const dateRes = res[0].split('-')
+      const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
+      return showDate
+    },
+    pad(number) {
+      return number < 10 ? "0" + number.toString() : number.toString();
+    },
   },
 };
 </script>

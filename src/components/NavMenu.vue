@@ -8,8 +8,8 @@
       <div
         class="flex flex-col lg:flex-row justify-center lg:justify-between py-6"
       >
-        <RouterLink to="/" class="text-3xl mx-auto lg:mx-0">
-          RANGMOD
+        <RouterLink to="/" class="mx-auto items-center lg:mx-0">
+          <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-32">
         </RouterLink>
 
         <div

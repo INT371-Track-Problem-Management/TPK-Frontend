@@ -7,7 +7,7 @@
       :key="i"
       class="mb-10"
     >
-      <div class="text-xl">ข้อมูลห้องพักชั้นที่ {{room.floor_number}}</div>
+      <div class="text-xl">หอพักชั้นที่ {{room.floor_number}}</div>
       <hr class="my-4 border-rangmod-purple">
 
       <div class="flex flex-wrap justify-center xl:justify-start">
@@ -56,7 +56,7 @@
 
       <div 
         v-show="showModal" 
-        class="fixed w-full h-screen z-90 inset-0 pb-20 "
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 "
       >
 
         <div class="w-11/12 xl:w-1/3 h-2/3 xl:h-1/3 mx-auto my-44 xl:my-60 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar">
@@ -256,6 +256,9 @@ export default {
         }
       }
       
+    },
+    sortRoom() {
+      console.log('search');
     }
   }
 
