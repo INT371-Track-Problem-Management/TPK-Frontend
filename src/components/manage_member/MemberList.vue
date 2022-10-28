@@ -250,7 +250,7 @@
           </div>
 
           <div class="mb-4 grid grid-cols-2 gap-2">
-            <div class="text-rangmod-black px-1">
+            <!-- <div class="text-rangmod-black px-1">
               ห้องพัก
               <div class="border-rangmod-gray rounded-xl">
                 <input
@@ -260,7 +260,7 @@
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
-            </div>
+            </div> -->
 
             <div class="text-rangmod-black px-1">
               สถานะ
@@ -504,7 +504,7 @@ export default {
         sex: "",
         phone: "",
         address: "",
-        room: 1,
+        // room: 1,
         status: "",
       },
       addModal: {
