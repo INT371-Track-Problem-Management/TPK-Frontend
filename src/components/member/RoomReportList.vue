@@ -269,11 +269,7 @@
               ยืนยัน
             </div>
           </div>
-        </div>
-      </div>
-    </transition>
-
-    <transition name="bounce">
+        </div><transition name="bounce">
       <div
         v-if="sentReport"
         class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6 my-auto"
@@ -287,6 +283,10 @@
         </div>
       </div>
     </transition>
+      </div>
+    </transition>
+
+    
   </div>
 </template>
 
@@ -507,7 +507,6 @@ export default {
         const data = res.json();
         console.log(data);
         return data.then(async (data) => {
-          console.log(typeof data);
           if (typeof data === "number") {
             this.sentReport = true;
             setTimeout(() => {
@@ -519,7 +518,6 @@ export default {
               this.clearData();
             }, 2500);
             this.reportList = await this.getReport();
-            console.log(this.reportList);
           }
         });
       }

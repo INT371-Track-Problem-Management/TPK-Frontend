@@ -110,152 +110,6 @@
       "
       v-on:click="showModal = !showModal"
     ></div>
-
-    <transition name="bounce">
-      <div
-        v-show="showModal"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
-      >
-        <div
-          class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <!-- Closed -->
-          <div class="flex justify-end">
-            <div
-              @click="
-                (showModal = false),
-                  (validate.title = false),
-                  (validate.description = false),
-                  clearData()
-              "
-              class="cursor-pointer"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div class="text-2xl text-rangmod-purple mb-5">
-            รายละเอียดแจ้งซ่อม
-          </div>
-          <div class="grid grid-cols-2 space-x-2">
-            <div>
-              <div class="text-rangmod-black">หัวข้อปัญหา</div>
-              <div class="mb-5">
-                <input
-                  v-model="title"
-                  type="text"
-                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  :class="
-                    this.validate.title
-                      ? 'placeholder-red-500 border-red-500 border-2'
-                      : ''
-                  "
-                  :placeholder="
-                    this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''
-                  "
-                />
-              </div>
-            </div>
-            <div>
-              <div class="text-rangmod-black">ประเภทปัญหา</div>
-              <div
-                @click="isActivateCategory = !isActivateCategory"
-                class="rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-col w-full mb-5 text-rangmod-black border border-rangmod-gray transition-all"
-              >
-                <div
-                  class="flex items-center justify-between cursor-pointer px-4"
-                >
-                  <div>
-                    <div v-if="this.category != ''">
-                      {{ this.category.name }}
-                    </div>
-                    <div v-else class="text-rangmod-gray">เลือกประเภท</div>
-                  </div>
-                  <!-- <div>เลือกประเภทปัญหา</div> -->
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    fill="currentColor"
-                    class="bi bi-caret-down-fill"
-                    viewBox="0 0 16 16"
-                    :class="
-                      isActivateCategory
-                        ? 'transition-all rotate-180'
-                        : 'transition-all'
-                    "
-                  >
-                    <path
-                      d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-                    />
-                  </svg>
-                </div>
-                <transition name="bounce">
-                  <div
-                    v-show="isActivateCategory"
-                    class="flex flex-row-reverse"
-                  >
-                    <div
-                      class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
-                    >
-                      <div v-for="(category, i) in categoryLists" :key="i">
-                        <div
-                          class="py-2 hover:font-bold text-right cursor-pointer"
-                          @click="
-                            (this.category = category),
-                              (isActivateCategory = true)
-                          "
-                        >
-                          {{ category.name }}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </transition>
-              </div>
-            </div>
-          </div>
-
-          <div class="text-rangmod-black">รายละเอียดปัญหา</div>
-          <div class="mb-5">
-            <textarea
-              v-model="description"
-              class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-              :class="
-                this.validate.description
-                  ? 'placeholder-red-500 border-red-500 border-2'
-                  : ''
-              "
-              :placeholder="
-                this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''
-              "
-            ></textarea>
-          </div>
-
-          <div class="flex flex-row space-x-4 justify-end">
-            <div
-              v-on:click="sendReport()"
-              class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
-            >
-              ยืนยัน
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -353,7 +207,6 @@ export default {
         },
       ],
 
-      showModal: false,
       activeSortFilter: false,
       // modal: {
       //   code: "00000",
@@ -601,33 +454,6 @@ export default {
     },
     showDetail(reportId) {
       console.log(reportId);
-    },
-    sendReport() {
-      if (!this.validation()) {
-        fetch(`${process.env.VUE_APP_API_URL}/customer/report`, {
-          method: "POST",
-          headers: {
-            "content-Type": "application/json",
-            Authorization: `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            Title: this.title,
-            CategoriesReport: this.category.engName,
-            ReportDes: this.description,
-            Status: this.status,
-            CreatedBy: this.createdBy,
-          }),
-        })
-          .then(() => {
-            alert("Send report!");
-            this.showModal = !this.showModal;
-            this.clearData();
-          })
-          .then(async () => {
-            this.reportList = await this.getReport();
-            console.log(this.reportList);
-          });
-      }
     },
     async getReport() {
       const res = await fetch(

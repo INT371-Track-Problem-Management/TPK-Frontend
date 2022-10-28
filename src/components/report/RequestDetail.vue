@@ -384,6 +384,7 @@ export default {
       isActiveMaintainer: false,
       isAccept: false,
       isEdit: false,
+      sentEngage: false,
       reportDetail: {},
       reportEngage: {},
       maintainerLists: [],
@@ -514,13 +515,6 @@ export default {
       this.maintainerLists = await this.getMaintainer();
       this.selectedMaintainer = this.maintainerLists[0];
       await this.getAllReportStatus(this.$route.params.id)
-      // if(this.engageDateShowFormat(this.reportDetail.selectedDate) == this.dateShowFormat(Date.now())) {
-      //   const res = await this.updateStatus('S4')
-      //   console.log(res);
-      //   if(res == 'success') {
-      //     await this.getAllReportStatus(this.$route.params.id)
-      //   }
-      // }
     },
     async getReportDetail() {
       const res = await fetch(

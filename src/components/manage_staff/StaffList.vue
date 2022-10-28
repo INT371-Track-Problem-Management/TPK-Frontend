@@ -706,7 +706,7 @@ export default {
   },
   methods: {
     async create() {
-      await this.getStaffs();
+      this.staffList = await this.getStaffs();
     },
     async getStaffs() {
       const res = await fetch(
@@ -721,8 +721,7 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        this.staffList = data.Employees
-        // console.log(data.Employees);
+        return data.Employees
       });
     },
     backStep() {
@@ -765,12 +764,12 @@ export default {
       });
       const data = res.json();
       console.log(data);
-      return data.then((res) => {
-
+      return data.then(async (res) => {
         if (res == "this email can not use!!!") {
           alert("อีเมลนี้ใช้ไม่ได้!!!");
         } else {
-          alert("ลงทะเบียนสำเร็จ!");
+          // alert("ลงทะเบียนสำเร็จ!");
+          this.staffList = await this.getStaffs();
           this.registeredStaff = true;
           setTimeout(() => {
             this.registeredStaff = false;
