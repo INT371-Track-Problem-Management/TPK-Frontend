@@ -209,6 +209,20 @@
         </div>
       </div>
     </transition>
+    <transition name="bounce">
+      <div
+        v-if="assignedCustomer"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ลงทะเบียนผู้พักอาศัยสำเร็จ
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -235,7 +249,8 @@ export default {
         dob: false,
         phone: false,
         address: false,
-      }
+      },
+      assignedCustomer: false,
     };
   },
   computed: {
@@ -293,9 +308,16 @@ export default {
         res = await data
         if(res == 'this email can not use!!!') {
           alert('อีเมลนี้ใช้ไม่ได้!!!')
+          this.$router.push(`/register`);
         } else {
-          alert("ลงทะเบียนสำเร็จ!");
-          this.$router.push(`/login`);
+          // alert("ลงทะเบียนสำเร็จ!");
+          this.assignedCustomer = true
+          setTimeout(() => {
+            this.assignedCustomer = false
+          }, 2000)
+          setTimeout(() => {
+            this.$router.push(`/login`);
+          }, 2500)
         }
       })
     }

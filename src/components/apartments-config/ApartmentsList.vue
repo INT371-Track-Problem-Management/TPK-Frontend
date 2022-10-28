@@ -28,34 +28,37 @@
         <div v-for="(building, i) in buildingLists" :key="i">
           <transition name="bounce" appear>
             <RouterLink
-            :to="{
-              name: 'dashboard-apartment-room',
-              params: { buildingId: building.buildingId, buildingName: building.buildingName},
-            }"
+              :to="{
+                name: 'dashboard-apartment-room',
+                params: {
+                  buildingId: building.buildingId,
+                  buildingName: building.buildingName,
+                },
+              }"
             >
-            <div
-              class="cursor-pointer w-full border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
-            >
-              <div class="items-center my-5 flex justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-36 w-36"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  stroke-width="1"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                  />
-                </svg>
+              <div
+                class="cursor-pointer w-full border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
+              >
+                <div class="items-center my-5 flex justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-36 w-36"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="1"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
+                    />
+                  </svg>
+                </div>
+                <div class="text-center my-2 text-base">
+                  {{ building.buildingName }}
+                </div>
               </div>
-              <div class="text-center my-2 text-base">
-                {{ building.buildingName }}
-              </div>
-            </div>
             </RouterLink>
           </transition>
         </div>
@@ -216,6 +219,20 @@
             </div>
           </div>
         </div>
+        <transition name="bounce">
+          <div
+            v-if="addedBuilding"
+            class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+          >
+            <div
+              class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+            >
+              <div class="text-2xl text-rangmod-purple my-5 text-center">
+                เพิ่มหอพักสำเร็จ
+              </div>
+            </div>
+          </div>
+        </transition>
       </div>
     </transition>
   </div>
@@ -245,6 +262,7 @@ export default {
         },
       ],
       rooms: [],
+      addedBuilding: false,
       // buildingId: 1,
       // allBuilding: [],
     };
@@ -272,24 +290,27 @@ export default {
         );
         const data = res.json();
         return data.then((data) => {
-          return data.AllBuilding
-        })
+          return data.AllBuilding;
+        });
       } catch (e) {
         console.log(e);
       }
     },
     async insertBuildingAndRoom() {
-      const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/building`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${this.token}`,
-        },
-        body: JSON.stringify({
-          buildingName: this.addBuilding.name,
-          createBy: parseInt(localStorage.getItem("id")),
-        }),
-      });
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/employee/building`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            buildingName: this.addBuilding.name,
+            createBy: parseInt(localStorage.getItem("id")),
+          }),
+        }
+      );
       const data = res.json();
       return data.then(async (res) => {
         if (res.message == "Insert success") {
@@ -297,31 +318,42 @@ export default {
         }
       });
     },
-    async insertRooms(buildingId) { //////////////////////////////
-      this.add(buildingId)
+    async insertRooms(buildingId) {
+      //////////////////////////////
+      this.add(buildingId);
       try {
-        const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/rooms`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${this.token}`,
-          },
-          body: JSON.stringify({
-            BuildingId: buildingId,
-            Rooms: this.rooms,
-            UpdateBy: parseInt(localStorage.getItem("id")),
-          }),
-        });
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/employee/rooms`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              BuildingId: buildingId,
+              Rooms: this.rooms,
+              UpdateBy: parseInt(localStorage.getItem("id")),
+            }),
+          }
+        );
         const data = res.json();
         console.log(data);
-        return data.then(async(res) => {
+        return data.then(async (res) => {
           console.log(res);
-          if(res.message == "success") {
-            alert('เพิ่มหอพักสำเร็จ!!')
+          if (res.message == "success") {
+            // alert('เพิ่มหอพักสำเร็จ!!')
+            this.addedBuilding = true;
+            setTimeout(() => {
+              this.addedBuilding = false;
+            }, 2000);
+            setTimeout(() => {
+              this.showAddModal = false;
+            }, 2500);
           } else {
-            alert('การเพิ่มหอพักผิดพลาด')
+            alert("การเพิ่มหอพักผิดพลาด");
           }
-        })
+        });
       } catch (e) {
         console.log(e);
       }
@@ -330,9 +362,7 @@ export default {
       for (let i in this.floorRooms) {
         for (let j = 1; j <= this.floorRooms[i].rooms; j++) {
           this.rooms.push({
-            RoomNum: `${buildingId}${this.floorRooms[i].floor}${this.pad(
-              j
-            )}`,
+            RoomNum: `${buildingId}${this.floorRooms[i].floor}${this.pad(j)}`,
             Description: "ห้องธรรมดา",
             Floors: this.floorRooms[i].floor,
           });

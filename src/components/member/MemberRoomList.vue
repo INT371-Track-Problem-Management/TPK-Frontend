@@ -7,7 +7,7 @@
 
     <div
       class="w-full bg-white"
-      :class="roomLists.length > 0 ? '' : 'py-48'"
+      :class="noInRoom ? '' : 'py-48'"
     >
       <!-- <div
         v-show="buildingLists.length > 0"
@@ -22,7 +22,7 @@
       </div> -->
 
       <div
-        v-if="roomLists.length > 0"
+        v-if="noInRoom"
         class="grid grid-cols-1 xse:grid-cols-2 sm:grid-cols-3 2xmd:grid-cols-4 lg:grid-cols-5 gap-5 my-5 px-0 py-2"
       >
         <div v-for="(room, i) in roomLists" :key="i">
@@ -78,6 +78,7 @@ export default {
       token: localStorage.getItem("token"),
       modalBg: false,
       roomLists: [],
+      noInRoom: false,
     };
   },
   computed: {},
@@ -100,26 +101,34 @@ export default {
             },
           }
         );
-        const data = res.json();
-        return data;
+        const data = res.json()
+        return data.then((data) => {
+          console.log(data);
+          if(data == null) {
+            this.noInRoom = true
+            console.log('not in any room');
+          } else {
+            return data
+          }
+        })
       } catch (e) {
         console.log(e);
       }
     },
-    add() {
-      for (let i in this.floorRooms) {
-        for (let j = 1; j <= this.floorRooms[i].rooms; j++) {
-          this.rooms.push({
-            roomNum: `${this.buildingId}${this.floorRooms[i].floor}${this.pad(
-              j
-            )}`,
-            description: "ห้องธรรมดา",
-            floor: this.floorRooms[i].floor,
-          });
-        }
-      }
-      console.log(this.rooms);
-    },
+    // add() {
+    //   for (let i in this.floorRooms) {
+    //     for (let j = 1; j <= this.floorRooms[i].rooms; j++) {
+    //       this.rooms.push({
+    //         roomNum: `${this.buildingId}${this.floorRooms[i].floor}${this.pad(
+    //           j
+    //         )}`,
+    //         description: "ห้องธรรมดา",
+    //         floor: this.floorRooms[i].floor,
+    //       });
+    //     }
+    //   }
+    //   console.log(this.rooms);
+    // },
     goToRoom(roomId) {
       console.log(roomId)
       // this.$router.push('/member/myroom/room/'+roomId)
