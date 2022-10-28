@@ -147,7 +147,7 @@
       >
         <div
           v-if="this.isEngageDateNow"
-          @click="this.showFinish = !this.showFinish, this.modalBg = !this,modalBg"
+          @click="this.showFinish = !this.showFinish, this.modalBg = !this.modalBg"
           class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
         >
           แก้ไขปัญหาเสร็จสิ้น
@@ -609,7 +609,7 @@
           class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ทำการรับเรื่องรายงานแล้ว
+            ทำการยกเลิกรายงานแล้ว
           </div>
         </div>
       </div>
