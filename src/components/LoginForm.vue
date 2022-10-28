@@ -1,26 +1,30 @@
 <template>
-  <div class="px-6 md:px-0">
-    <div
-      class="bg-white w-full md:w-2/3 lg:w-1/3 md:mx-auto mt-4 px-10 py-6 rounded-xl shadow-md"
-    >
+  <div class="px-6">
+    <div class="bg-white max-w-md mx-auto mt-4 px-10 py-6 rounded-xl shadow-md">
       <div class="text-rangmod-black text-2xl">เข้าสู่ระบบ</div>
       <hr class="my-4" />
       <div class="mb-4">
         <div class="text-rangmod-black px-1">อีเมล์</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.email ? 'border-red-500 border-2' : ''">
+        <div
+          class="border border-rangmod-gray rounded-xl px-3"
+          :class="this.validate.email ? 'border-red-500 border-2' : ''"
+        >
           <input
             v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
             :class="this.validate.email ? 'placeholder-red-500' : ''"
             :placeholder="this.validate.email ? 'กรุณาใส่อีเมล' : ''"
-            />
+          />
         </div>
       </div>
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">รหัสผ่าน</div>
-        <div class="border border-rangmod-gray rounded-xl px-3 relative" :class="this.validate.password ? 'border-red-500 border-2' : ''">
+        <div
+          class="border border-rangmod-gray rounded-xl px-3 relative"
+          :class="this.validate.password ? 'border-red-500 border-2' : ''"
+        >
           <input
             v-model="password"
             :type="textPassword"
@@ -101,60 +105,72 @@ export default {
       },
       validate: {
         email: false,
-        password: false
-      }
+        password: false,
+      },
     };
+  },
+  mounted() {
+    if(localStorage.getItem("token")) {
+      this.goToPage(localStorage.getItem("role"))
+    }
   },
   methods: {
     validation() {
-      this.email == "" ? this.validate.email = true : this.validate.email = false
-      this.password == "" ? this.validate.password = true : this.validate.password = false
+      this.email == ""
+        ? (this.validate.email = true)
+        : (this.validate.email = false);
+      this.password == ""
+        ? (this.validate.password = true)
+        : (this.validate.password = false);
     },
 
     async doLogin() {
-      if(!this.validation()) {
-      fetch(`https://dev.rungmod.com/api/login`, {
-        method: "POST",
-        headers: { "content-Type": "application/json" },
-        body: JSON.stringify({
-          email: this.email,
-          password: this.password,
-        }),
-      })
-        .then((response) => {
-          const res = response.json();
-          return res;
+      if (!this.validation()) {
+        fetch(`${process.env.VUE_APP_API_URL}/login`, {
+          method: "POST",
+          headers: { "content-Type": "application/json" },
+          body: JSON.stringify({
+            email: this.email,
+            password: this.password,
+          }),
         })
-        .then((res) => {
-          this.token = res.token;
-          this.userLogin.id = this.parseJwt(this.token).id;
-          this.userLogin.email = this.parseJwt(this.token).email;
-          this.userLogin.role = this.parseJwt(this.token).role;
-          this.userLogin.status = this.parseJwt(this.token).status;
-          localStorage.setItem("id", this.userLogin.id);
-          localStorage.setItem("email", this.userLogin.email);
-          localStorage.setItem("role", this.userLogin.role);
-          localStorage.setItem("token", this.token);
-          console.log(this.userLogin); //checkuserlogin
-          // console.log(this.token); // checktoken
-        })
-        .then(() => {
-          if (this.userLogin.status == true) {
-            if (this.userLogin.role == "A") {
-              this.$router.push(`/apartments`);
+          .then((response) => {
+            const res = response.json();
+            return res;
+          })
+          .then((res) => {
+            this.token = res.token;
+            this.userLogin.id = this.parseJwt(this.token).id;
+            this.userLogin.email = this.parseJwt(this.token).email;
+            this.userLogin.role = this.parseJwt(this.token).role;
+            this.userLogin.status = this.parseJwt(this.token).status;
+            localStorage.setItem("id", this.userLogin.id);
+            localStorage.setItem("email", this.userLogin.email);
+            localStorage.setItem("role", this.userLogin.role);
+            localStorage.setItem("token", this.token);
+            localStorage.setItem("username", res.name);
+            console.log(this.userLogin);
+          })
+          .then(() => {
+            if (this.userLogin.status == true) {
+              this.goToPage(this.userLogin.role);
+            } else {
+              console.log("failed login");
             }
+          });
+      }
+    },
+    goToPage(userRole) {
+      if (userRole == "A") {
+        this.$router.push(`/dashboard/member`);
+      }
 
-            if (this.userLogin.role == "E") {
-              this.$router.push(`/dashboard/member`);
-            }
+      if (userRole == "E") {
+        this.$router.push(`/dashboard/member`);
+      }
 
-            if (this.userLogin.role == "C") {
-              this.$router.push(`/member/report`);
-            }
-          } else {
-            console.log("failed login");
-          }
-        });
+      if (userRole == "C") {
+        this.$router.push(`/member/myroom`);
       }
     },
     parseJwt(token) {

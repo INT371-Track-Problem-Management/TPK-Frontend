@@ -77,7 +77,11 @@
               </div> -->
 
               <div class="w-7">
-                <div v-if="this.reportWithEngage.status != 'S6' && this.reportWithEngage.status != 'S7'"
+                <div
+                  v-if="
+                    this.reportWithEngage.status != 'S6' &&
+                    this.reportWithEngage.status != 'S7'
+                  "
                   @click="postpone(engageDate.date)"
                   class="w-7 h-7 rounded-full"
                   :class="
@@ -115,15 +119,16 @@
     <div
       v-if="this.isEngageDateNow"
       class="flex flex-row space-x-4 justify-end"
-      
     >
-      <div v-if="this.reportWithEngage.status != 'S7'"
+      <div
+        v-if="this.reportWithEngage.status != 'S7'"
         @click="this.showReviewModal = !this.showReviewModal"
         class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
       >
         แก้ไขปัญหาเสร็จสิ้น
       </div>
-      <div v-if="this.reportWithEngage.status == 'S7'"
+      <div
+        v-if="this.reportWithEngage.status == 'S7'"
         @click="this.$router.push('/member/report')"
         class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
       >
@@ -487,8 +492,24 @@
           <div class="text-2xl text-rangmod-purple mb-5">ให้คะแนน / รีวิว</div>
 
           <div class="flex flex-row space-x-4 justify-center mb-5">
-            <div v-for="(score, i) in rates" :key="i">
-              <div v-html="star" @click="rating(score.score)"></div>
+            <div v-for="(rate, i) in rates" :key="i">
+              <!-- <div v-html="star" @click="rating(score.score)"></div> -->
+              <svg
+                @mouseover="fillStar(rate.score)"
+                @mouseleave="removeStar(rate.score)"
+                style="color: rgb(255, 221, 0)"
+                xmlns="http://www.w3.org/2000/svg"
+                width="75"
+                height="75"
+                fill="currentColor"
+                class="bi bi-star-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                  :fill="rate.hover ? '#ffdd00' : '#7f7f7a'"
+                ></path>
+              </svg>
             </div>
           </div>
 
@@ -562,56 +583,33 @@ export default {
         {
           star: 1,
           score: 1,
+          hover: false,
         },
         {
           star: 2,
           score: 2,
+          hover: false,
         },
         {
           star: 3,
           score: 3,
+          hover: false,
         },
         {
           star: 4,
           score: 4,
+          hover: false,
         },
         {
           star: 5,
           score: 5,
+          hover: false,
         },
       ],
       review: {
         score: 0,
         description: "",
       },
-      star: `<svg
-            style="color: rgb(255, 221, 0)"
-            xmlns="http://www.w3.org/2000/svg"
-            width="50"
-            height="50"
-            fill="currentColor"
-            class="bi bi-star cursor-pointer"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.565.565 0 0 0-.163-.505L1.71 6.745l4.052-.576a.525.525 0 0 0 .393-.288L8 2.223l1.847 3.658a.525.525 0 0 0 .393.288l4.052.575-2.906 2.77a.565.565 0 0 0-.163.506l.694 3.957-3.686-1.894a.503.503 0 0 0-.461 0z"
-              fill="#ffdd00"
-            ></path>
-          </svg>`,
-      filledStar: `<svg 
-                style="color: rgb(255, 221, 0)"
-                xmlns="http://www.w3.org/2000/svg"
-                width="50"
-                height="50"
-                fill="currentColor"
-                class="bi bi-star-fill cursor-pointer"
-                viewBox="0 0 16 16"
-              >
-                <path
-                  d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                  fill="#ffdd00"
-                ></path>
-              </svg>`,
     };
   },
   mounted() {
@@ -642,58 +640,53 @@ export default {
         }
       }
       this.isEngageDateNow = this.checkEngageDateNow();
-      console.log(this.reportWithEngage.status == 'S7');
+      console.log(this.reportWithEngage.status == "S7");
     },
     postpone(selectedDate) {
       if (confirm("คุณต้องการเลื่อนการนัดวันซ่อมใช่หรือไม่")) {
-        fetch(`https://dev.rungmod.com/api/customer/selectedPlanFixDate`, {
+        fetch(`${process.env.VUE_APP_API_URL}/customer/selectedPlanFixDate`, {
           method: "PUT",
           headers: {
             "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
           },
           body: JSON.stringify({
             EngageId: parseInt(this.reportWithEngage.engageId),
             SelectedDate: selectedDate,
           }),
-        })
-          .then(async() => {
-            this.reportWithEngage = await this.getReportDetailWithEngage()
-            alert("ทำการเลือกนัดวันเข้าซ่อมแล้ว")
-          })
-          // .then(
-          //   async () =>
-          //     (this.reportWithEngage = await this.getReportDetailWithEngage())
-          // );
+        }).then(async () => {
+          this.reportWithEngage = await this.getReportDetailWithEngage();
+          alert("ทำการเลือกนัดวันเข้าซ่อมแล้ว");
+        });
+        // .then(
+        //   async () =>
+        //     (this.reportWithEngage = await this.getReportDetailWithEngage())
+        // );
       }
     },
     finishAndReview() {
-      console.log(parseInt(this.$route.params.id))
-      console.log(this.review.score)
-      console.log(this.review.description)
-      if(this.review.description == "") {
-        alert('กรุณาแสดงความคิดเห็นการแก้ไขปัญหานี้')
+      console.log(parseInt(this.$route.params.id));
+      console.log(this.review.score);
+      console.log(this.review.description);
+      if (this.review.description == "") {
+        alert("กรุณาแสดงความคิดเห็นการแก้ไขปัญหานี้");
       } else {
-      fetch(
-          `https://dev.rungmod.com/api/customer/endJobReview`,
-          {
-            method: "POST",
-            headers: {
-              "content-Type": "application/json",
-              "Authorization": `Bearer ${this.token}`,
-            },
-            body: JSON.stringify({
-              ReportId: parseInt(this.$route.params.id),
-              Des: this.review.description,
-              Score: this.review.score
-            }),
-          }
-        ).then(() => {
-          alert('ทำการให้คะแนนและแสดงความคิดเห็นแล้ว')
-          this.showReviewModal = false
-        }
-        )
-    }
+        fetch(`${process.env.VUE_APP_API_URL}/customer/endJobReview`, {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            ReportId: parseInt(this.$route.params.id),
+            Des: this.review.description,
+            Score: this.review.score,
+          }),
+        }).then(() => {
+          alert("ทำการให้คะแนนและแสดงความคิดเห็นแล้ว");
+          this.showReviewModal = false;
+        });
+      }
       // this.showReviewModal = true;
       // console.log(this.showReviewModal);
     },
@@ -701,17 +694,28 @@ export default {
       this.review.score = score;
       console.log(score);
     },
+    fillStar(score) {
+      for(let i = 0 ; i < score; i++) {
+          this.rates[i].hover = true
+      }
+
+    },
+    removeStar(score) {
+      for(let i = 0 ; i < score; i++) {
+          this.rates[i].hover = false
+      }
+    },
     delete(action) {
       console.log(action);
     },
     async getReportDetailWithEngage() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
+        `${process.env.VUE_APP_API_URL}/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
         {
           method: "GET",
           headers: {
             "content-Type": "application/json",
-            "Authorization": `Bearer ${this.token}`,
+            Authorization: `Bearer ${this.token}`,
           },
         }
       );
@@ -721,12 +725,12 @@ export default {
     async getReportById() {
       try {
         const res = await fetch(
-          `https://dev.rungmod.com/api/customer/reportById`,
+          `${process.env.VUE_APP_API_URL}/customer/reportById`,
           {
             method: "POST",
             headers: {
               "content-Type": "application/json",
-              "Authorization": `Bearer ${this.token}`,
+              Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify({
               ReportId: parseInt(this.$route.params.id),

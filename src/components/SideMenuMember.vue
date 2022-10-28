@@ -11,7 +11,7 @@
         <div
           v-for="(menu, i) in menuList"
           :key="i"
-          class="tracking-wide transition-all cursor-pointer"
+          class="tracking-wide transition-all cursor-pointer my-1"
         >
           <RouterLink
             :to="menu.url"
@@ -31,7 +31,7 @@
 
           <div v-else >
             <div 
-              class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative"
+              class="flex flex-row space-x-2 items-center px-5 py-4 rounded-xl hover:bg-rangmod-light-pink relative my-1"
               @click="menu.activeDropdown = !menu.activeDropdown"
             >
               <div v-html="menu.icon"></div>
@@ -52,7 +52,7 @@
               >
                 <RouterLink :to="item.url">
                   <div 
-                    class="flex flex-row space-x-2 items-center px-8 py-2 rounded-xl hover:bg-rangmod-light-pink"
+                    class="flex flex-row space-x-2 items-center px-8 py-2 rounded-xl hover:bg-rangmod-light-pink my-1"
                     :class="item.isActive ? `bg-rangmod-light-pink` : ``"
                     @click="selectMenu(i, j, true)"
                   >

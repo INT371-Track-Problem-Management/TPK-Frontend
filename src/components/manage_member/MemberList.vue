@@ -5,11 +5,11 @@
     <div class="text-xl">ข้อมูลผู้พัก</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="w-32 my-10 cursor-pointer" @click="add()">
+    <div class="w-32 my-5 cursor-pointer" @click="add()">
       <div
-        class="flex flex-row justify-start items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
+        class="items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
       >
-        <div>สร้างประวัติ</div>
+        <div class="flex justify-center">สร้างประวัติ</div>
       </div>
     </div>
 
@@ -18,8 +18,8 @@
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัสสมาชิก</th>
         <th class="py-4">ชื่อ-นามสกุล</th>
-        <!-- <th class="py-4">ว/ด/ป ลงทะเบียน</th> -->
-        <th class="py-4">ห้อง</th>
+        <th class="py-4">ว/ด/ป ลงทะเบียน</th>
+        <!-- <th class="py-4">ห้อง</th> -->
         <th class="py-4">สถานะ</th>
         <th class="py-4"></th>
       </tr>
@@ -29,29 +29,32 @@
         class="border-b border-rangmod-light-gray transition-all hover:bg-rangmod-light-pink/60"
       >
         <td class="text-center py-4 whitespace-nowrap">{{ i + 1 }}</td>
-        <td class="text-center py-4 whitespace-nowrap">{{ member.customerId }}</td>
         <td class="text-center py-4 whitespace-nowrap">
+          {{ member.customerId }}
+        </td>
+        <td class="text-center py-4 whitespace-nowrap truncate max-w-[100px]">
           {{ member.fname }} {{ member.lname }}
         </td>
-        <!-- <td class="text-center py-4 whitespace-nowrap">{{ member.date }}</td> -->
-        <td class="text-center py-4 whitespace-nowrap">{{ member.room }}</td>
         <td class="text-center py-4 whitespace-nowrap">
+          {{ this.dateFormat(member.createAt) }}
+        </td>
+        <!-- <td class="text-center py-4 whitespace-nowrap">
           <div v-for="(status, j) in statusList" :key="j">
-            <div v-if="member.status == status.id" :class="status.color">
+            <div v-if="member.status == status.name" :class="status.color">
               {{ status.title }}
             </div>
           </div>
-        </td>
+        </td> -->
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="showDetail(member.code)"
+          @click="getDetail(member.customerId)"
         >
           <div>รายละเอียด</div>
         </td>
       </tr>
     </table>
 
-    <div class="flex flex-col md:hidden mb-10">
+    <!-- <div class="flex flex-col md:hidden mb-10">
       <div
         v-for="(member, i) in memberList"
         :key="i"
@@ -91,28 +94,28 @@
           <div>รายละเอียด</div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <div
       :class="
-        showModal
+        showDetailModal
           ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
           : 'hidden opacity-0'
       "
-      v-on:click="showModal = !showModal"
+      v-on:click="showDetailModal = !showDetailModal"
     ></div>
 
-    <transition>
+    <transition name="bounce">
       <div
-        v-show="showModal"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        v-show="showDetailModal"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="w-11/12 lg:w-1/2 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showModal = false" class="cursor-pointer">
+            <div @click="showDetailModal = false" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -134,14 +137,9 @@
             ประวัติผู้พักอาศัย
           </div>
 
-          <div class="mb-8">
+          <!-- <div class="mb-8">
             <div class="text-rangmod-black px-1">รหัสผู้ใช้งาน</div>
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
-              <input
-                type="text"
-                v-model="modal.code"
-                class="w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              />
 
               <div
                 class="absolute right-4 top-2 text-rangmod-purple cursor-pointer"
@@ -162,7 +160,7 @@
                 </svg>
               </div>
             </div>
-          </div>
+          </div> -->
 
           <div class="mb-4">
             <div class="text-rangmod-black px-1">ชื่อ</div>
@@ -170,7 +168,7 @@
               <input
                 type="text"
                 readonly
-                v-model="modal.fname"
+                v-model="detailModal.fname"
                 class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
@@ -182,7 +180,7 @@
               <input
                 type="text"
                 readonly
-                v-model="modal.lname"
+                v-model="detailModal.lname"
                 class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
             </div>
@@ -195,7 +193,7 @@
                 <input
                   type="text"
                   readonly
-                  v-model="modal.dateOfBirth"
+                  v-model="detailModal.dateOfBirth"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
@@ -207,7 +205,7 @@
                 <input
                   type="text"
                   readonly
-                  v-model="modal.age"
+                  v-model="detailModal.age"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
@@ -221,7 +219,7 @@
                 <input
                   type="text"
                   readonly
-                  v-model="modal.sex"
+                  v-model="detailModal.sex"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
@@ -233,7 +231,7 @@
                 <input
                   type="text"
                   readonly
-                  v-model="modal.phone"
+                  v-model="detailModal.phone"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
@@ -245,24 +243,24 @@
             <div class="border-rangmod-gray rounded-xl -pb-4">
               <textarea
                 readonly
-                v-model="modal.address"
+                v-model="detailModal.address"
                 class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               ></textarea>
             </div>
           </div>
 
           <div class="mb-4 grid grid-cols-2 gap-2">
-            <div class="text-rangmod-black px-1">
+            <!-- <div class="text-rangmod-black px-1">
               ห้องพัก
               <div class="border-rangmod-gray rounded-xl">
                 <input
                   type="text"
                   readonly
-                  v-model="modal.room"
+                  v-model="detailModal.room"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
-            </div>
+            </div> -->
 
             <div class="text-rangmod-black px-1">
               สถานะ
@@ -270,7 +268,7 @@
                 <input
                   type="text"
                   readonly
-                  v-model="modal.status"
+                  v-model="detailModal.status"
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
@@ -279,7 +277,7 @@
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="showModal = !showModal"
+              v-on:click="showDetailModal = !showDetailModal"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยืนยัน
@@ -298,17 +296,17 @@
       v-on:click="showAdd = !showAdd"
     ></div>
 
-    <transition>
+    <transition name="bounce">
       <div
         v-show="showAdd"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="w-11/12 lg:w-1/2 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <!-- Closed -->
           <div class="flex justify-end">
-            <div @click="showAdd = false, clearData()" class="cursor-pointer">
+            <div @click="(showAdd = false), clearData()" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-6 w-6"
@@ -334,13 +332,14 @@
             <div class="text-rangmod-black px-1">รหัสผู้ใช้งาน</div>
             <div class="border border-rangmod-gray rounded-xl px-3 relative">
               <input
-                type="number" min="1"
+                type="number"
+                min="1"
                 v-model="addModal.customerId"
                 class="w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               />
 
               <div
-                @click = search()
+                @click="search()"
                 class="absolute right-4 top-2 text-rangmod-purple cursor-pointer"
               >
                 <svg
@@ -453,8 +452,8 @@
               ห้องพัก
               <div class="border-rangmod-gray rounded-xl">
                 <input
-                  type="number" min="1"
-
+                  type="number"
+                  min="1"
                   v-model="addModal.room"
                   class="border border-rangmod-gray px-3 w-full text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
@@ -476,7 +475,7 @@
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="addCustomerToRoom()"
+              v-on:click="addCustomerToRoom(addModal.room)"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยืนยัน
@@ -485,7 +484,20 @@
         </div>
       </div>
     </transition>
-
+    <transition name="bounce">
+      <div
+        v-if="assignedCustomer"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            เพิ่มผู้พักอาศัยเข้าห้องพักเสร็จสิ้น
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -493,20 +505,22 @@
 export default {
   data() {
     return {
-      token: "",
-      showModal: false,
+      token: localStorage.getItem("token"),
+      empId: localStorage.getItem("id"),
+      showDetailModal: false,
       showAdd: false,
-      modal: {
-        code: "00000",
-        name: "name",
-        surname: "surname",
-        date: "XX/XX/XXXX",
-        age: "24",
-        gender: "หญิง",
-        tel: "0809876543",
-        address: "Address B",
-        room: "102",
-        status: "2",
+      assignedCustomer: false,
+      detailModal: {
+        customerId: 1,
+        fname: "",
+        lname: "",
+        dateOfBirth: "",
+        age: 1,
+        sex: "",
+        phone: "",
+        address: "",
+        // room: 1,
+        status: "",
       },
       addModal: {
         customerId: 1,
@@ -523,61 +537,17 @@ export default {
       searchCustomer: {},
       statusList: [
         {
-          id: "1",
+          name: "A",
           color: "text-rangmod-green",
           title: "พักอาศัย",
         },
         {
-          id: "2",
+          name: "I",
           color: "text-rangmod-yellow",
           title: "รอเข้าพัก",
         },
-        {
-          id: "3",
-          color: "text-rangmod-red",
-          title: "ย้ายออก",
-        },
       ],
-      memberList:[],
-      // memberList: [
-      //   {
-      //     code: "00123",
-      //     name: "ธนวินท์",
-      //     surname: "วัตราเศรษฐ์",
-      //     date: "29/03/2565",
-      //     age: "24",
-      //     gender: "ชาย",
-      //     tel: "0809876543",
-      //     address: "Address A",
-      //     room: "201",
-      //     status: "1",
-      //   },
-      //   {
-      //     code: "00122",
-      //     name: "นพศร",
-      //     surname: "เตชะรุ่งเรืองวิทย์",
-      //     date: "29/03/2565",
-      //     age: "24",
-      //     gender: "หญิง",
-      //     tel: "0809876543",
-      //     address: "Address B",
-      //     room: "102",
-      //     status: "2",
-      //   },
-      //   {
-      //     code: "00121",
-      //     name: "อาทฤต",
-      //     surname: "วิจิตรพันธ์ไม้",
-      //     date: "29/03/2565",
-      //     age: "24",
-      //     gender: "ชาย",
-      //     tel: "0809876543",
-      //     address: "Address C",
-      //     room: "203",
-      //     status: "3",
-      //   }
-      // ],
-      // username: "",
+      memberList: [],
     };
   },
   mounted() {
@@ -585,144 +555,163 @@ export default {
   },
   methods: {
     async create() {
-      this.token = localStorage.getItem("token");
       this.memberList = await this.getCustomers();
-      // this.roomList = await this.getRooms();
-      // this.dormList = await this.getDorm();
-      // this.reportList = await this.getReport();
-      // console.log(this.memberList);
-      // console.log(this.roomList);
-      // console.log(this.dormList);
-      // console.log(this.reportList);
-      // this.username = localStorage.username;
-      // console.log(this.username);
-      // this.searchCustomer = await this.getCustomerById();
-      // console.log(this.searchCustomer)
+      console.log(this.memberList);
     },
     async getCustomers() {
       try {
-        const res = await fetch("https://dev.rungmod.com/api/employee/customer", {
-        method: "GET",
-        headers: { "Authorization" : `Bearer ${this.token}`}
-      })
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/employee/customer`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${this.token}` },
+          }
+        );
         const data = res.json();
         return data;
       } catch (e) {
         console.log(e);
       }
     },
-    async getCustomerById() {
+    async getCustomerById(customerId) {
       try {
-        const res = await fetch(`https://dev.rungmod.com/api/employee/customerById/?customerId=${this.addModal.customerId}`, {
-        method: "GET",
-        headers: { "Authorization" : `Bearer ${this.token}`}
-      })
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/employee/customerById/?customerId=${customerId}`,
+          {
+            method: "GET",
+            headers: { Authorization: `Bearer ${this.token}` },
+          }
+        );
         const data = res.json();
         return data;
       } catch (e) {
         console.log(e);
       }
     },
-    showDetail(member_code) {
-      // console.log(`Show ${member_code} !`)
-
-      this.showModal = true;
-      let memberList = this.memberList;
-
-      for (var i = 0; i < memberList.length; i++) {
-        if (memberList[i].code == member_code) {
-          this.modal.code = memberList[i].code;
-          this.modal.name = memberList[i].name;
-          this.modal.surname = memberList[i].surname;
-          // this.modal.date = memberList[i].date;
-          this.modal.age = memberList[i].age;
-          this.modal.gender = memberList[i].gender;
-          this.modal.tel = memberList[i].tel;
-          this.modal.address = memberList[i].address;
-          // this.modal.room = memberList[i].room;
-          this.modal.status = memberList[i].status == 'I' ? 'ยังไม่ได้เข้าพัก' : 'เข้าพักแล้ว';
-        }
-      }
+    async getDetail(customerId) {
+      const detail = await this.getCustomerById(customerId);
+      this.detailModal.customerId = detail.customerId;
+      this.detailModal.fname = detail.fname;
+      this.detailModal.lname = detail.lname;
+      this.detailModal.age = detail.age;
+      this.detailModal.dateOfBirth = this.dateFormat(detail.dateOfBirth);
+      this.detailModal.sex = detail.sex == "M" ? "ชาย" : "หญิง";
+      this.detailModal.phone = detail.phone;
+      this.detailModal.address = detail.address;
+      this.detailModal.status = detail.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
+      this.showDetailModal = true;
     },
     async search() {
-      this.searchCustomer = await this.getCustomerById()
-      if(!this.searchCustomer) {
-        alert('ไม่มีลูกค้าคนนี้')
+      this.searchCustomer = await this.getCustomerById(
+        this.addModal.customerId
+      );
+      if (!this.searchCustomer) {
+        alert("ไม่มีลูกค้าคนนี้");
       } else {
-      this.addModal.customerId = this.searchCustomer.customerId;
-      this.addModal.fname = this.searchCustomer.fname;
-      this.addModal.lname = this.searchCustomer.lname;
-      this.addModal.dateOfBirth = this.dateFormat(this.searchCustomer.dateOfBirth);
-      this.addModal.age = this.searchCustomer.age;
-      this.addModal.sex = this.searchCustomer.sex;
-      this.addModal.phone = this.searchCustomer.phone;
-      this.addModal.address = this.searchCustomer.address;
-      // this.addModal.room = this.searchCustomer.room;
-      this.addModal.status = this.searchCustomer.status == 'I' ? 'ยังไม่ได้เข้าพัก' : 'เข้าพักแล้ว';
-      console.log(this.searchCustomer);
-    }
+        this.addModal.customerId = this.searchCustomer.customerId;
+        this.addModal.fname = this.searchCustomer.fname;
+        this.addModal.lname = this.searchCustomer.lname;
+        this.addModal.dateOfBirth = this.dateFormat(
+          this.searchCustomer.dateOfBirth
+        );
+        this.addModal.age = this.searchCustomer.age;
+        this.addModal.sex = this.searchCustomer.sex == "M" ? "ชาย" : "หญิง";
+        this.addModal.phone = this.searchCustomer.phone;
+        this.addModal.address = this.searchCustomer.address;
+        // this.addModal.room = this.searchCustomer.room;
+        this.addModal.status =
+          this.searchCustomer.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
+        console.log(this.searchCustomer);
+      }
     },
     add() {
       this.showAdd = true;
       console.log("add");
     },
     clearData() {
-      this.addModal.customerId = 1
-      this.addModal.fname = ""
-      this.addModal.lname = ""
-      this.addModal.dateOfBirth = ""
-      this.addModal.age = 1
-      this.addModal.sex = ""
-      this.addModal.phone = ""
-      this.addModal.address = ""
-      this.addModal.room = 1
-      this.addModal.status = ""
+      this.addModal.customerId = 1;
+      this.addModal.fname = "";
+      this.addModal.lname = "";
+      this.addModal.dateOfBirth = "";
+      this.addModal.age = 1;
+      this.addModal.sex = "";
+      this.addModal.phone = "";
+      this.addModal.address = "";
+      this.addModal.room = 1;
+      this.addModal.status = "";
     },
-    addCustomerToRoom() {
-      // if (this.title == "" || this.description == "") {
-      //   alert("Please complete your report");
-      // } else {
-        fetch(`https://dev.rungmod.com/api/employee/roomAddCustomer`, {
-          method: "POST",
-          headers: { "content-Type": "application/json",
-                    "Authorization" : `Bearer ${this.token}` },
-          body: JSON.stringify({
-            RoomId: this.addModal.room,
-            CustomerId: this.addModal.customerId,
-            DoomId: 1
-          }),
-        })
-          .then(() => {
-            alert('เพิ่มลูกค้าเข้าห้องพักแล้ว')
-            this.showAdd = !this.showAdd;
-          })
-          // .then(async () => {
-          //   this.reportList = await this.getReport();
-          //   console.log(this.reportList)
-          // });
-      // }
-    },
-    async getRooms() {
-      try {
-        const res = await fetch("https://dev.rungmod.com/api/rooms");
-        // const res = await fetch("http://localhost:5000/api/rooms");
+    async addCustomerToRoom(roomNum) {
+      const room = await this.searchRoomByRoomNum(roomNum);
+      if (room != "fail") {
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/employee/roomAddCustomer`,
+          {
+            method: "POST",
+            headers: {
+              "content-Type": "application/json",
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: JSON.stringify({
+              RoomId: room.roomId,
+              CustomerId: this.addModal.customerId,
+              BuildingId: room.buildingId,
+              UpdateBy: parseInt(this.empId),
+            }),
+          }
+        );
         const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
+        return data.then((data) => {
+          if (data == "success") {
+            this.assignedCustomer = true
+            setTimeout(() => {
+              this.assignedCustomer = false
+            }, 2000)
+            setTimeout(() => {
+              this.showAdd = false
+            }, 2500)
+          } else {
+            alert("fail");
+          }
+        });
+      } else {
+        alert("no room");
       }
     },
+    async searchRoomByRoomNum(roomNum) {
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/employee/roomByRoomNum/?roomNum=${roomNum}`,
+        {
+          method: "GET",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((data) => {
+        if (data.roomId != 0) {
+          return data;
+        } else {
+          return "fail";
+        }
+      });
+    },
     dateFormat(inputDate) {
-      // console.log(inputDate)
       const date = new Date(inputDate);
-      // console.log(date.getDate())
-      // console.log(date.getMonth())
-      // console.log(date.getFullYear())
       const formatedDate =
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
       return formatedDate;
     },
-  }
+    spiltBuilding(room) {
+      const res = room.toString().split("");
+      res.pop();
+      res.pop();
+      res.pop();
+      const res2 = res[0] + res[1];
+      return parseInt(res2);
+    },
+  },
 };
 </script>
 
@@ -738,9 +727,27 @@ export default {
   scrollbar-width: none; /* Firefox */
 }
 
-input[type=number]::-webkit-inner-spin-button, 
-input[type=number]::-webkit-outer-spin-button { 
-  -webkit-appearance: none; 
-  margin: 0; 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.bounce-enter-active {
+  animation: bounce-in 0.5s;
+}
+.bounce-leave-active {
+  animation: bounce-in 0.5s reverse;
+}
+@keyframes bounce-in {
+  0% {
+    transform: scale(0);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 </style>

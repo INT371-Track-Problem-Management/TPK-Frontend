@@ -1,6 +1,7 @@
 <template>
+  <div class="px-6">
   <div
-    class="font-primary bg-white w-4/5 md:w-2/3 lg:w-1/3 mx-auto my-4 p-10 rounded-xl shadow-md"
+    class="font-primary bg-white max-w-md mx-auto mt-4 px-10 py-6 rounded-xl shadow-md"
   >
     <div class="text-rangmod-purple text-2xl">สมัครสมาชิก</div>
     <hr class="my-4" />
@@ -64,7 +65,11 @@
     </div>
 
     <div class="mb-4">
-      <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
+      <div class="flex flex-row">
+        <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
+        <div v-if="this.validate.confirmPassword" class="text-rangmod-red px-1 font-bold">X รหัสผ่านไม่ตรงกัน</div>
+      </div>
+      
       <div
         class="border border-rangmod-gray rounded-xl px-3 relative"
         :class="this.validate.confirmPassword ? 'border-red-500 border-2' : ''"
@@ -108,7 +113,7 @@
       <!-- <RouterLink :to="{ path:'/register/select', params:{ email: this.email, password}}"> -->
       <div
         @click="register()"
-        class="w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+        class="cursor-pointer w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
       >
         สมัครสมาชิก
       </div>
@@ -122,6 +127,7 @@
         </div>
       </RouterLink>
     </div>
+  </div>
   </div>
 </template>
 
@@ -161,7 +167,7 @@ export default {
 
     register() {
       if (!this.validation()) {
-          this.$router.push({ name: "register-select", params: { email: this.email, password: this.password },
+          this.$router.push({ name: "register-form", params: { email: this.email, password: this.password },
         });
       }
     },

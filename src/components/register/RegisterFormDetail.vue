@@ -12,11 +12,11 @@
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ชื่อ</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.fname ? 'border-red-500 border-2' : ''">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.fname ? 'border-rangmod-red border' : ''">
           <input v-model="fname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.fname ? 'placeholder-red-500' : ''"
+            :class="this.validate.fname ? 'placeholder-rangmod-red text-sm' : ''"
             :placeholder="this.validate.fname ? 'กรุณาใส่ชื่อ' : ''"
           />
         </div>
@@ -24,24 +24,24 @@
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">นามสกุล</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.lname ? 'border-red-500 border-2' : ''">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.lname ? 'border-rangmod-red border' : ''">
           <input v-model="lname"
             type="text"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.lname ? 'placeholder-red-500' : ''"
+            :class="this.validate.lname ? 'placeholder-rangmod-red text-sm' : ''"
             :placeholder="this.validate.lname ? 'กรุณาใส่นามสกุล' : ''"
           />
         </div>
       </div>
 
-      <div class="mb-4 grid grid-cols-2 gap-2">
+      <div class="mb-4 grid se:grid-cols-2 grid-cols-1 gap-2">
         <div class="text-rangmod-black px-1">
           วันเกิด
-          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.dob ? 'border-red-500 border-2' : ''">
+          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.dob ? 'border-rangmod-red border' : ''">
             <input v-model="dob"
               type="date"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              :class="this.validate.dob ? 'placeholder-red-500' : ''"
+              :class="this.validate.dob ? 'placeholder-rangmod-red' : ''"
               :placeholder="this.validate.dob ? 'กรุณาใส่วันเกิด' : ''"
             />
           </div>
@@ -59,28 +59,29 @@
         </div>
       </div>
 
-      <div class="mb-4 grid grid-cols-2 gap-2">
+      <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
         <div class="text-rangmod-black px-1">
-          เพศ
-          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.sex ? 'border-red-500 border-2' : ''">
-            <input v-model="sex"
-              maxlength="1"
-              type="text"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              :class="this.validate.sex ? 'placeholder-red-500' : ''"
-              :placeholder="this.validate.sex ? 'กรุณาใส่เพศ M / F' : 'M / F'"
-            />
-          </div>
-        </div>
+              เพศ
+              <div>
+                <select
+                  v-model="sex"
+                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider cursor-pointer"
+                >
+                  <option disabled value="">เลือกเพศ</option>
+                  <option value="M">ชาย</option>
+                  <option value="F">หญิง</option>
+                </select>
+              </div>
+            </div>
 
         <div class="text-rangmod-black px-1">
           เบอร์มือถือ
-          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.phone ? 'border-red-500 border-2' : ''">
+          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.phone ? 'border-rangmod-red border' : ''">
             <input v-model="phone"
               maxlength="10"
               type="text"
               class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              :class="this.validate.phone ? 'placeholder-red-500' : ''"
+              :class="this.validate.phone ? 'placeholder-rangmod-red text-sm' : ''"
               :placeholder="this.validate.phone ? 'กรุณาใส่เบอร์โทรศัพท์' : ''"
             />
           </div>
@@ -89,17 +90,17 @@
 
       <div class="mb-4">
         <div class="text-rangmod-black px-1">ที่อยู่</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.address ? 'border-red-500 border-2' : ''">
+        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.address ? 'border-rangmod-red border' : ''">
           <textarea v-model="address"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.address ? 'placeholder-red-500' : ''"
+            :class="this.validate.address ? 'placeholder-rangmod-red text-sm' : ''"
             :placeholder="this.validate.address ? 'กรุณาใส่ที่อยู่' : ''"
           ></textarea>
         </div>
       </div>
 
       <div class="flex flex-row space-x-4 justify-center">
-        <RouterLink to="/register/select">
+        <RouterLink to="/register">
           <div
             class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
           >
@@ -109,7 +110,7 @@
 
         <!-- <RouterLink :to="`/register/form?type=${type}`"> -->
           <div
-            v-on:click="showModal = !showModal && checkRole()"
+            v-on:click="checkRole()"
             class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
           >
             ยืนยัน
@@ -255,21 +256,22 @@ export default {
       this.dob == "" ? this.validate.dob = true : this.validate.dob = false
       this.phone == "" ? this.validate.phone = true : this.validate.phone = false
       this.address == "" ? this.validate.address = true : this.validate.address = false
+      setTimeout(() => {
+        this.validate.fname = false;
+        this.validate.lname = false;
+        this.validate.sex = false;
+        this.validate.dob = false;
+        this.validate.phone = false;
+        this.validate.address = false;
+          }, 3000);
       return this.validate.fname && this.validate.lname && this.validate.sex && this.validate.dob && this.validate.phone &&   this.validate.address
     },
     checkRole() {
-      // this.age = this.calculateAge(this.dob)
-      if(this.role == 'customer') {
-          this.registerCustomer()
-      } else if(this.role == 'owner') {
-          this.registerOwner()
-      } else {
-        alert('เกิดข้อผิดพลาด')
-      }
+      this.registerCustomer()
     },
     async registerCustomer() {
       if(!this.validation()) {
-      const res = await fetch(`https://dev.rungmod.com/api/registerCustomer`, {
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/registerCustomer`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -283,38 +285,6 @@ export default {
           Phone: this.phone,
           Address: this.address,
         })
-      }
-      )
-      const data = res.json()
-      return data
-      .then(async (res) => {
-        res = await data
-        if(res == 'this email can not use!!!') {
-          alert('อีเมลนี้ใช้ไม่ได้!!!')
-        } else {
-          alert("ลงทะเบียนสำเร็จ!");
-          this.$router.push(`/login`);
-        }
-      })
-    }
-    },
-    async registerOwner() {
-      if(!this.validation()) {
-      const res = await fetch(`https://dev.rungmod.com/api/registerOwner`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Email: this.email,
-          Password: this.password,
-          Fname: this.fname,
-          Lname: this.lname,
-          Sex: this.sex,
-          DateOfBirth: this.dob,
-          Age: this.age,
-          Phone: this.phone,
-          Address: this.address,
-          Position: ''
-        }),
       }
       )
       const data = res.json()
