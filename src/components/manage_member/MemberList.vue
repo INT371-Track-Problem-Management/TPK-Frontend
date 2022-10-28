@@ -493,7 +493,7 @@
           class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="text-2xl text-rangmod-purple my-5 text-center">
-            เพิ่มผู้พักอาศัยเข้าห้องพักเสร็จสิ้น
+            เพิ่มผู้พักอาศัยเข้าห้องพักสำเร็จ
           </div>
         </div>
       </div>

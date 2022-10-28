@@ -163,7 +163,7 @@
           </div>
           <div v-else class="transition-all">
             <div class="text-2xl text-rangmod-purple my-5 text-center">
-              ลบข้อมูลผู้พักอาศัยเสร็จสิ้น
+              ลบข้อมูลผู้พักอาศัยสำเร็จ
             </div>
           </div>
         </div>

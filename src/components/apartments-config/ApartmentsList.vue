@@ -317,7 +317,7 @@ export default {
         return data.then(async(res) => {
           console.log(res);
           if(res.message == "success") {
-            alert('เพิ่มหอพักเสร็จสิ้น!!')
+            alert('เพิ่มหอพักสำเร็จ!!')
           } else {
             alert('การเพิ่มหอพักผิดพลาด')
           }
