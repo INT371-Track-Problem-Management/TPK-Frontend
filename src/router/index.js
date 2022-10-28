@@ -3,7 +3,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import LoginPage from "../views/LoginPage.vue";
 import RegisterPage from "../views/register/RegisterPage.vue";
-import RegisterSelectPage from "../views/register/RegisterSelectPage.vue";
+// import RegisterSelectPage from "../views/register/RegisterSelectPage.vue";
 import RegisterFormPage from "../views/register/RegisterFormPage.vue";
 import RepairStatusPage from "../views/RepairStatusPage.vue";
 
@@ -51,13 +51,13 @@ const routes = [
     props: true,
     meta: { layout: "AppLayoutRegister" },
   },
-  {
-    path: "/register/select",
-    name: "register-select",
-    component: RegisterSelectPage,
-    props: true,
-    meta: { layout: "AppLayoutRegister" },
-  },
+  // {
+  //   path: "/register/select",
+  //   name: "register-select",
+  //   component: RegisterSelectPage,
+  //   props: true,
+  //   meta: { layout: "AppLayoutRegister" },
+  // },
   {
     path: "/register/form",
     name: "register-form",

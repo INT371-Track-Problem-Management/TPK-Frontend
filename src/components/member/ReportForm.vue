@@ -125,7 +125,7 @@
         @click="this.showReviewModal = !this.showReviewModal"
         class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
       >
-        แก้ไขปัญหาเสร็จสิ้น
+        แก้ไขปัญหาสำเร็จ
       </div>
       <div
         v-if="this.reportWithEngage.status == 'S7'"
@@ -359,7 +359,7 @@
               v-on:click="finish('success')"
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
-              แก้ไขปัญหาเสร็จสิ้น
+              แก้ไขปัญหาสำเร็จ
             </div>
           </div>
         </div>
