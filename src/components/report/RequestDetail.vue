@@ -60,7 +60,7 @@
             class="w-5 h-5 rounded-full bg-rangmod-light-yellow"
           ></div>
           <div v-show="status.isActive" class="px-3 text-base">
-            {{ status.th }} ({{ dateShowFormat(status.createdAt)}})
+            {{ status.th }} ({{ dateShowFormat(status.createdAt) }})
           </div>
           <!-- </div> -->
 
@@ -126,7 +126,10 @@
                 </div>
 
                 <div
-                  v-if="this.reportDetail.status != 'waiting' && engageDate.ogdatetime == this.reportDetail.selectedDate"
+                  v-if="
+                    this.reportDetail.status != 'waiting' &&
+                    engageDate.ogdatetime == this.reportDetail.selectedDate
+                  "
                   class="w-7"
                 >
                   <div class="w-7 h-7 rounded-full bg-rangmod-green"></div>
@@ -187,7 +190,8 @@
               <div class="w-full">
                 <div class="text-rangmod-black">ชื่อ-นามสกุล</div>
                 <div class="mb-5">
-                  <div v-if="this.reportDetail.status == 'waiting'"
+                  <div
+                    v-if="this.reportDetail.status == 'waiting'"
                     @click="isActiveMaintainer = !isActiveMaintainer"
                     class="flex justify-between items-center cursor-pointer w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                     :class="isEdit ? '' : 'bg-rangmod-light-gray'"
@@ -214,7 +218,8 @@
                       />
                     </svg>
                   </div>
-                  <div v-if="this.reportDetail.status != 'waiting'"
+                  <div
+                    v-if="this.reportDetail.status != 'waiting'"
                     class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
                   >
                     <div>
@@ -255,10 +260,12 @@
             <div v-else class="flex flex-row justify-between w-full">
               <div class="w-1/2 mr-1">
                 <div class="flex flex-row">
-                  <div class="text-rangmod-black">ชื่อ </div>
-                  <div v-if="ivlMaintainer.fname" class="text-rangmod-red"> *กรุณาใส่ชื่อ</div>
+                  <div class="text-rangmod-black">ชื่อ</div>
+                  <div v-if="ivlMaintainer.fname" class="text-rangmod-red">
+                    *กรุณาใส่ชื่อ
+                  </div>
                 </div>
-                
+
                 <div class="mb-5">
                   <input
                     v-model="this.maintainer.fname"
@@ -270,8 +277,10 @@
               </div>
               <div class="w-1/2 ml-1">
                 <div class="flex flex-row">
-                  <div class="text-rangmod-black">นามสกุล </div>
-                  <div v-if="ivlMaintainer.lname" class="text-rangmod-red"> *นามสกุล</div>
+                  <div class="text-rangmod-black">นามสกุล</div>
+                  <div v-if="ivlMaintainer.lname" class="text-rangmod-red">
+                    *นามสกุล
+                  </div>
                 </div>
                 <div class="mb-5">
                   <input
@@ -284,10 +293,12 @@
               </div>
             </div>
             <div class="flex flex-row">
-                  <div class="text-rangmod-black">เบอร์ติดต่อช่าง </div>
-                  <div v-if="ivlMaintainer.phone" class="text-rangmod-red"> *กรุณาใส่เบอร์ติดต่อช่าง</div>
-                </div>
-                <div v-if="this.reportDetail.status != 'waiting'" class="mb-5">
+              <div class="text-rangmod-black">เบอร์ติดต่อช่าง</div>
+              <div v-if="ivlMaintainer.phone" class="text-rangmod-red">
+                *กรุณาใส่เบอร์ติดต่อช่าง
+              </div>
+            </div>
+            <div v-if="this.reportDetail.status != 'waiting'" class="mb-5">
               <div
                 class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
               >
@@ -368,11 +379,66 @@
         </div>
       </div>
     </div>
+    <transition name="bounce">
+      <div
+        v-if="accepted"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการรับเรื่องรายงานแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="isDefer"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการยืนยันวันนัดซ่อมแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="isPending"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการยืนยันการยกเลิกรายงานแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="isDelete"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการลบรายงานแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -384,7 +450,10 @@ export default {
       isActiveMaintainer: false,
       isAccept: false,
       isEdit: false,
-      sentEngage: false,
+      accepted: false,
+      isPending: false,
+      isDefer: false,
+      isDelete: false,
       reportDetail: {},
       reportEngage: {},
       maintainerLists: [],
@@ -514,7 +583,7 @@ export default {
       this.checkAccept();
       this.maintainerLists = await this.getMaintainer();
       this.selectedMaintainer = this.maintainerLists[0];
-      await this.getAllReportStatus(this.$route.params.id)
+      await this.getAllReportStatus(this.$route.params.id);
     },
     async getReportDetail() {
       const res = await fetch(
@@ -549,37 +618,45 @@ export default {
         if (data.engageId == 0) {
           this.reportDetail = await this.getReportDetail();
         } else {
-          this.reportDetail = await this.getReportDetail()
+          this.reportDetail = await this.getReportDetail();
           this.reportEngage = data;
-          this.reportEngageDate[0].datetime = this.engageShowFormat(this.reportEngage.date1)
-          this.reportEngageDate[1].datetime = this.engageShowFormat(this.reportEngage.date2)
-          this.reportEngageDate[2].datetime = this.engageShowFormat(this.reportEngage.date3)
-          this.reportEngageDate[3].datetime = this.engageShowFormat(this.reportEngage.date4)
-          this.reportEngageDate[0].ogdatetime = this.reportEngage.date1
-          this.reportEngageDate[1].ogdatetime = this.reportEngage.date2
-          this.reportEngageDate[2].ogdatetime = this.reportEngage.date3
-          this.reportEngageDate[3].ogdatetime = this.reportEngage.date4
-          await this.getAssignedMaintainer(data.maintainerId)
+          this.reportEngageDate[0].datetime = this.engageShowFormat(
+            this.reportEngage.date1
+          );
+          this.reportEngageDate[1].datetime = this.engageShowFormat(
+            this.reportEngage.date2
+          );
+          this.reportEngageDate[2].datetime = this.engageShowFormat(
+            this.reportEngage.date3
+          );
+          this.reportEngageDate[3].datetime = this.engageShowFormat(
+            this.reportEngage.date4
+          );
+          this.reportEngageDate[0].ogdatetime = this.reportEngage.date1;
+          this.reportEngageDate[1].ogdatetime = this.reportEngage.date2;
+          this.reportEngageDate[2].ogdatetime = this.reportEngage.date3;
+          this.reportEngageDate[3].ogdatetime = this.reportEngage.date4;
+          await this.getAssignedMaintainer(data.maintainerId);
         }
       });
     },
     async getAssignedMaintainer(maintainerId) {
       const res = await fetch(
-              `${process.env.VUE_APP_API_URL}/service/maintainerById/${maintainerId}`,
-              {
-                method: "GET",
-                headers: {
-                  "content-Type": "application/json",
-                  Authorization: `Bearer ${this.token}`,
-                },
-              }
-            );
-            const data = res.json()
-            return data.then((data) => {
-              if(data.maintainerId != 0) {
-                this.assignedMaintainer = data
-              }
-            })
+        `${process.env.VUE_APP_API_URL}/service/maintainerById/${maintainerId}`,
+        {
+          method: "GET",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((data) => {
+        if (data.maintainerId != 0) {
+          this.assignedMaintainer = data;
+        }
+      });
     },
     async addMaintainer() {
       this.ivlMaintainer.fname = this.maintainer.fname == "" ? true : false;
@@ -653,10 +730,13 @@ export default {
         }
       );
       const data = res.json();
-      return data;
+      return data.then((data) => {
+        if (data != null) {
+          return data;
+        }
+      });
     },
     async createEngage() {
-      console.log(this.reportEngageDate);
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/employee/CreateReportEngage`,
         {
@@ -672,7 +752,7 @@ export default {
             Date4: this.reportEngageDate[3].datetime,
             ReportId: parseInt(this.$route.params.id),
             BuildingId: parseInt(this.reportDetail.buildingId),
-            UpdateBy: parseInt(this.empId), 
+            UpdateBy: parseInt(this.empId),
             SelectedBy: parseInt(this.reportDetail.createdBy),
           }),
         }
@@ -715,9 +795,6 @@ export default {
     async actionButton(action) {
       if (action == "accept") {
         for (let engage in this.reportEngageDate) {
-          console.log(
-            this.dateShowFormat(this.reportEngageDate[engage].datetime)
-          );
           if (this.reportEngageDate[engage].datetime == "") {
             this.reportEngageDate[engage].incorrectDate = true;
           }
@@ -745,89 +822,26 @@ export default {
             setTimeout(() => {
               this.isCorrectAllDate = false;
             }, 2000);
-            console.log("all date ok");
             const res1 = await this.createEngage();
-            console.log(res1);
             if (res1 == "success") {
               const res2 = await this.assignMaintainer();
-              console.log(res2);
               if (res2 == "success") {
                 await this.updateStatus("S2");
+                this.accepted = true;
+                setTimeout(async () => {
+                  this.accepted = false;
+                  await this.reloadData();
+                }, 1500);
               }
             }
           }
         }
       }
 
-      if (action == "cancel") {
-        if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
-            method: "PUT",
-            headers: {
-              "content-Type": "application/json",
-              Authorization: `Bearer ${this.token}`,
-            },
-            body: JSON.stringify({
-              ReportId: parseInt(this.$route.params.id),
-              Status: "S6",
-              EmployeeId: parseInt(this.empId),
-            }),
-          });
-          alert("ทำการยกเลิกนัดรายงานแล้ว");
-        }
-      }
-
-      // if (action == "postpone") {
-      //   if (confirm("ต้องการเลื่อนนัดรายงานนี้ใช่หรือไม่")) {
-      //     fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
-      //       method: "PUT",
-      //       headers: {
-      //         "content-Type": "application/json",
-      //         Authorization: `Bearer ${this.token}`,
-      //       },
-      //       body: JSON.stringify({
-      //         ReportId: parseInt(this.$route.params.id),
-      //         Status: "S5",
-      //         EmployeeId: parseInt(this.empId),
-      //       }),
-      //     });
-      //     fetch(`${process.env.VUE_APP_API_URL}/employee/selectedPlanFixDate`, {
-      //       method: "PUT",
-      //       headers: {
-      //         "content-Type": "application/json",
-      //         Authorization: `Bearer ${this.token}`,
-      //       },
-      //       body: JSON.stringify({
-      //         EngageId: parseInt(this.$route.params.id),
-      //         SelectedDate: "date2",
-      //       }),
-      //     });
-      //     alert("ทำการเลื่อนนัดรายงานแล้ว");
-      //   }
-      // }
-
-      if (action == "review") {
-        // if (confirm("ต้องการสำเร็จรายงานนี้ใช่หรือไม่")) {
-        //   fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
-        //     method: "PUT",
-        //     headers: {
-        //       "content-Type": "application/json",
-        //       Authorization: `Bearer ${this.token}`,
-        //     },
-        //     body: JSON.stringify({
-        //       ReportId: parseInt(this.$route.params.id),
-        //       Status: "S7",
-        //       EmployeeId: parseInt(this.empId),
-        //     }),
-        //   });
-        //   alert("รายงานนี้เสร็จสิ้นแล้ว!!");
-        // }
-        this.showReviewModal = true;
-      }
-
       if (action == "delete") {
-        if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`${process.env.VUE_APP_API_URL}/employee/deleteReportById`, {
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/employee/deleteReportById`,
+          {
             method: "DELETE",
             headers: {
               "content-Type": "application/json",
@@ -836,18 +850,49 @@ export default {
             body: JSON.stringify({
               ReportId: this.reportDetail.reportId,
             }),
-          });
-          alert("ทำการลบรายงานแล้ว");
-          this.$router.push(`/dashboard/report`);
+          }
+        );
+        const data = res.json();
+        return data.then((data) => {
+          if (data.message == "success") {
+            this.isDelete = true;
+            setTimeout(() => {
+              this.isDelete = false;
+            }, 2000);
+            setTimeout(() => {
+              this.$router.push(`/dashboard/report`);
+            }, 2500);
+          } else {
+            return "fail";
+          }
+        });
+
+      }
+
+      if (action == "defer") {
+        const res = await this.updateStatus("S5");
+        if (res == "success") {
+          await this.reloadData();
+          this.isDefer = true;
+          setTimeout(() => {
+            this.isDefer = false;
+          }, 2000);
+        } else {
+          alert("error");
         }
       }
 
-      if(action == 'defer') {
-        this.updateStatus('S5')
-      }
-
-      if(action == 'pending') {
-        this.updateStatus('S6')
+      if (action == "pending") {
+        const res = await this.updateStatus("S6");
+        if (res == "success") {
+          await this.reloadData();
+          this.isPending = true;
+          setTimeout(() => {
+            this.isPending = false;
+          }, 2000);
+        } else {
+          alert("error");
+        }
       }
     },
     async getAllReportStatus(reportId) {
@@ -861,21 +906,21 @@ export default {
           },
         }
       );
-      const data = res.json()
+      const data = res.json();
       return data.then((data) => {
-        this.activateStatus = data.Profile
-        for(let i in this.activateStatus) {
-          for(let j in this.statusList) {
-            if(this.activateStatus[i].status == this.statusList[j].eng) {
-              this.activateStatus[i].th = this.statusList[j].name
+        this.activateStatus = data.Profile;
+        for (let i in this.activateStatus) {
+          for (let j in this.statusList) {
+            if (this.activateStatus[i].status == this.statusList[j].eng) {
+              this.activateStatus[i].th = this.statusList[j].name;
             }
           }
-          this.activateStatus[i].isActive = true
-          this.activateStatus[i].divider = true
-          this.activateStatus[0].divider = false
+          this.activateStatus[i].isActive = true;
+          this.activateStatus[i].divider = true;
+          this.activateStatus[0].divider = false;
         }
         console.log(this.activateStatus);
-      })
+      });
     },
     async updateStatus(status) {
       const res = await fetch(
@@ -893,14 +938,14 @@ export default {
           }),
         }
       );
-      const data = res.json()
+      const data = res.json();
       return data.then((data) => {
-        if(data == 'Update success') {
-          return 'success'
+        if (data.message == "success") {
+          return "success";
         } else {
-          return 'fail'
+          return "fail";
         }
-      })
+      });
     },
     checkAccept() {
       this.isAccept = this.reportDetail.status != "waiting";
@@ -977,18 +1022,24 @@ export default {
       return formatedDate + " " + formatedTime;
     },
     engageShowFormat(engage) {
-      const res = engage.split('T')
-      const dateRes = res[0].split('-')
-      const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
-      const showTime = res[1].split('Z')
-      return showDate + " " + showTime[0]
+      const res = engage.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      const showTime = res[1].split("Z");
+      return showDate + " " + showTime[0];
     },
     engageDateShowFormat(engage) {
-      const res = engage.split('T')
-      const dateRes = res[0].split('-')
-      const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
-      return showDate
-    }
+      const res = engage.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      return showDate;
+    },
+    async reloadData() {
+      await this.reportEngageByReportId();
+      await this.getAllReportStatus(this.$route.params.id);
+    },
   },
 };
 </script>

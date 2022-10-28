@@ -92,7 +92,7 @@
                   <div
                     v-if="
                       this.reportDetail.status != 'S6' &&
-                      this.reportDetail.status != 'S7'
+                      this.reportDetail.status != 'S7' 
                     "
                     @click="
                       (showPostpone = !showPostpone),
@@ -147,7 +147,7 @@
       >
         <div
           v-if="this.isEngageDateNow"
-          @click="this.showReviewModal = !this.showReviewModal"
+          @click="this.showFinish = !this.showFinish, this.modalBg = !this,modalBg"
           class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
         >
           แก้ไขปัญหาเสร็จสิ้น
@@ -158,7 +158,7 @@
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
           <div
-            @click="cancel()"
+            @click="showCancel = !showCancel"
             v-if="!this.isEngageDateNow"
             class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
           >
@@ -178,15 +178,18 @@
 
       <transition name="bounce">
         <div
-          v-show="showModal"
+          v-show="showPostpone"
           class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
-            class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+            class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
             <div class="flex justify-end">
-              <div @click="showModal = false" class="cursor-pointer">
+              <div
+                @click="(showPostpone = false), (modalBg = false)"
+                class="cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -203,61 +206,110 @@
                 </svg>
               </div>
             </div>
-            <div class="text-rangmod-black">หัวข้อปัญหา</div>
-            <div class="mb-5">
-              <input
-                v-model="title"
-                type="text"
-                class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-              />
-            </div>
+            <div v-if="reportDetail.selectedDate != ''">
+              <div class="text-2xl text-rangmod-purple mb-5">เลื่อนนัด</div>
+              <div class="text-rangmod-black">หัวข้อปัญหา</div>
+              <div class="mb-5">
+                <input
+                  v-model="reportDetail.title"
+                  type="text"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
+              </div>
 
-            <div class="text-rangmod-black">รายละเอียดปัญหา</div>
-            <div class="mb-5">
-              <textarea
-                v-model="description"
-                class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                readonly
-              ></textarea>
-            </div>
+              <div class="text-rangmod-black">รายละเอียดปัญหา</div>
+              <div class="mb-5">
+                <textarea
+                  v-model="reportDetail.reportDes"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                ></textarea>
+              </div>
 
-            <!-- <div class="flex flex-col">
-              <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="w-full">
                 <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป</div>
-                  <input
-                    type="text"
+                  <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
+                  <div
                     class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
-                </div>
-
-                <div class="mb-5">
-                  <div class="text-rangmod-black">เวลา</div>
-                  <input
-                    type="text"
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
+                  >
+                    {{ engageDateTimeShowFormat(oldEngage) }}
+                  </div>
                 </div>
               </div>
-            </div> -->
+              <div>วันเลื่อนนัดครั้งถัดไป</div>
+              <div class="flex flex-col">
+                <div class="mb-5">
+                  <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
+                  <div
+                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  >
+                    {{ engageDateTimeShowFormat(newEngage) }}
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-row space-x-4 justify-end">
+                <div
+                  @click="(showPostpone = false), (modalBg = false)"
+                  class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-red text-rangmod-red hover:bg-rangmod-red hover:border-white hover:text-white hover:shadow-none"
+                >
+                  ยกเลิก
+                </div>
+                <div
+                  @click="postpone(newEngage)"
+                  class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+                >
+                  เลื่อนนัด
+                </div>
+              </div>
+            </div>
 
-            <!-- <div class="flex flex-row space-x-4 justify-end">
-              <div
-                @click="postpone()"
-                class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-purple text-rangmod-purple hover:shadow-none"
-              >
-                ยกเลิก
+            <div v-else>
+              <div class="text-2xl text-rangmod-purple mb-5">เลือกวันนัด</div>
+              <div class="text-rangmod-black">หัวข้อปัญหา</div>
+              <div class="mb-5">
+                <input
+                  v-model="reportDetail.title"
+                  type="text"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                />
               </div>
-              <div
-                @click="postpone()"
-                class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
-              >
-                เลื่อนนัด
+
+              <div class="text-rangmod-black">รายละเอียดปัญหา</div>
+              <div class="mb-5">
+                <textarea
+                  v-model="reportDetail.reportDes"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  readonly
+                ></textarea>
               </div>
-            </div> -->
+
+              <div class="w-full">
+                <div class="mb-5">
+                  <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
+                  <div
+                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  >
+                    {{ engageDateTimeShowFormat(newEngage) }}
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-row space-x-4 justify-end">
+                <div
+                  @click="(showPostpone = false), (modalBg = false)"
+                  class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-red text-rangmod-red hover:bg-rangmod-red hover:border-white hover:text-white hover:shadow-none"
+                >
+                  ยกเลิก
+                </div>
+                <div
+                  @click="postpone(newEngage)"
+                  class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+                >
+                  นัดซ่อม
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -265,14 +317,14 @@
       <transition name="bounce">
         <div
           v-show="showFinish"
-          class="fixed w-full h-screen z-90 inset-0 pb-20 pt-10"
+          class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
             class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
             <div class="flex justify-end">
-              <div @click="showFinish = false" class="cursor-pointer">
+              <div @click="showFinish = false, modalBg = false" class="cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -295,7 +347,7 @@
             <div class="text-rangmod-black">หัวข้อปัญหา</div>
             <div class="mb-5">
               <input
-                v-model="title"
+                v-model="reportDetail.title"
                 type="text"
                 class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
@@ -305,37 +357,28 @@
             <div class="text-rangmod-black">รายละเอียดปัญหา</div>
             <div class="mb-5">
               <textarea
-                v-model="description"
+                v-model="reportDetail.reportDes"
                 class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
               ></textarea>
             </div>
 
             <div class="flex flex-col">
-              <div class="flex flex-row space-x-4 justify-between items-center">
+              <div class="w-full">
                 <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป</div>
-                  <input
-                    type="text"
+                  <div class="text-rangmod-black">ว/ด/ป เวลา</div>
+                  <div
                     class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
-                </div>
-
-                <div class="mb-5">
-                  <div class="text-rangmod-black">เวลา</div>
-                  <input
-                    type="text"
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
+                  >
+                    {{ engageDateTimeShowFormat(oldEngage) }}
+                  </div>
                 </div>
               </div>
             </div>
 
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                v-on:click="finish('success')"
+                v-on:click="openReview()"
                 class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 แก้ไขปัญหาเสร็จสิ้น
@@ -347,15 +390,15 @@
 
       <transition name="bounce">
         <div
-          v-show="showDelete"
-          class="fixed w-full h-screen z-90 inset-0 pb-20 pt-10"
+          v-show="showCancel"
+          class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
-            class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+            class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
             <div class="flex justify-end">
-              <div @click="showDelete = false" class="cursor-pointer">
+              <div @click="showCancel = false" class="cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -376,7 +419,7 @@
             <div class="text-rangmod-black">หัวข้อปัญหา</div>
             <div class="mb-5">
               <input
-                v-model="title"
+                v-model="reportDetail.title"
                 type="text"
                 class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
@@ -386,38 +429,27 @@
             <div class="text-rangmod-black">รายละเอียดปัญหา</div>
             <div class="mb-5">
               <textarea
-                v-model="description"
+                v-model="reportDetail.reportDes"
                 class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                 readonly
               ></textarea>
             </div>
 
-            <div class="flex flex-col">
-              <div class="flex flex-row space-x-4 justify-between items-center">
-                <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป</div>
-                  <input
-                    type="text"
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
-                </div>
-
-                <div class="mb-5">
-                  <div class="text-rangmod-black">เวลา</div>
-                  <input
-                    type="text"
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                    readonly
-                  />
+            <div class="w-full">
+              <div class="mb-5">
+                <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
+                <div
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                >
+                  {{ engageDateTimeShowFormat(oldEngage) }}
                 </div>
               </div>
             </div>
 
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                v-on:click="delete 'delete'"
-                class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+                @click="cancel()"
+                class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-red text-rangmod-red hover:bg-rangmod-red hover:border-white hover:text-white hover:shadow-none"
               >
                 ยกเลิกนัด
               </div>
@@ -436,7 +468,7 @@
           >
             <!-- Closed -->
             <div class="flex justify-end">
-              <div @click="showReviewModal = false" class="cursor-pointer">
+              <div @click="showReviewModal = false, modalBg = false" class="cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -454,7 +486,7 @@
               </div>
             </div>
             <div class="text-2xl text-rangmod-purple mb-5">
-              ให้คะแนน / รีวิว
+              ให้คะแนน / ความคิดเห็น
             </div>
 
             <div class="flex flex-row space-x-4 justify-center mb-5">
@@ -504,7 +536,7 @@
         </div>
       </transition>
     </div>
-    <transition name="bounce">
+    <!-- <transition name="bounce">
       <div
         v-if="showPostpone"
         class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6"
@@ -539,7 +571,7 @@
           </div>
         </div>
       </div>
-    </transition>
+    </transition> -->
     <transition name="bounce">
       <div
         v-if="isPostpone"
@@ -549,7 +581,49 @@
           class="max-w-xs min-w-[320px] h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl"
         >
           <div class="text-2xl text-rangmod-purple my-5 text-center">
-            เลื่อนนัดสำเร็จ
+            ทำการเลือกวันนัดซ่อมสำเร็จ
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="accepted"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการรับเรื่องรายงานแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="isCancel"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการรับเรื่องรายงานแล้ว
+          </div>
+        </div>
+      </div>
+    </transition>
+    <transition name="bounce">
+      <div
+        v-if="isReview"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            ทำการให้คะแนนและแสดงความคิดเห็นแล้ว
           </div>
         </div>
       </div>
@@ -567,11 +641,13 @@ export default {
       modalBg: false,
       showModal: false,
       showFinish: false,
-      showDelete: false,
+      showCancel: false,
       showPostpone: false,
       showReviewModal: false,
       showCancelModal: false,
       isPostpone: false,
+      isCancel: false,
+      isReview: false,
       statusList: [
         {
           id: 1,
@@ -665,7 +741,6 @@ export default {
         },
       ],
       assignedMaintainer: {},
-      selectedDate: {},
       isEngageDateNow: false,
       rates: [
         {
@@ -706,6 +781,7 @@ export default {
       goback: "<",
       activateStatus: [],
       newEngage: "",
+      oldEngage: "",
     };
   },
   // computed: {
@@ -721,9 +797,10 @@ export default {
       this.isEngageDateNow =
         this.engageDateShowFormat(this.reportDetail.selectedDate) ==
         this.dateShowFormat(Date.now());
-      // if(this.isEngageDateNow) {
-      //   this.updateStatus('S4')
-      // }
+
+      if (this.reportDetail.selectedDate != "") {
+        this.oldEngage = this.reportDetail.selectedDate;
+      }
       await this.getAllReportStatus(this.$route.params.id);
     },
     async getReportById() {
@@ -777,7 +854,6 @@ export default {
           this.reportEngageDate[2].ogdatetime = this.reportDetail.date3;
           this.reportEngageDate[3].ogdatetime = this.reportDetail.date4;
           await this.getAssignedMaintainer(data.maintainerId);
-          console.log(this.reportDetail);
         }
       });
     },
@@ -833,57 +909,6 @@ export default {
         }
       });
     },
-    checkStatus(status) {
-      if (status == "success") {
-        this.statusList[0].divider = true;
-        this.statusList[1].divider = true;
-        this.statusList[2].divider = true;
-        this.statusList[3].divider = true;
-        // this.statusList[4].divider = true
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[1]);
-        this.activateStatus.push(this.statusList[2]);
-        this.activateStatus.push(this.statusList[3]);
-        // this.activateStatus.push(this.statusList[4])
-        // this.activateStatus.push(this.statusList[5])
-        this.activateStatus.push(this.statusList[6]);
-      } else if (status == "postpone") {
-        this.statusList[0].divider = true;
-        this.statusList[1].divider = true;
-        this.statusList[2].divider = true;
-        this.statusList[3].divider = true;
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[1]);
-        this.activateStatus.push(this.statusList[2]);
-        this.activateStatus.push(this.statusList[3]);
-        this.activateStatus.push(this.statusList[4]);
-      } else if (status == "prepare") {
-        this.statusList[0].divider = true;
-        this.statusList[1].divider = true;
-        this.statusList[2].divider = true;
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[1]);
-        this.activateStatus.push(this.statusList[2]);
-        this.activateStatus.push(this.statusList[3]);
-      } else if (status == "engage") {
-        this.statusList[0].divider = true;
-        this.statusList[1].divider = true;
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[1]);
-        this.activateStatus.push(this.statusList[2]);
-      } else if (status == "accept") {
-        this.statusList[0].divider = true;
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[1]);
-      } else if (status == "cancel") {
-        this.statusList[0].divider = true;
-        this.activateStatus.push(this.statusList[0]);
-        this.activateStatus.push(this.statusList[5]);
-      } else if (status == "waiting") {
-        this.activateStatus.push(this.statusList[0]);
-      }
-      // this.activateStatus.push()
-    },
     pad(number) {
       return number < 10 ? "0" + number.toString() : number.toString();
     },
@@ -904,9 +929,10 @@ export default {
         }
       );
       const data = res.json();
-      return data.then((data) => {
+      return data.then(async (data) => {
         if (data.message == "success") {
-          this.updateStatus("S8");
+          await this.updateStatus("S8");
+          await this.reloadData()
           this.isPostpone = true;
           setTimeout(() => {
             this.isPostpone = false;
@@ -921,9 +947,19 @@ export default {
       });
     },
     async cancel() {
-      const res = this.updateStatus("S9");
+      const res = await this.updateStatus("S9");
       if (res == "success") {
-        alert("success");
+        await this.reloadData()
+        this.isCancel = true;
+        setTimeout(() => {
+            this.isCancel = false;
+          }, 2000);
+        setTimeout(() => {
+          this.showCancel = false;
+          this.modalBg = false;
+        }, 2500);
+      } else {
+        alert("error");
       }
     },
     async finish() {
@@ -955,7 +991,7 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        if (data == "Update success") {
+        if (data.message == "success") {
           return "success";
         } else {
           return "fail";
@@ -979,11 +1015,16 @@ export default {
       return showDate;
     },
     engageDateTimeShowFormat(engage) {
-      const res = engage.split('T')
-      const dateRes = res[0].split('-')
-      const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
-      const showTime = res[1].split('Z')
-      return showDate + " " + showTime[0]
+      if (engage == "") {
+        return "";
+      } else {
+        const res = engage.split("T");
+        const dateRes = res[0].split("-");
+        const showDate =
+          dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+        const showTime = res[1].split("Z");
+        return showDate + " " + showTime[0];
+      }
     },
     fillStar(score) {
       for (let i = 0; i < score; i++) {
@@ -1000,7 +1041,7 @@ export default {
         for (let i in this.rates) {
           this.rates[i].isActive = false;
         }
-        this.review.score = 0
+        this.review.score = 0;
       } else {
         for (let i in this.rates) {
           if (i < score) {
@@ -1009,8 +1050,15 @@ export default {
             this.rates[i].isActive = false;
           }
         }
-        this.review.score = score
+        this.review.score = score;
       }
+    },
+    openReview() {
+      this.showFinish = !this.showFinish
+      setTimeout(() => {
+        this.showReviewModal = !this.showReviewModal
+      }, 500)
+      
     },
     async reviewReport() {
       const res = await fetch(
@@ -1025,20 +1073,31 @@ export default {
             ReportId: parseInt(this.$route.params.id),
             Des: this.review.description,
             Score: this.review.score,
-            UpdateBy: parseInt(this.createdBy)
+            UpdateBy: parseInt(this.createdBy),
           }),
         }
       );
       const data = res.json();
       return data.then((data) => {
-        console.log(data);
-        // if (data == "success") {
-        //   return "success";
-        // } else {
-        //   return "fail";
-        // }
+        if (data.message == "success") {
+          this.isReview = true
+          setTimeout(() => {
+            this.isReview = false
+          },2000)
+          setTimeout(() => {
+            this.showReviewModal = false
+            this.modalBg = false
+          },2500)
+          return "success";
+        } else {
+          return "fail";
+        }
       });
-    }
+    },
+    async reloadData() {
+      await this.getReportEngageWithReport();
+      await this.getAllReportStatus(this.$route.params.id);
+    },
   },
 };
 </script>

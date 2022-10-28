@@ -7,7 +7,7 @@
 
     <div
       class="w-full bg-white"
-      :class="noInRoom ? '' : 'py-48'"
+      :class="!noInRoom ? '' : 'py-48'"
     >
       <!-- <div
         v-show="buildingLists.length > 0"
@@ -22,7 +22,7 @@
       </div> -->
 
       <div
-        v-if="noInRoom"
+        v-if="!noInRoom"
         class="grid grid-cols-1 xse:grid-cols-2 sm:grid-cols-3 2xmd:grid-cols-4 lg:grid-cols-5 gap-5 my-5 px-0 py-2"
       >
         <div v-for="(room, i) in roomLists" :key="i">
@@ -88,6 +88,7 @@ export default {
   methods: {
     async create() {
       this.roomLists = await this.getAllRoomByCustomerId();
+      console.log(this.roomLists);
     },
     async getAllRoomByCustomerId() {
       try {
@@ -103,7 +104,6 @@ export default {
         );
         const data = res.json()
         return data.then((data) => {
-          console.log(data);
           if(data == null) {
             this.noInRoom = true
             console.log('not in any room');
