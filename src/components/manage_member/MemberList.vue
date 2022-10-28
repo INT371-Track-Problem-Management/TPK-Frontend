@@ -484,6 +484,20 @@
         </div>
       </div>
     </transition>
+    <transition name="bounce">
+      <div
+        v-if="assignedCustomer"
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+      >
+        <div
+          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="text-2xl text-rangmod-purple my-5 text-center">
+            เพิ่มผู้พักอาศัยเข้าห้องพักเสร็จสิ้น
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -495,6 +509,7 @@ export default {
       empId: localStorage.getItem("id"),
       showDetailModal: false,
       showAdd: false,
+      assignedCustomer: false,
       detailModal: {
         customerId: 1,
         fname: "",
@@ -647,8 +662,13 @@ export default {
         const data = res.json();
         return data.then((data) => {
           if (data == "success") {
-            alert("success");
-            this.showAdd = !this.showAdd;
+            this.assignedCustomer = true
+            setTimeout(() => {
+              this.assignedCustomer = false
+            }, 2000)
+            setTimeout(() => {
+              this.showAdd = false
+            }, 2500)
           } else {
             alert("fail");
           }
