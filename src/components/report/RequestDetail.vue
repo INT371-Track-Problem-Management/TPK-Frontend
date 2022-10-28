@@ -524,7 +524,7 @@ export default {
     },
     async getReportDetail() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/reportById`,
+        `${process.env.VUE_APP_API_URL}/employee/reportById`,
         {
           method: "POST",
           headers: {
@@ -541,7 +541,7 @@ export default {
     },
     async reportEngageByReportId() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/reportEngageByReportId/${this.$route.params.id}`,
+        `${process.env.VUE_APP_API_URL}/employee/reportEngageByReportId/${this.$route.params.id}`,
         {
           method: "GET",
           headers: {
@@ -571,7 +571,7 @@ export default {
     },
     async getAssignedMaintainer(maintainerId) {
       const res = await fetch(
-              `https://dev.rungmod.com/api/service/maintainerById/${maintainerId}`,
+              `${process.env.VUE_APP_API_URL}/service/maintainerById/${maintainerId}`,
               {
                 method: "GET",
                 headers: {
@@ -603,7 +603,7 @@ export default {
         }, 2000);
       } else {
         const res = await fetch(
-          `https://dev.rungmod.com/api/employee/maintainer`,
+          `${process.env.VUE_APP_API_URL}/employee/maintainer`,
           {
             method: "POST",
             headers: {
@@ -622,7 +622,7 @@ export default {
         return data.then(async (data) => {
           if (data.message == "success") {
             const res2 = await fetch(
-              `https://dev.rungmod.com/api/service/maintainerById/${data.maintainerId}`,
+              `${process.env.VUE_APP_API_URL}/service/maintainerById/${data.maintainerId}`,
               {
                 method: "GET",
                 headers: {
@@ -649,7 +649,7 @@ export default {
     },
     async getMaintainer() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/maintainerList`,
+        `${process.env.VUE_APP_API_URL}/employee/maintainerList`,
         {
           method: "GET",
           headers: {
@@ -664,7 +664,7 @@ export default {
     async createEngage() {
       console.log(this.reportEngageDate);
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/CreateReportEngage`,
+        `${process.env.VUE_APP_API_URL}/employee/CreateReportEngage`,
         {
           method: "POST",
           headers: {
@@ -694,7 +694,7 @@ export default {
     },
     async assignMaintainer() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/assignFixReport`,
+        `${process.env.VUE_APP_API_URL}/employee/assignFixReport`,
         {
           method: "POST",
           headers: {
@@ -767,7 +767,7 @@ export default {
 
       if (action == "cancel") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
@@ -785,7 +785,7 @@ export default {
 
       // if (action == "postpone") {
       //   if (confirm("ต้องการเลื่อนนัดรายงานนี้ใช่หรือไม่")) {
-      //     fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+      //     fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
       //       method: "PUT",
       //       headers: {
       //         "content-Type": "application/json",
@@ -797,7 +797,7 @@ export default {
       //         EmployeeId: parseInt(this.empId),
       //       }),
       //     });
-      //     fetch(`https://dev.rungmod.com/api/employee/selectedPlanFixDate`, {
+      //     fetch(`${process.env.VUE_APP_API_URL}/employee/selectedPlanFixDate`, {
       //       method: "PUT",
       //       headers: {
       //         "content-Type": "application/json",
@@ -814,7 +814,7 @@ export default {
 
       if (action == "review") {
         // if (confirm("ต้องการสำเร็จรายงานนี้ใช่หรือไม่")) {
-        //   fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+        //   fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
         //     method: "PUT",
         //     headers: {
         //       "content-Type": "application/json",
@@ -833,7 +833,7 @@ export default {
 
       if (action == "delete") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/deleteReportById`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/deleteReportById`, {
             method: "DELETE",
             headers: {
               "content-Type": "application/json",
@@ -858,7 +858,7 @@ export default {
     },
     async getAllReportStatus(reportId) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/reportStatusApplication/${reportId}`,
+        `${process.env.VUE_APP_API_URL}/employee/reportStatusApplication/${reportId}`,
         {
           method: "GET",
           headers: {
@@ -885,7 +885,7 @@ export default {
     },
     async updateStatus(status) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/statusReport`,
+        `${process.env.VUE_APP_API_URL}/employee/statusReport`,
         {
           method: "PUT",
           headers: {

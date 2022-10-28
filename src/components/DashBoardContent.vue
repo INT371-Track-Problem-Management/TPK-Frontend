@@ -387,7 +387,7 @@ export default {
       console.log(this.dashboardReport);
     },
     // async getAllRequest() {
-    //   const res = await fetch(`https://dev.rungmod.com/api/employee/report`, {
+    //   const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/report`, {
     //     method: "GET",
     //     headers: { Authorization: `Bearer ${this.token}` },
     //   });
@@ -398,7 +398,7 @@ export default {
       if(this.selectedMonth.id != 0 && this.selectedYear.id == 0) {
         console.log('กรุณาเลือกปี');
       } else {
-        const res = await fetch(`https://dev.rungmod.com/api/employee/dashboard`, {
+        const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/dashboard`, {
         method: "POST",
         headers: { "content-Type": "application/json", Authorization: `Bearer ${this.token}` },
         body: JSON.stringify({

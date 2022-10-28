@@ -644,7 +644,7 @@ export default {
     },
     postpone(selectedDate) {
       if (confirm("คุณต้องการเลื่อนการนัดวันซ่อมใช่หรือไม่")) {
-        fetch(`https://dev.rungmod.com/api/customer/selectedPlanFixDate`, {
+        fetch(`${process.env.VUE_APP_API_URL}/customer/selectedPlanFixDate`, {
           method: "PUT",
           headers: {
             "content-Type": "application/json",
@@ -671,7 +671,7 @@ export default {
       if (this.review.description == "") {
         alert("กรุณาแสดงความคิดเห็นการแก้ไขปัญหานี้");
       } else {
-        fetch(`https://dev.rungmod.com/api/customer/endJobReview`, {
+        fetch(`${process.env.VUE_APP_API_URL}/customer/endJobReview`, {
           method: "POST",
           headers: {
             "content-Type": "application/json",
@@ -710,7 +710,7 @@ export default {
     },
     async getReportDetailWithEngage() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
+        `${process.env.VUE_APP_API_URL}/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
         {
           method: "GET",
           headers: {
@@ -725,7 +725,7 @@ export default {
     async getReportById() {
       try {
         const res = await fetch(
-          `https://dev.rungmod.com/api/customer/reportById`,
+          `${process.env.VUE_APP_API_URL}/customer/reportById`,
           {
             method: "POST",
             headers: {

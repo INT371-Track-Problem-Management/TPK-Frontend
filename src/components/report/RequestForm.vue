@@ -266,7 +266,7 @@ export default {
         ) {
           alert("กรุณาใส่วันนัดซ่อมให้ครบ");
         } else if (confirm("ต้องการรับเรื่องรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
@@ -279,7 +279,7 @@ export default {
             }),
           })
             .then(
-              fetch(`https://dev.rungmod.com/api/employee/CreateReportEngage`, {
+              fetch(`${process.env.VUE_APP_API_URL}/employee/CreateReportEngage`, {
                 method: "POST",
                 headers: {
                   "content-Type": "application/json",
@@ -298,7 +298,7 @@ export default {
               })
             )
             .then(
-              fetch(`https://dev.rungmod.com/api/employee/assignFixReport`, {
+              fetch(`${process.env.VUE_APP_API_URL}/employee/assignFixReport`, {
                 method: "POST",
                 headers: {
                   "content-Type": "application/json",
@@ -325,7 +325,7 @@ export default {
 
       if (action == "cancel") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
@@ -344,7 +344,7 @@ export default {
 
       if (action == "postpone") {
         if (confirm("ต้องการเลื่อนนัดรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
@@ -356,7 +356,7 @@ export default {
               EmployeeId: parseInt(this.empId),
             }),
           });
-          fetch(`https://dev.rungmod.com/api/employee/selectedPlanFixDate`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/selectedPlanFixDate`, {
             method: "PUT",
             headers: {
               "content-Type": "application/json",
@@ -373,7 +373,7 @@ export default {
 
       if (action == "review") {
         // if (confirm("ต้องการสำเร็จรายงานนี้ใช่หรือไม่")) {
-        //   fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+        //   fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
         //     method: "PUT",
         //     headers: {
         //       "content-Type": "application/json",
@@ -392,7 +392,7 @@ export default {
 
       if (action == "delete") {
         if (confirm("ต้องการลบรายงานนี้ใช่หรือไม่")) {
-          fetch(`https://dev.rungmod.com/api/employee/deleteReportById`, {
+          fetch(`${process.env.VUE_APP_API_URL}/employee/deleteReportById`, {
             method: "DELETE",
             headers: {
               "content-Type": "application/json",
@@ -409,7 +409,7 @@ export default {
     },
     async getReportDetail() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/reportById`,
+        `${process.env.VUE_APP_API_URL}/employee/reportById`,
         {
           method: "POST",
           headers: {
@@ -426,7 +426,7 @@ export default {
     },
     async getAllReportEngage() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/reportEngageByReportId/${this.reportDetail.reportId}`,
+        `${process.env.VUE_APP_API_URL}/employee/reportEngageByReportId/${this.reportDetail.reportId}`,
         {
           method: "GET",
           headers: {
@@ -440,7 +440,7 @@ export default {
     },
     async addMaintainer() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/maintainer`,
+        `${process.env.VUE_APP_API_URL}/employee/maintainer`,
         {
           method: "POST",
           headers: {
@@ -460,7 +460,7 @@ export default {
       return data.then(() => {});
     },
     updateStatusFromSelectedDate() {
-      fetch(`https://dev.rungmod.com/api/employee/statusReport`, {
+      fetch(`${process.env.VUE_APP_API_URL}/employee/statusReport`, {
         method: "PUT",
         headers: {
           "content-Type": "application/json",

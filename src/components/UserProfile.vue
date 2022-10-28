@@ -411,7 +411,7 @@ export default {
     async getUserProfile(userRole) {
       const role = userRole == "E" || userRole == "A" ? "employee" : "customer";
       const res = await fetch(
-        `https://dev.rungmod.com/api/${role}/FetchProfile/${this.email}`,
+        `${process.env.VUE_APP_API_URL}/${role}/FetchProfile/${this.email}`,
         {
           method: "GET",
           headers: {
@@ -441,7 +441,7 @@ export default {
     async changePassword() {
       if (this.checkChangePwd()) {
         const res = await fetch(
-          `https://dev.rungmod.com/api/service/changePassword`,
+          `${process.env.VUE_APP_API_URL}/service/changePassword`,
           {
             method: "POST",
             headers: {
@@ -473,7 +473,7 @@ export default {
     },
     async editProfile() {
         const res = await fetch(
-          `https://dev.rungmod.com/api/customer/editProfile/?email=${this.email}`,
+          `${process.env.VUE_APP_API_URL}/customer/editProfile/?email=${this.email}`,
           {
             method: "PUT",
             headers: {

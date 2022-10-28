@@ -126,7 +126,7 @@ export default {
 
     async doLogin() {
       if (!this.validation()) {
-        fetch(`https://dev.rungmod.com/api/login`, {
+        fetch(`${process.env.VUE_APP_API_URL}/login`, {
           method: "POST",
           headers: { "content-Type": "application/json" },
           body: JSON.stringify({

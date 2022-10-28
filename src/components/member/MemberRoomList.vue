@@ -77,7 +77,6 @@ export default {
     return {
       token: localStorage.getItem("token"),
       modalBg: false,
-    //   showAddModal: false,
       roomLists: [],
     };
   },
@@ -88,12 +87,11 @@ export default {
   methods: {
     async create() {
       this.roomLists = await this.getAllRoomByCustomerId();
-      console.log(this.roomLists);
     },
     async getAllRoomByCustomerId() {
       try {
         const res = await fetch(
-          "https://dev.rungmod.com/api/customer/getAllRoomByCustomerId/"+parseInt(localStorage.getItem('id')),
+          `${process.env.VUE_APP_API_URL}/customer/getAllRoomByCustomerId/`+parseInt(localStorage.getItem('id')),
           {
             method: "GET",
             headers: {

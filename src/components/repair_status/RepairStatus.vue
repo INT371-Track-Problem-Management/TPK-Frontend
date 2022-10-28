@@ -165,7 +165,7 @@ export default {
     },
     async getReportByCreatedBy() {
       try {
-        const res = await fetch(`https://dev.rungmod.com/api/customer/reportByCreatedBy`, {
+        const res = await fetch(`${process.env.VUE_APP_API_URL}/customer/reportByCreatedBy`, {
           method: "POST",
           headers: { "content-Type": "application/json" ,
                      "Authorization": `Bearer ${this.token}`,},

@@ -261,7 +261,7 @@ export default {
     async getBuildings() {
       try {
         const res = await fetch(
-          "https://dev.rungmod.com/api/employee/allBuilding",
+          `${process.env.VUE_APP_API_URL}/employee/allBuilding`,
           {
             method: "GET",
             headers: {
@@ -279,7 +279,7 @@ export default {
       }
     },
     async insertBuildingAndRoom() {
-      const res = await fetch("https://dev.rungmod.com/api/employee/building", {
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/building`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -300,7 +300,7 @@ export default {
     async insertRooms(buildingId) { //////////////////////////////
       this.add(buildingId)
       try {
-        const res = await fetch("https://dev.rungmod.com/api/employee/rooms", {
+        const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/rooms`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

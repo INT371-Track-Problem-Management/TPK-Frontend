@@ -250,7 +250,7 @@
           </div>
 
           <div class="mb-4 grid grid-cols-2 gap-2">
-            <div class="text-rangmod-black px-1">
+            <!-- <div class="text-rangmod-black px-1">
               ห้องพัก
               <div class="border-rangmod-gray rounded-xl">
                 <input
@@ -260,7 +260,7 @@
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
-            </div>
+            </div> -->
 
             <div class="text-rangmod-black px-1">
               สถานะ
@@ -504,7 +504,7 @@ export default {
         sex: "",
         phone: "",
         address: "",
-        room: 1,
+        // room: 1,
         status: "",
       },
       addModal: {
@@ -541,13 +541,12 @@ export default {
   methods: {
     async create() {
       this.memberList = await this.getCustomers();
-      await this.searchRoomByRoomNum(43101);
       console.log(this.memberList);
     },
     async getCustomers() {
       try {
         const res = await fetch(
-          "https://dev.rungmod.com/api/employee/customer",
+          `${process.env.VUE_APP_API_URL}/employee/customer`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${this.token}` },
@@ -562,7 +561,7 @@ export default {
     async getCustomerById(customerId) {
       try {
         const res = await fetch(
-          `https://dev.rungmod.com/api/employee/customerById/?customerId=${customerId}`,
+          `${process.env.VUE_APP_API_URL}/employee/customerById/?customerId=${customerId}`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${this.token}` },
@@ -630,7 +629,7 @@ export default {
       const room = await this.searchRoomByRoomNum(roomNum);
       if (room != "fail") {
         const res = await fetch(
-          `https://dev.rungmod.com/api/employee/roomAddCustomer`,
+          `${process.env.VUE_APP_API_URL}/employee/roomAddCustomer`,
           {
             method: "POST",
             headers: {
@@ -660,7 +659,7 @@ export default {
     },
     async searchRoomByRoomNum(roomNum) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/employee/roomByRoomNum/?roomNum=${roomNum}`,
+        `${process.env.VUE_APP_API_URL}/employee/roomByRoomNum/?roomNum=${roomNum}`,
         {
           method: "GET",
           headers: {

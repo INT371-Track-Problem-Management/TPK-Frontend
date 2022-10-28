@@ -289,7 +289,7 @@ export default {
       }
     },
     logout() {
-      fetch(`https://dev.rungmod.com/api/logout`, {
+      fetch(`${process.env.VUE_APP_API_URL}/logout`, {
         method: "POST",
         headers: {
           "content-Type": "application/json",
