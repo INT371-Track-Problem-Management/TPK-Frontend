@@ -31,7 +31,7 @@
             class="w-5 h-5 rounded-full bg-rangmod-light-yellow"
           ></div>
           <div v-show="status.isActive" class="px-3 text-base">
-            {{ status.th }} ({{ dateShowFormat(status.createdAt)}})
+            {{ status.th }} ({{ dateShowFormat(status.createdAt) }})
           </div>
         </div>
       </div>
@@ -94,7 +94,11 @@
                       this.reportDetail.status != 'S6' &&
                       this.reportDetail.status != 'S7'
                     "
-                    @click="showPostpone = !showPostpone, modalBg = !modalBg, newEngage = engageDate.ogdatetime"
+                    @click="
+                      (showPostpone = !showPostpone),
+                        (modalBg = !modalBg),
+                        (newEngage = engageDate.ogdatetime)
+                    "
                     class="w-7 h-7 rounded-full"
                     :class="
                       engageDate.ogdatetime == reportDetail.selectedDate
@@ -107,7 +111,10 @@
             </div>
           </div>
         </div>
-        <div v-if="this.reportDetail.status != 'waiting'" class="border border-rangmod-purple rounded-3xl h-fit px-10">
+        <div
+          v-if="this.reportDetail.status != 'waiting'"
+          class="border border-rangmod-purple rounded-3xl h-fit px-10"
+        >
           <div class="hidden md:flex flex-col justify-start w-full">
             <div class="text-rangmod-purple my-5">ข้อมูลช่าง</div>
             <div class="w-full">
@@ -145,19 +152,18 @@
         >
           แก้ไขปัญหาเสร็จสิ้น
         </div>
-
       </div>
       <div class="flex justify-end space-x-4">
         <div
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
-
-          <div @click="cancel()"
-          v-if="!this.isEngageDateNow"
-          class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
-        >
-          ยกเลิกนัด
-        </div>
+          <div
+            @click="cancel()"
+            v-if="!this.isEngageDateNow"
+            class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
+          >
+            ยกเลิกนัด
+          </div>
         </div>
       </div>
 
@@ -426,7 +432,7 @@
           class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
-            class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+            class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
             <div class="flex justify-end">
@@ -453,23 +459,28 @@
 
             <div class="flex flex-row space-x-4 justify-center mb-5">
               <div v-for="(rate, i) in rates" :key="i">
-                <!-- <div v-html="star" @click="rating(score.score)"></div> -->
-                <svg
-                  @mouseover="fillStar(rate.score)"
-                  @mouseleave="removeStar(rate.score)"
-                  style="color: rgb(255, 221, 0)"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="75"
-                  height="75"
-                  fill="currentColor"
-                  class="bi bi-star-fill"
-                  viewBox="0 0 16 16"
+                <div
+                  @click="scored(rate.score)"
+                  class="cursor-pointer"
+                  :class="
+                    rate.hover || rate.isActive ? 'text-rangmod-yellow' : ''
+                  "
                 >
-                  <path
-                    d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
-                    :fill="rate.hover ? '#ffdd00' : '#7f7f7a'"
-                  ></path>
-                </svg>
+                  <svg
+                    @mouseover="fillStar(rate.score)"
+                    @mouseleave="removeStar()"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="60"
+                    height="60"
+                    fill="currentColor"
+                    class="bi bi-star-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                    ></path>
+                  </svg>
+                </div>
               </div>
             </div>
 
@@ -483,7 +494,7 @@
 
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                @click="finishAndReview()"
+                @click="reviewReport()"
                 class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 ยืนยัน
@@ -496,7 +507,7 @@
     <transition name="bounce">
       <div
         v-if="showPostpone"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6 "
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6"
       >
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-3 py-8 rounded-xl shadow-xl"
@@ -504,31 +515,35 @@
           <div class="text-2xl text-rangmod-purple my-5 text-center">
             เลื่อนนัด
           </div>
-          <div class="flex flex-col text-lg text-rangmod-purple my-5 text-center">
+          <div
+            class="flex flex-col text-lg text-rangmod-purple my-5 text-center"
+          >
             <div>ต้องการเลื่อนนัดเป็น</div>
-            <div class="rounded-full mx-auto px-2 bg-rangmod-gray text-white">{{ postponeFormat(newEngage) }}</div>
+            <div class="rounded-full mx-auto px-2 bg-rangmod-gray text-white">
+              {{ engageDateTimeShowFormat(newEngage) }}
+            </div>
           </div>
           <div class="flex flex-row space-x-4 justify-center">
-              <div
-                @click="showPostpone = false, modalBg = false"
-                class="w-32 my-4 py-2 text-lg text-center rounded-full cursor-pointer transition-all text-rangmod-red hover:shadow-lg"
-              >
-                ยกเลิก
-              </div>
-              <div
-                @click="postpone(newEngage)"
-                class="w-32 my-4 py-2 text-lg text-center rounded-full cursor-pointer transition-all text-rangmod-purple hover:shadow-lg"
-              >
-                ยืนยัน
-              </div>
+            <div
+              @click="(showPostpone = false), (modalBg = false)"
+              class="w-32 my-4 py-2 text-lg text-center rounded-full cursor-pointer transition-all text-rangmod-red hover:shadow-lg"
+            >
+              ยกเลิก
             </div>
+            <div
+              @click="postpone(newEngage)"
+              class="w-32 my-4 py-2 text-lg text-center rounded-full cursor-pointer transition-all text-rangmod-purple hover:shadow-lg"
+            >
+              ยืนยัน
+            </div>
+          </div>
         </div>
       </div>
     </transition>
     <transition name="bounce">
       <div
         v-if="isPostpone"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6 "
+        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6"
       >
         <div
           class="max-w-xs min-w-[320px] h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl"
@@ -543,9 +558,7 @@
 </template>
 
 <script>
-
 export default {
-
   data() {
     return {
       token: localStorage.getItem("token"),
@@ -659,26 +672,31 @@ export default {
           star: 1,
           score: 1,
           hover: false,
+          isActive: false,
         },
         {
           star: 2,
           score: 2,
           hover: false,
+          isActive: false,
         },
         {
           star: 3,
           score: 3,
           hover: false,
+          isActive: false,
         },
         {
           star: 4,
           score: 4,
           hover: false,
+          isActive: false,
         },
         {
           star: 5,
           score: 5,
           hover: false,
+          isActive: false,
         },
       ],
       review: {
@@ -687,7 +705,7 @@ export default {
       },
       goback: "<",
       activateStatus: [],
-      newEngage: "27/10/2565 17:22:00",
+      newEngage: "",
     };
   },
   // computed: {
@@ -700,7 +718,9 @@ export default {
     async create() {
       await this.getReportEngageWithReport();
       await this.getAllReportStatus(this.$route.params.id);
-      this.isEngageDateNow = this.engageDateShowFormat(this.reportDetail.selectedDate)== this.dateShowFormat(Date.now())
+      this.isEngageDateNow =
+        this.engageDateShowFormat(this.reportDetail.selectedDate) ==
+        this.dateShowFormat(Date.now());
       // if(this.isEngageDateNow) {
       //   this.updateStatus('S4')
       // }
@@ -708,7 +728,7 @@ export default {
     },
     async getReportById() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/reportById`,
+        `${process.env.VUE_APP_API_URL}/customer/reportById`,
         {
           method: "POST",
           headers: {
@@ -725,7 +745,7 @@ export default {
     },
     async getReportEngageWithReport() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
+        `${process.env.VUE_APP_API_URL}/customer/getReportEngageWithReport/?reportId=${this.$route.params.id}`,
         {
           method: "GET",
           headers: {
@@ -763,7 +783,7 @@ export default {
     },
     async getAssignedMaintainer(maintainerId) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/service/maintainerById/${maintainerId}`,
+        `${process.env.VUE_APP_API_URL}/service/maintainerById/${maintainerId}`,
         {
           method: "GET",
           headers: {
@@ -789,7 +809,7 @@ export default {
     },
     async getAllReportStatus(reportId) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/reportStatusApplication/${reportId}`,
+        `${process.env.VUE_APP_API_URL}/customer/reportStatusApplication/${reportId}`,
         {
           method: "GET",
           headers: {
@@ -869,7 +889,7 @@ export default {
     },
     async postpone(datetime) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/selectedPlanFixDate`,
+        `${process.env.VUE_APP_API_URL}/customer/selectedPlanFixDate`,
         {
           method: "PUT",
           headers: {
@@ -886,30 +906,30 @@ export default {
       const data = res.json();
       return data.then((data) => {
         if (data.message == "success") {
-          this.updateStatus('S8')
-          this.isPostpone = true
+          this.updateStatus("S8");
+          this.isPostpone = true;
           setTimeout(() => {
-            this.isPostpone = false
-          }, 2000)
+            this.isPostpone = false;
+          }, 2000);
           setTimeout(() => {
-            this.showPostpone = false
-            this.modalBg = false
-          }, 3000)
+            this.showPostpone = false;
+            this.modalBg = false;
+          }, 3000);
         } else {
-          alert('error')
+          alert("error");
         }
       });
     },
     async cancel() {
-      const res = this.updateStatus('S9')
-      if(res == 'success') {
-        alert('success')
+      const res = this.updateStatus("S9");
+      if (res == "success") {
+        alert("success");
       }
     },
     async finish() {
-      const res = this.updateStatus('S7')
-      if(res == 'success') {
-        alert('success')
+      const res = this.updateStatus("S7");
+      if (res == "success") {
+        alert("success");
       }
     },
     postponeFormat(datetime) {
@@ -919,7 +939,7 @@ export default {
     },
     async updateStatus(status) {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/statusReport`,
+        `${process.env.VUE_APP_API_URL}/customer/statusReport`,
         {
           method: "PUT",
           headers: {
@@ -933,14 +953,14 @@ export default {
           }),
         }
       );
-      const data = res.json()
+      const data = res.json();
       return data.then((data) => {
-        if(data == 'Update success') {
-          return 'success'
+        if (data == "Update success") {
+          return "success";
         } else {
-          return 'fail'
+          return "fail";
         }
-      })
+      });
     },
     dateShowFormat(inputDate) {
       const date = new Date(inputDate);
@@ -952,10 +972,72 @@ export default {
       return formatedDate;
     },
     engageDateShowFormat(engage) {
+      const res = engage.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      return showDate;
+    },
+    engageDateTimeShowFormat(engage) {
       const res = engage.split('T')
       const dateRes = res[0].split('-')
       const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
-      return showDate
+      const showTime = res[1].split('Z')
+      return showDate + " " + showTime[0]
+    },
+    fillStar(score) {
+      for (let i = 0; i < score; i++) {
+        this.rates[i].hover = true;
+      }
+    },
+    removeStar() {
+      for (let i in this.rates) {
+        this.rates[i].hover = false;
+      }
+    },
+    scored(score) {
+      if (this.rates[score - 1].isActive == true) {
+        for (let i in this.rates) {
+          this.rates[i].isActive = false;
+        }
+        this.review.score = 0
+      } else {
+        for (let i in this.rates) {
+          if (i < score) {
+            this.rates[i].isActive = true;
+          } else {
+            this.rates[i].isActive = false;
+          }
+        }
+        this.review.score = score
+      }
+    },
+    async reviewReport() {
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/customer/endJobReview`,
+        {
+          method: "POST",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+          body: JSON.stringify({
+            ReportId: parseInt(this.$route.params.id),
+            Des: this.review.description,
+            Score: this.review.score,
+            UpdateBy: parseInt(this.createdBy)
+          }),
+        }
+      );
+      const data = res.json();
+      return data.then((data) => {
+        console.log(data);
+        // if (data == "success") {
+        //   return "success";
+        // } else {
+        //   return "fail";
+        // }
+      });
     }
   },
 };
@@ -997,4 +1079,3 @@ input[type="number"]::-webkit-outer-spin-button {
   }
 }
 </style>
-

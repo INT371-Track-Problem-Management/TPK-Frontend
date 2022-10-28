@@ -604,7 +604,7 @@ export default {
     },
     sendReport() {
       if (!this.validation()) {
-        fetch(`https://dev.rungmod.com/api/customer/report`, {
+        fetch(`${process.env.VUE_APP_API_URL}/customer/report`, {
           method: "POST",
           headers: {
             "content-Type": "application/json",
@@ -631,7 +631,7 @@ export default {
     },
     async getReport() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/reportByCreatedBy/${this.createdBy}`,
+        `${process.env.VUE_APP_API_URL}/customer/reportByCreatedBy/${this.createdBy}`,
         {
           method: "GET",
           headers: {

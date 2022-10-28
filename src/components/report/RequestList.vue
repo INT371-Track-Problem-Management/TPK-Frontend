@@ -403,7 +403,7 @@ export default {
       }
     },
     async getAllRequest() {
-      const res = await fetch(`https://dev.rungmod.com/api/employee/report`, {
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/report`, {
         method: "GET",
         headers: { "content-Type": "application/json",Authorization: `Bearer ${this.token}` },
       });

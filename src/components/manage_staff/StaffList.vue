@@ -710,7 +710,7 @@ export default {
     },
     async getStaffs() {
       const res = await fetch(
-        "https://dev.rungmod.com/api/employee/listEmployee",
+        `${process.env.VUE_APP_API_URL}/employee/listEmployee`,
         {
           method: "GET",
           headers: {
@@ -748,7 +748,7 @@ export default {
     },
     async registerStaff() {
 
-      const res = await fetch(`https://dev.rungmod.com/api/registerOwner`, {
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/registerOwner`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

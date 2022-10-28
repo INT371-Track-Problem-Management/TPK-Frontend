@@ -489,7 +489,7 @@ export default {
     },
     async sendReport() {
       if (!this.validation()) {
-        const res = await fetch(`https://dev.rungmod.com/api/customer/report`, {
+        const res = await fetch(`${process.env.VUE_APP_API_URL}/customer/report`, {
           method: "POST",
           headers: {
             "content-Type": "application/json",
@@ -526,7 +526,7 @@ export default {
     },
     async getReport() {
       const res = await fetch(
-        `https://dev.rungmod.com/api/customer/getAllReportByRoomId/${parseInt(
+        `${process.env.VUE_APP_API_URL}/customer/getAllReportByRoomId/${parseInt(
           this.$route.params.id
         )}`,
         {
