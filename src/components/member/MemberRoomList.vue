@@ -59,7 +59,16 @@
       </div>
 
     </div>
-
+    <div  v-if="loading" class="flex justify-center">
+      <lottie-player
+      autoplay
+      loop
+      mode="normal"
+      src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+      class="w-40 h-40"
+    >
+    </lottie-player>
+    </div>
   </div>
 </template>
 
@@ -81,7 +90,14 @@ export default {
       noInRoom: false,
     };
   },
-  computed: {},
+  computed: {
+    loading() {
+      if(this.roomLists.length == 0) {
+        return true
+      }
+      return false
+    }
+  },
   mounted() {
     this.create();
   },
@@ -115,24 +131,6 @@ export default {
         console.log(e);
       }
     },
-    // add() {
-    //   for (let i in this.floorRooms) {
-    //     for (let j = 1; j <= this.floorRooms[i].rooms; j++) {
-    //       this.rooms.push({
-    //         roomNum: `${this.buildingId}${this.floorRooms[i].floor}${this.pad(
-    //           j
-    //         )}`,
-    //         description: "ห้องธรรมดา",
-    //         floor: this.floorRooms[i].floor,
-    //       });
-    //     }
-    //   }
-    //   console.log(this.rooms);
-    // },
-    goToRoom(roomId) {
-      console.log(roomId)
-      // this.$router.push('/member/myroom/room/'+roomId)
-    },
     clearData() {
       this.addBuilding.name = "";
       this.addBuilding.floor = 1;
@@ -162,7 +160,7 @@ export default {
   scrollbar-width: none; /* Firefox */
 }
 
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -178,5 +176,5 @@ export default {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

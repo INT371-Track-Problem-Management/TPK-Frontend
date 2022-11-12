@@ -6,13 +6,17 @@
     "serve": "vue-cli-service serve",
     "serve-dev": "vue-cli-service serve --mode development",
     "serve-prd": "vue-cli-service serve --mode production",
+    "serve-lcl": "vue-cli-service serve --mode lcl",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "build-dev": "vue-cli-service build --mode development",
     "build-prd": "vue-cli-service build --mode production"
   },
   "dependencies": {
+    "@lottiefiles/lottie-player": "^1.6.0",
+    "@vuepic/vue-datepicker": "^3.5.3",
     "core-js": "^3.8.3",
+    "moment-timezone": "^0.5.38",
     "vue": "^3.2.13",
     "vue-router": "4"
   },

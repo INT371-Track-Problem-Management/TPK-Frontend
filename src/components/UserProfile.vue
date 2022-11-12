@@ -550,7 +550,7 @@ export default {
 </script>
 
 <style>
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -566,5 +566,5 @@ export default {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

@@ -857,7 +857,7 @@ input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -873,7 +873,7 @@ input[type="number"]::-webkit-outer-spin-button {
   100% {
     transform: scale(1);
   }
-}
+} */
 select {
   -webkit-appearance: none;
 }

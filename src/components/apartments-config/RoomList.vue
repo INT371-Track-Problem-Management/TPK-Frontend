@@ -21,18 +21,20 @@
           <div class="flex flex-wrap justify-start">
             <div v-for="(room, k) in rooms" :key="k" @click="showDetail(room)">
               <div
-                class="w-[250px] text-center px-24 py-5 m-2 border border-rangmod-purple cursor-pointer transition-all hover:bg-rangmod-light-pink hover:font-bold"
+                class="w-[250px] text-center py-5 m-2 border border-rangmod-purple cursor-pointer transition-all hover:bg-rangmod-light-pink hover:font-bold"
               >
-                <div class="pb-2">{{ room.roomNum }}</div>
+                <div class="flex flex-col juxtify-center items-center">
+                  <div class="pb-2">{{ room.roomNum }}</div>
 
-                <div class="flex justify-center">
-                  <div v-for="(status, l) in statusList" :key="l">
-                    <div
-                      v-if="room.status == status.id"
-                      :class="[status.color, status.border_color]"
-                      class="whitespace-nowrap border px-1 rounded-md"
-                    >
-                      {{ status.title }}
+                  <div class="w-fit">
+                    <div v-for="(status, l) in statusList" :key="l">
+                      <div
+                        v-if="room.status == status.id"
+                        :class="[status.color, status.border_color]"
+                        class="whitespace-nowrap border px-1 rounded-md"
+                      >
+                        {{ status.title }}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -122,7 +124,7 @@
               </div>
             </div>
           </div>
-          <div class="flex justify-end">
+          <div v-if="customerModal.id != 0" class="flex justify-end">
             <div
               @click="confirmRemove = !confirmRemove"
               class="w-fit text-base text-center text-rangmod-light-red cursor-pointer transition-all hover:font-bold"
@@ -216,7 +218,8 @@ export default {
     },
     async getAllRoomByBuilding(buildingId) {
       const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/employee/roomByBuildingId/` + buildingId,
+        `${process.env.VUE_APP_API_URL}/employee/roomByBuildingId/` +
+          buildingId,
         {
           method: "GET",
           headers: {
@@ -251,9 +254,9 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        for(let i in data) {
-          if(data[i].status == 'A') {
-            this.roomWithCustomerList.push(data[i])
+        for (let i in data) {
+          if (data[i].status == "A") {
+            this.roomWithCustomerList.push(data[i]);
           }
         }
         // this.roomWithCustomerList = data;
@@ -261,20 +264,25 @@ export default {
       });
     },
     showDetail(room) {
-      this.showModal = true;
-      for (let customer in this.roomWithCustomerList) {
-        if (this.roomWithCustomerList[customer].roomId == room.roomId) {
-          this.customerModal = this.roomWithCustomerList[customer];
-          break;
-        } else {
-          this.customerModal = { id: 0 };
+      if (this.roomWithCustomerList.length == 0) {
+        this.customerModal = { id: 0 };
+      } else {
+        for (let customer in this.roomWithCustomerList) {
+          if (this.roomWithCustomerList[customer].roomId == room.roomId) {
+            this.customerModal = this.roomWithCustomerList[customer];
+            break;
+          } else {
+            this.customerModal = { id: 0 };
+          }
         }
       }
       this.customerModal.roomNum = room.roomNum;
+      this.showModal = true;
     },
     async removeCustomer(room) {
       const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/employee/roomRemoveCustomer/?id=` + room.id,
+        `${process.env.VUE_APP_API_URL}/employee/roomRemoveCustomer/?id=` +
+          room.id,
         {
           method: "GET",
           headers: {
@@ -286,7 +294,7 @@ export default {
       const data = res.json();
       return data.then(async (data) => {
         if (data.message == "success") {
-          await this.getAllRoomByBuilding(this.$route.params.buildingId)
+          await this.getAllRoomByBuilding(this.$route.params.buildingId);
           this.removed = true;
           setTimeout(() => {
             this.removed = false;
@@ -296,7 +304,7 @@ export default {
             this.showModal = false;
           }, 2500);
         } else {
-          alert('error')
+          alert("error");
         }
       });
     },

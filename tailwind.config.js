@@ -30,6 +30,7 @@ module.exports = {
         'rangmod-pink': "#FFECEC", 
         'rangmod-dark-pink': "#FF8477",
         'rangmod-light-pink': "#F6F2FF",
+        'rangmod-light-purple': "#8699FF",
         'rangmod-purple': "#7364FF",
         'rangmod-light-yellow': "#FFE996",
         'rangmod-yellow': "#FFB800",
@@ -49,6 +50,27 @@ module.exports = {
         'rangmod-cat-light-blue': "#71D4FF",
         'rangmod-cat-dark-blue': "#4679F9",
         'rangmod-cat-purple': "#B495FF",
+
+        'rangmod-stat-gray': "#B4B4B4",
+        'rangmod-stat-light-gray': "#EEEEEE",
+        'rangmod-stat-yellow' : "#FFD039",
+        'rangmod-stat-light-yellow' : "#FFF0BA",
+        'rangmod-stat-green' : "#15C976",
+        'rangmod-stat-light-green' : "#E6FFCA",
+        'rangmod-stat-red' : "#FF3939",
+        'rangmod-stat-light-red' : "#FFE2E2",
+
+        'rangmod-step-yellow' : "#FFD200",
+
+        'rangmod-selected-gray' : "#C6C6C6",
+        'rangmod-selected-green' : "#64BD79",
+
+        'rangmod-ppbtn-blue' : "#77ADFF",
+
+        'rangmod-font-light-purple' : "#A57CFF",
+        'rangmod-font-purple' : "#7364FF",
+        'rangmod-font-light-gray' : "#B4B4B4",
+        'rangmod-font-gray' : "#858585",
       },
       
     },

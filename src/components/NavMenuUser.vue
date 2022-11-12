@@ -158,7 +158,7 @@
           <div
             class="rounded-full cursor-pointer py-1 px-2 hover:scale-110 transition ease-in-out delay-150 hover:bg-rangmod-pink"
           >
-            <RouterLink :to="this.role == 'E' ? '/dashboard/member' : '/member/myroom'" @click="closeMenu()" class="mx-auto items-center lg:mx-0">
+            <RouterLink :to="this.role == 'E' || this.role == 'A' ? '/dashboard/member' : '/member/myroom'" @click="closeMenu()" class="mx-auto items-center lg:mx-0">
               <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-fit" />
             </RouterLink>
           </div>

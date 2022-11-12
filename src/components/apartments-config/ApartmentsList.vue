@@ -277,7 +277,6 @@ export default {
       console.log(this.buildingLists);
     },
     async getBuildings() {
-      try {
         const res = await fetch(
           `${process.env.VUE_APP_API_URL}/employee/allBuilding`,
           {
@@ -289,12 +288,9 @@ export default {
           }
         );
         const data = res.json();
-        return data.then((data) => {
-          return data.AllBuilding;
-        });
-      } catch (e) {
-        console.log(e);
-      }
+        return data.then((res) => {
+          return res.buildings
+        })
     },
     async insertBuildingAndRoom() {
       const res = await fetch(
@@ -414,7 +410,7 @@ export default {
   scrollbar-width: none; /* Firefox */
 }
 
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -430,5 +426,5 @@ export default {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

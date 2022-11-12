@@ -76,7 +76,7 @@
         <td class="text-center py-4">{{ report.reportId }}</td>
         <td class="text-center py-4 truncate max-w-[120px]">{{ report.reportDes }}</td>
         <td class="text-center py-4">{{ dateShowFormat(report.createdAt) }}</td>
-        <td class="text-center py-4">{{ report.selectedDate == '' ? '-' : engageDateShowFormat(report.selectedDate) }}
+        <td class="text-center py-4">{{ report.fixDate }}
         </td>
         <td class="text-center py-4">
           <div v-for="(status, j) in statusList" :key="j">
@@ -228,63 +228,63 @@ export default {
       ],
       statusList: [
         {
-          id: 1,
+          id: "S1",
           eng: "waiting",
           name: "รอรับเรื่อง",
           color: "text-rangmod-blue",
           bgcolor: "bg-rangmod-blue/20",
         },
         {
-          id: 2,
+          id: "S2",
           eng: "accept",
           name: "รับเรื่อง",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 3,
+          id: "S3",
           eng: "engage",
           name: "นัดวันเข้าซ่อม",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 4,
+          id: "S4",
           eng: "prepare",
           name: "รอดำเนินการ",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 5,
+          id: "S5",
           eng: "postpone",
           name: "เลื่อนนัด",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
         },
         {
-          id: 6,
+          id: "S6",
           eng: "cancel",
           name: "ยกเลิกนัด",
           color: "text-rangmod-red",
           bgcolor: "bg-rangmod-red/20",
         },
         {
-          id: 7,
+          id: "S7",
           eng: "success",
           name: "เสร็จสิ้น",
           color: "text-rangmod-green",
           bgcolor: "bg-rangmod-green/20",
         },
         {
-          id: 8,
+          id: "S8",
           eng: "defer",
           name: "รอยืนยันเลื่อนนัด",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
         },
         {
-          id: 9,
+          id: "S9",
           eng: "pending",
           name: "รอยืนยันการยกเลิก",
           color: "text-rangmod-red",
@@ -457,7 +457,7 @@ export default {
     },
     async getReport() {
       const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/customer/reportByCreatedBy/${this.createdBy}`,
+        `${process.env.VUE_APP_API_URL}/customer/reports`,
         {
           method: "GET",
           headers: {
@@ -485,7 +485,7 @@ export default {
     checkThaiStatus(status) {
       console.log(status);
       for(let i in this.statusList) {
-        if(status.toLowerCase() == this.statusList[i].eng) {
+        if(status == this.statusList[i].id) {
           return this.statusList[i].name
         }
       }
@@ -513,7 +513,7 @@ export default {
 </script>
 
 <style>
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -529,5 +529,5 @@ export default {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>

@@ -92,7 +92,7 @@
         <td class="text-center py-2 px-2">{{ request.reportId }}</td>
         <td class="text-center py-2 px-2">{{ request.title }}</td>
         <td class="text-center py-2">{{ dateShowFormat(request.createdAt) }}</td>
-        <td class="text-center py-2">{{ request.selectedDate == '' ? '-' : engageDateShowFormat(request.selectedDate) }}</td>
+        <td class="text-center py-2">{{ request.fixDate }}</td>
         <td class="text-center py-2">
           <div v-for="(status, j) in statusList" :key="j">
             <div
@@ -188,198 +188,69 @@ export default {
 
       statusList: [
         {
-          id: 1,
+          id: "S1",
           eng: "waiting",
           name: "รอรับเรื่อง",
           color: "text-rangmod-blue",
           bgcolor: "bg-rangmod-blue/20",
         },
         {
-          id: 2,
+          id: "S2",
           eng: "accept",
           name: "รับเรื่อง",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 3,
+          id: "S3",
           eng: "engage",
           name: "นัดวันเข้าซ่อม",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 4,
+          id: "S4",
           eng: "prepare",
           name: "รอดำเนินการ",
           color: "text-rangmod-yellow",
           bgcolor: "bg-rangmod-yellow/20",
         },
         {
-          id: 5,
+          id: "S5",
           eng: "postpone",
           name: "เลื่อนนัด",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
         },
         {
-          id: 6,
+          id: "S6",
           eng: "cancel",
           name: "ยกเลิกนัด",
           color: "text-rangmod-red",
           bgcolor: "bg-rangmod-red/20",
         },
         {
-          id: 7,
+          id: "S7",
           eng: "success",
           name: "เสร็จสิ้น",
           color: "text-rangmod-green",
           bgcolor: "bg-rangmod-green/20",
         },
         {
-          id: 8,
+          id: "S8",
           eng: "defer",
           name: "รอยืนยันเลื่อนนัด",
           color: "text-rangmod-purple",
           bgcolor: "bg-rangmod-purple/20",
         },
         {
-          id: 9,
+          id: "S9",
           eng: "pending",
           name: "รอยืนยันการยกเลิก",
           color: "text-rangmod-red",
           bgcolor: "bg-rangmod-red/20",
         },
       ],
-
-      // requestList: [
-      //   {
-      //     id: "ED123456",
-      //     room: "201",
-      //     title: "น้ำไม่ไหล",
-      //     desc: "น้ำไม่ไหล DESC ",
-      //     status: "3",
-      //     request_date: "29/03/2565",
-      //     repair_date: [
-      //       {
-      //         date: "31/03/2565",
-      //         isActive: true,
-      //         remark: "เหตุผลครั้งที่ 1"
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     id: "ED654321",
-      //     room: "102",
-      //     title: "ไฟไม่ติด",
-      //     desc: "ไฟไม่ติด DESC ",
-      //     status: "2",
-      //     request_date: "29/03/2565",
-      //     repair_date: [
-      //       {
-      //         date: "31/03/2565",
-      //         isActive: true,
-      //         remark: "เหตุผลครั้งที่ 1"
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     id: "ED789101",
-      //     room: "203",
-      //     title: "น้ำรั่ว",
-      //     desc: "น้ำรั่ว DESC ",
-      //     status: "5",
-      //     request_date: "29/03/2565",
-      //     repair_date: [
-      //       {
-      //         date: "31/03/2565",
-      //         isActive: true,
-      //         remark: "เหตุผลครั้งที่ 1"
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     id: "ED786123",
-      //     room: "203",
-      //     title: "ปลวกขึ้น",
-      //     desc: "ปลวกขึ้น DESC ",
-      //     status: "4",
-      //     request_date: "29/03/2565",
-      //     repair_date: [
-      //       {
-      //         date: "31/03/2565",
-      //         isActive: true,
-      //         remark: "เหตุผลครั้งที่ 1"
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //     ],
-      //   },
-      //   {
-      //     id: "ED543210",
-      //     room: "201",
-      //     title: "โต๊ะพัง",
-      //     desc: "โต๊ะพัง DESC ",
-      //     status: "1",
-      //     request_date: "29/03/2565",
-      //     repair_date: [
-      //       {
-      //         date: "31/03/2565",
-      //         isActive: true,
-      //         remark: "เหตุผลครั้งที่ 1"
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //       {
-      //         date: "",
-      //         isActive: false,
-      //         remark: ""
-      //       },
-      //     ],
-      //   },
-
-      // ]
       requestList: [],
     };
   },
@@ -391,19 +262,20 @@ export default {
       this.token = localStorage.getItem("token");
       this.createdBy = parseInt(localStorage.getItem("id"));
       this.requestList = await this.getAllRequest();
+      console.log(this.requestList[10]);
       this.requestList.sort(function (a, b) {
         return a.reportId - b.reportId;
       });
     },
     checkThaiStatus(status) {
       for(let i in this.statusList) {
-        if(status.toLowerCase() == this.statusList[i].eng) {
+        if(status == this.statusList[i].id) {
           return this.statusList[i].name
         }
       }
     },
     async getAllRequest() {
-      const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/report`, {
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/employee/reports`, {
         method: "GET",
         headers: { "content-Type": "application/json",Authorization: `Bearer ${this.token}` },
       });

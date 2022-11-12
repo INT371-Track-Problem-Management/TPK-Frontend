@@ -160,9 +160,6 @@
                 <div class="se:w-6 xse:w-8 w-4 rounded-full h-full transition-all" :class="category.bg"></div>
               </transition>
             </div>
-            <!-- <div class="mt-2 w-8 mx-auto text-center">
-              <div>{{ category.name }}</div>
-            </div> -->
           </div>
         </div>
         <div class="flex flex-wrap mt-8 justify-start">
@@ -451,7 +448,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -468,5 +465,5 @@ input[type="number"]::-webkit-outer-spin-button {
   100% {
     transform: scaleY(1);
   }
-}
+} */
 </style>

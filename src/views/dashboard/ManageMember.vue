@@ -1,7 +1,7 @@
 <template>
   
   <div>
-    <SearchPanel />
+    <!-- <SearchPanel /> -->
     <MemberList />
   </div>
 
@@ -9,12 +9,12 @@
 
 <script>
 
-import SearchPanel from "@/components/manage_member/SearchPanel.vue"
+// import SearchPanel from "@/components/manage_member/SearchPanel.vue"
 import MemberList from "@/components/manage_member/MemberList.vue"
 
 export default {
 
-  components: { SearchPanel, MemberList }
+  components: {  MemberList }
 
 }
 </script>

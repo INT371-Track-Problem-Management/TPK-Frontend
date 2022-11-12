@@ -113,7 +113,6 @@ export default {
     if(localStorage.getItem("token")) {
       this.goToPage(localStorage.getItem("role"))
     }
-    console.log(process.env.VUE_APP_API_URL);
   },
   methods: {
     validation() {

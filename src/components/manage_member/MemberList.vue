@@ -1,4 +1,5 @@
 <template>
+  <SearchPanel />
   <div
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
@@ -24,7 +25,7 @@
         <th class="py-4"></th>
       </tr>
       <tr
-        v-for="(member, i) in memberList"
+        v-for="(member, i) in filteredMember"
         :key="i"
         class="border-b border-rangmod-light-gray transition-all hover:bg-rangmod-light-pink/60"
       >
@@ -498,11 +499,25 @@
         </div>
       </div>
     </transition>
+
+    <div  v-if="loading" class="flex justify-center">
+      <lottie-player
+      autoplay
+      loop
+      mode="normal"
+      src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+      class="w-40 h-40"
+    >
+    </lottie-player>
+    </div>
+    
   </div>
 </template>
 
 <script>
+import SearchPanel from "@/components/manage_member/SearchPanel.vue";
 export default {
+  components: { SearchPanel },
   data() {
     return {
       token: localStorage.getItem("token"),
@@ -548,7 +563,16 @@ export default {
         },
       ],
       memberList: [],
+      filteredMember: [],
     };
+  },
+  computed: {
+    loading() {
+      if(this.memberList.length == 0 || this.filteredMember.length == 0) {
+        return true
+      }
+      return false
+    }
   },
   mounted() {
     this.create();
@@ -556,6 +580,7 @@ export default {
   methods: {
     async create() {
       this.memberList = await this.getCustomers();
+      this.filteredMember = this.memberList;
       console.log(this.memberList);
     },
     async getCustomers() {
@@ -662,13 +687,13 @@ export default {
         const data = res.json();
         return data.then((data) => {
           if (data == "success") {
-            this.assignedCustomer = true
+            this.assignedCustomer = true;
             setTimeout(() => {
-              this.assignedCustomer = false
-            }, 2000)
+              this.assignedCustomer = false;
+            }, 2000);
             setTimeout(() => {
-              this.showAdd = false
-            }, 2500)
+              this.showAdd = false;
+            }, 2500);
           } else {
             alert("fail");
           }
@@ -711,6 +736,25 @@ export default {
       const res2 = res[0] + res[1];
       return parseInt(res2);
     },
+    searchCustomerList(searchItem) {
+      this.filteredMember = this.memberList;
+      console.log(searchItem);
+      // if(searchItem.fname == '' || searchItem.lname == '') {
+      //   console.log();
+      // }
+
+      this.filteredMember = this.filteredMember.filter((member) => {
+        return member.customerId
+          .toString()
+          .includes(searchItem.customerId.toString());
+      });
+      this.filteredMember = this.filteredMember.filter((member) => {
+        return member.fname.includes(searchItem.fname);
+      });
+      this.filteredMember = this.filteredMember.filter((member) => {
+        return member.lname.includes(searchItem.lname);
+      });
+    },
   },
 };
 </script>
@@ -733,7 +777,7 @@ input[type="number"]::-webkit-outer-spin-button {
   margin: 0;
 }
 
-.bounce-enter-active {
+/* .bounce-enter-active {
   animation: bounce-in 0.5s;
 }
 .bounce-leave-active {
@@ -749,5 +793,5 @@ input[type="number"]::-webkit-outer-spin-button {
   100% {
     transform: scale(1);
   }
-}
+} */
 </style>
