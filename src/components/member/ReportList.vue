@@ -76,7 +76,7 @@
         <td class="text-center py-4">{{ report.reportId }}</td>
         <td class="text-center py-4 truncate max-w-[120px]">{{ report.reportDes }}</td>
         <td class="text-center py-4">{{ dateShowFormat(report.createdAt) }}</td>
-        <td class="text-center py-4">{{ report.fixDate }}
+        <td class="text-center py-4">{{ splitDate(report.fixDate) }}
         </td>
         <td class="text-center py-4">
           <div v-for="(status, j) in statusList" :key="j">
@@ -489,6 +489,16 @@ export default {
           return this.statusList[i].name
         }
       }
+    },
+    splitDate(datetime) {
+      if (datetime == "") {
+        return "";
+      }
+      const res = datetime.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      return showDate;
     },
     dateShowFormat(inputDate) {
       const date = new Date(inputDate);

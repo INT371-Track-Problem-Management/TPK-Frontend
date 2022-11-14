@@ -92,7 +92,7 @@
         <td class="text-center py-2 px-2">{{ request.reportId }}</td>
         <td class="text-center py-2 px-2">{{ request.title }}</td>
         <td class="text-center py-2">{{ dateShowFormat(request.createdAt) }}</td>
-        <td class="text-center py-2">{{ request.fixDate }}</td>
+        <td class="text-center py-2">{{ splitDate(request.fixDate) }}</td>
         <td class="text-center py-2">
           <div v-for="(status, j) in statusList" :key="j">
             <div
@@ -291,12 +291,15 @@ export default {
       });
       return formatedDate;
     },
-    engageDateShowFormat(engage) {
-      const res = engage.split('T')
-      const dateRes = res[0].split('-')
-      const showDate = dateRes[2]+'/'+dateRes[1]+'/'+(parseInt(dateRes[0])+543)
-      // const showTime = res[1].split('Z')
-      return showDate
+    splitDate(datetime) {
+      if (datetime == "") {
+        return "";
+      }
+      const res = datetime.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      return showDate;
     },
     pad(number) {
       return number < 10 ? "0" + number.toString() : number.toString();

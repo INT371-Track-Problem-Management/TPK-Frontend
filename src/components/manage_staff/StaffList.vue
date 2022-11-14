@@ -721,7 +721,7 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        return data.Employees
+        return data.employees
       });
     },
     backStep() {

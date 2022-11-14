@@ -302,7 +302,10 @@
                           <div
                             class="flex flex-col justify-center h-full absolute -right-10"
                           >
-                            <div class="my-auto w-7 h-7 p-2 rounded-full"></div>
+                            <div
+                              v-if="reportEngage.selectedDate == date.id"
+                              class="my-auto w-7 h-7 p-2 rounded-full bg-rangmod-green"
+                            ></div>
                           </div>
                         </div>
                       </div>
@@ -576,11 +579,9 @@
         </div>
       </div>
       <div
-        v-if="this.isEngageDateNow"
-        class="flex flex-row space-x-4 justify-end px-10"
+        class="flex flex-row space-x-4 justify-end"
       >
         <div
-          v-if="this.isEngageDateNow"
           @click="
             (this.showFinish = !this.showFinish), (this.modalBg = !this.modalBg)
           "
@@ -589,7 +590,7 @@
           แก้ไขปัญหาเสร็จสิ้น
         </div>
       </div>
-      <div class="flex justify-end space-x-4">
+      <div v-if="!isCancel" class="flex justify-end space-x-4">
         <div
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
@@ -620,7 +621,7 @@
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
           <div
-            @click="showCancel = !showCancel"
+            @click="(showCancel = !showCancel), (modalBg = !modalBg)"
             v-if="!this.isEngageDateNow"
             class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
           >
@@ -822,7 +823,10 @@
           >
             <!-- Closed -->
             <div class="flex justify-end">
-              <div @click="showCancel = false" class="cursor-pointer">
+              <div
+                @click="(showCancel = false), (modalBg = false)"
+                class="cursor-pointer"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   class="h-6 w-6"
@@ -859,21 +863,10 @@
               ></textarea>
             </div>
 
-            <div class="w-full">
-              <div class="mb-5">
-                <div class="text-rangmod-black">ว/ด/ป เวลาที่นัด</div>
-                <div
-                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                >
-                  {{ engageDateTimeShowFormat(oldEngage) }}
-                </div>
-              </div>
-            </div>
-
             <div class="flex flex-row space-x-4 justify-end">
               <div
                 @click="cancel()"
-                class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-red text-rangmod-red hover:bg-rangmod-red hover:border-white hover:text-white hover:shadow-none"
+                class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-light-red text-rangmod-light-red hover:bg-rangmod-light-red hover:border-white hover:text-white hover:shadow-none"
               >
                 ยกเลิกนัด
               </div>
@@ -1038,7 +1031,7 @@ export default {
       showReviewModal: false,
       showCancelModal: false,
       isPostpone: false,
-      isCancel: false,
+      // isCancel: false,
       isReview: false,
       openReportStatus: false,
       tempStatus: "waiting",
@@ -1387,15 +1380,34 @@ export default {
       newEngageForSend: [],
     };
   },
-  // computed: {
-
-  // },
+  computed: {
+    isCancel() {
+      return this.reportDetail.status == 'S6'
+    }
+  },
   mounted() {
     this.create();
   },
   methods: {
+    filterSelectedDate() {
+      for (let i in this.reportEngage.fixDate) {
+        if (this.reportEngage.fixDate[i].id == this.reportEngage.selectedDate) {
+          console.log(this.reportEngage.fixDate[i].date);
+          const select = new Date(this.reportEngage.fixDate[i].date)
+          console.log(select);
+          console.log(Date.now());
+          break;
+        }
+      }
+      
+
+    },
     test() {
-      console.log(this.emptyEngage);
+      const date = new Date(Date.now());
+      console.log(date);
+      console.log(date.getDate());
+      console.log(date.getMonth());
+      console.log(date.getFullYear());
     },
     sortNewEngage(newDate) {
       for (let i in newDate) {
@@ -1406,13 +1418,13 @@ export default {
         };
         this.newEngageForSelect.push(temp);
       }
-      console.log(this.newEngageForSelect);
+      // console.log(this.newEngageForSelect);
     },
     async create() {
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
-      console.log(this.reportDetail);
-      console.log(this.reportEngage);
+      // console.log(this.reportDetail);
+      // console.log(this.reportEngage);
       this.assignedMaintainer = await this.getAssignedMaintainer(
         this.reportEngage.maintainerId
       );
@@ -1425,6 +1437,7 @@ export default {
         });
       }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
+      this.filterSelectedDate()
     },
     async getReportById(reportId) {
       const res = await fetch(
@@ -1693,10 +1706,11 @@ export default {
             Authorization: `Bearer ${this.token}`,
           },
           body: JSON.stringify({
-            ReportId: parseInt(this.$route.params.id),
-            Des: this.review.description,
-            Score: this.review.score,
-            UpdateBy: parseInt(this.createdBy),
+            reportId: parseInt(this.$route.params.id),
+            des: this.review.description,
+            score: this.review.score,
+            updateBy: parseInt(this.createdBy),
+            maintainerId: parseInt(this.reportEngage.maintainerId),
           }),
         }
       );

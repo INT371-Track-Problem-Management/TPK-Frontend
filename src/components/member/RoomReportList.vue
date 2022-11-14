@@ -100,7 +100,7 @@
           {{ dateShowFormat(report.createdAt) }}
         </td>
         <td class="text-center py-4">
-          {{ report.fixDate }}
+          {{ splitDate(report.fixDate) }}
         </td>
         <td class="text-center py-4">
           <div v-for="(status, j) in statusList" :key="j">
@@ -180,28 +180,27 @@
 
             <div>
               <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
-              <div
-                @click="isActivateCategory = !isActivateCategory"
-                class="rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-col w-full mb-3 text-rangmod-black border border-rangmod-gray transition-all"
-              >
-                <div class="flex items-center justify-between cursor-pointer">
-                  <div>
-                    <div v-if="reportForSend.categoriesReport != ''">
-                      {{ reportForSend.categoriesReport.name }}
+              <div class="mb-5 relative">
+                <div
+                  @click="isActivateCategory = !isActivateCategory"
+                  class="w-full bg-white border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
+                >
+                  <div class="cursor-pointer flex flex-row">
+                    <div
+                      v-if="reportForSend.categoriesReport != ''"
+                      class="cursor-pointer"
+                    >
+                      {{ filterCategory(reportForSend.categoriesReport) }}
                     </div>
                     <div v-else class="text-rangmod-gray">&nbsp;</div>
                   </div>
-                  <!-- <input
-                  v-model = "category.name"
-                  type="text"
-                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                /> -->
+
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
                     fill="currentColor"
-                    class="bi bi-chevron-down text-rangmod-purple"
+                    class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
                     viewBox="0 0 16 16"
                     :class="
                       isActivateCategory
@@ -215,28 +214,39 @@
                     />
                   </svg>
                 </div>
-                <transition name="bounce">
+                <div
+                  class="z-[100] w-full absolute flex flex-col"
+                  :class="
+                    isActivateCategory
+                      ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-gray rounded-lg bg-white divide-y divide-rangmod-light-gray'
+                      : 'max-h-[0vh]'
+                  "
+                >
                   <div
-                    v-show="isActivateCategory"
-                    class="flex flex-row-reverse w-full relative"
+                    v-for="(cat, i) in categoryLists"
+                    :key="i"
+                    class="w-full flex justify-end"
+                    :class="
+                      isActivateCategory
+                        ? ' max-h-min h-fit hover:font-bold cursor-pointer'
+                        : 'max-h-[0vh]'
+                    "
                   >
                     <div
-                      class="w-full z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
+                      @click="
+                        (reportForSend.categoriesReport = cat.engName),
+                          (isActivateCategory = false)
+                      "
+                      :class="
+                        isActivateCategory
+                          ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                          : 'opacity-0 max-h-[0vh]'
+                      "
                     >
-                      <div v-for="(category, i) in categoryLists" :key="i">
-                        <div
-                          class="py-2 hover:font-bold text-right cursor-pointer"
-                          @click="
-                            (reportForSend.categoriesReport = category),
-                              (isActivateCategory = true)
-                          "
-                        >
-                          {{ category.name }}
-                        </div>
-                      </div>
+                      {{ cat.name }}
                     </div>
                   </div>
-                </transition>
+                </div>
               </div>
             </div>
             <div>
@@ -275,17 +285,29 @@
             </div>
             <div
               v-on:click="uploadImage()"
-              class="w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
+              class="relative flex justify-center w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
             >
               อัพโหลดรูปภาพ
+              <div
+                class="absolute w-full h-full items-center rounded-full cursor-pointer"
+              >
+                <input
+                  type="file"
+                  @change="handleFileUpload($event)"
+                  class="cursor-pointer"
+                />
+              </div>
             </div>
-            <!-- <div>
-              <h3>Default datepicker</h3>
-              <DatePicker
-                placeholder="Select Date"
-              ></DatePicker>
-              <code> </code>
+            <img v-if="preview" :src="preview" />
+            <!-- <div
+              class="w-fit my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
+            >
+              <input
+                type="file"
+                @change="handleFileUpload($event)"
+              />
             </div> -->
+
             <div v-for="(engage, i) in reportEngageDate" :key="i">
               <div class="mb-4">
                 <div v-if="i == 0" class="text-rangmod-black ml-1">
@@ -417,31 +439,6 @@
             </div>
           </div>
         </div>
-        <!-- <transition name="bounce">
-          <div
-            v-if="true"
-            class="fixed w-full h-fit z-[110] inset-0 pb-20 pt-10 px-6 my-auto"
-          >
-            <div
-              class="w-full h-full mx-auto items-center"
-            >
-              <div class="text-rangmod-green items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="100"
-                  height="100"
-                  fill="currentColor"
-                  class="bi bi-check-circle-fill"
-                  viewBox="0 0 16 16"
-                >
-                  <path
-                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
-                  />
-                </svg>
-              </div>
-            </div>
-          </div>
-        </transition> -->
       </div>
     </transition>
   </div>
@@ -459,6 +456,7 @@ export default {
   },
   data() {
     return {
+      preview: null,
       token: localStorage.getItem("token"),
       // report -------------------
       createdBy: parseInt(localStorage.getItem("id")),
@@ -467,12 +465,8 @@ export default {
       showModal: false,
       loading: false,
       sentReport: false,
+      file: {},
       categoryLists: [
-        // {
-        //   id: 0,
-        //   name: "เลือกประเภทปัญหา",
-        //   engName: "",
-        // },
         {
           id: 1,
           name: "ไฟฟ้า",
@@ -544,7 +538,7 @@ export default {
         { key: "request_date", name: "ว/ด/ป แจ้งซ่อม" },
       ],
       statusList: [
-      {
+        {
           id: "R1",
           eng: "reject",
           name: "ขอเปลี่ยนวันนัด",
@@ -760,8 +754,6 @@ export default {
     },
     async create() {
       this.reportList = await this.getReport();
-      console.log(this.buildingId);
-      console.log(this.reportList);
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -770,33 +762,58 @@ export default {
       console.log(`Sorted by ${id} !`);
     },
     async sendReport() {
+      let formData = new FormData();
+      this.reportForSend.buildingId = this.buildingId;
       let rfs = this.reportForSend;
       this.modalBg = false;
       this.loading = true;
-      console.log(this.loading);
-      // if (!this.validation()) {
+      let formJson = JSON.stringify({
+        title: rfs.title,
+        categoriesReport: rfs.categoriesReport,
+        reportDes: rfs.reportDes,
+        status: rfs.status,
+        roomId: rfs.roomId,
+        buildingId: rfs.buildingId,
+        step: rfs.step,
+        dates: rfs.dates,
+        updateBy: rfs.updateBy,
+      });
+
+      formData.append("data", formJson);
+      formData.append("image", this.file);
+
+      console.log(formData.get("data"));
+      console.log(formData.get("image"));
+      console.log(formData);
+
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/report`,
+        // `${process.env.VUE_APP_API_URL}/test_upload_file`,
         {
           method: "POST",
           headers: {
-            "content-Type": "application/json",
+            // "Content-Type":
+            //   "multipart/form-data; boundary=----WebKitFormBoundary",
+            // Accept:
+            //   "application/json, application/xml, text/plain, text/html, *.*",
             Authorization: `Bearer ${this.token}`,
           },
-          body: JSON.stringify({
-            title: rfs.title,
-            categoriesReport: rfs.categoriesReport.engName,
-            reportDes: rfs.reportDes,
-            status: rfs.status,
-            roomId: rfs.roomId,
-            buildingId: this.buildingId,
-            step: rfs.step,
-            dates: rfs.dates,
-            updateBy: rfs.updateBy,
-          }),
+          // body: JSON.stringify({
+          //   title: rfs.title,
+          //   categoriesReport: rfs.categoriesReport.engName,
+          //   reportDes: rfs.reportDes,
+          //   status: rfs.status,
+          //   roomId: rfs.roomId,
+          //   buildingId: this.buildingId,
+          //   step: rfs.step,
+          //   dates: rfs.dates,
+          //   updateBy: rfs.updateBy,
+          // }),
+          body: formData,
         }
       );
       const data = res.json();
+      console.log(data);
       return data.then(async (data) => {
         if (typeof data === "number") {
           this.loading = false;
@@ -830,6 +847,20 @@ export default {
       console.log();
       return data;
     },
+    handleFileUpload(e) {
+      this.file = e.target.files[0];
+      // if (this.file) {
+      // var reader = new FileReader();
+      //   reader.onload = (e) => {
+      //     this.preview = e.target.result;
+      //   }
+      // reader.readAsDataURL(e.target.files[0]);
+      // console.log(reader);
+      // }
+      // const url = URL.createObjectURL(e.target.files[0]);
+      // console.log(url);
+      console.log(this.file);
+    },
     clearData() {
       this.title = "";
       this.description = "";
@@ -842,10 +873,16 @@ export default {
       return formatedDate;
     },
     checkThaiStatus(status) {
-      console.log(status);
       for (let i in this.statusList) {
         if (status == this.statusList[i].id) {
           return this.statusList[i].name;
+        }
+      }
+    },
+    filterCategory(category) {
+      for (let i in this.categoryLists) {
+        if (this.categoryLists[i].engName == category) {
+          return this.categoryLists[i].name;
         }
       }
     },
@@ -862,6 +899,16 @@ export default {
       //   second: "numeric",
       // });
       return formatedDate;
+    },
+    splitDate(datetime) {
+      if (datetime == "") {
+        return "";
+      }
+      const res = datetime.split("T");
+      const dateRes = res[0].split("-");
+      const showDate =
+        dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
+      return showDate;
     },
     pad(number) {
       return number < 10 ? "0" + number.toString() : number.toString();
@@ -892,4 +939,8 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+input[type="file"] {
+  opacity: 0;
+}
+</style>

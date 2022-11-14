@@ -366,7 +366,7 @@
                           >
                             {{ splitTime(date.date) }}
                           </div>
-                          <div
+                          <div v-if="!isCancel"
                             class="flex flex-col justify-center h-full absolute -right-10"
                           >
                             <div
@@ -397,7 +397,8 @@
               <div class="hidden md:flex flex-col justify-start w-full">
                 <div class="flex flex-row justify-between items-center">
                   <div class="text-rangmod-purple my-5">ข้อมูลช่าง</div>
-                  <div
+                  <div v-if="!isCancel">
+                    <div
                     v-if="!isEdit"
                     @click="isEdit = !isEdit"
                     class="w-fit h-fit px-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
@@ -411,6 +412,8 @@
                   >
                     บันทึก
                   </div>
+                  </div>
+                  
                 </div>
 
                 <div class="w-full flex flex-row space-x-4">
@@ -564,7 +567,7 @@
       </div>
 
       <div
-        v-if="this.reportDetail.status != 'success'"
+        v-if="this.reportDetail.status != 'S7'"
         class="flex justify-end space-x-4"
       >
         <div
@@ -574,12 +577,13 @@
           ขอเปลี่ยนวันนัด
         </div>
 
-        <!-- <div
+        <div
+        v-if="this.reportDetail.status == 'S9'"
           @click="actionButton('cancel')"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-red shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-red hover:text-rangmod-red hover:shadow-none"
         >
           ยกเลิกนัด
-        </div> -->
+        </div>
 
         <div
           @click="(saveModal = true), (modalbg = true)"
@@ -1071,6 +1075,13 @@ export default {
       assignedMaintainer: {},
       statusList: [
         {
+          id: "R1",
+          eng: "reject",
+          name: "ขอเลื่อนนัด",
+          divider: false,
+          isActive: true,
+        },
+        {
           id: "S1",
           eng: "waiting",
           name: "รอรับเรื่อง",
@@ -1279,6 +1290,9 @@ export default {
       const newDate = this.postponeDetail.newEngageDate;
       return newDate.length;
     },
+    isCancel() {
+      return this.reportDetail.status == 'S6'
+    }
   },
   mounted() {
     this.create();
@@ -1300,7 +1314,7 @@ export default {
     async create() {
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
-      // console.log(this.reportDetail);
+      console.log(this.reportDetail);
       // console.log(this.reportEngage);
       await this.getAllReportStatus(this.$route.params.id);
       this.maintainerLists = await this.getMaintainer();
@@ -1495,18 +1509,19 @@ export default {
           const res1 = await this.selectPlanFixDate(this.selectedFixDate.id);
           console.log(res1);
         }
-        if (
-          this.hasNewCategory &&
-          this.selectedMaintainer.id != 0 &&
-          this.selectedFixDate.id != 0
-        ) {
-          const resStatus = await this.updateStatus("S2", "");
-          console.log(resStatus);
-        }
+        // if (
+        //   this.hasNewCategory &&
+        //   this.selectedMaintainer.id != 0 &&
+        //   this.selectedFixDate.id != 0
+        // ) {
+        await this.updateStatus("S4", "").then(async () => {
+          this.reloadData();
+          this.saveModal = false;
+          this.modalbg = false;
+        });
 
-        this.reloadData();
-        this.saveModal = false;
-        this.modalbg = false;
+        // }
+
         // for (let engage in this.reportEngageDate) {
         //   if (this.reportEngageDate[engage].datetime == "") {
         //     this.reportEngageDate[engage].incorrectDate = true;
@@ -1549,6 +1564,13 @@ export default {
         //     }
         //   }
         // }
+      }
+
+      if (action == "cancel") {
+        await this.updateStatus("S6", "").then(async () => {
+          this.reloadData();
+          this.modalbg = false;
+        });
       }
 
       if (action == "delete") {

@@ -584,19 +584,17 @@ export default {
       console.log(this.memberList);
     },
     async getCustomers() {
-      try {
         const res = await fetch(
-          `${process.env.VUE_APP_API_URL}/employee/customer`,
+          `${process.env.VUE_APP_API_URL}/employee/listCustomer`,
           {
             method: "GET",
             headers: { Authorization: `Bearer ${this.token}` },
           }
         );
         const data = res.json();
-        return data;
-      } catch (e) {
-        console.log(e);
-      }
+        return data.then((res) => {
+          return res.customers
+        })
     },
     async getCustomerById(customerId) {
       try {
