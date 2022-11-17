@@ -283,30 +283,28 @@
                 "
               ></textarea>
             </div>
-            <div
-              v-on:click="uploadImage()"
-              class="relative flex justify-center w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
-            >
-              อัพโหลดรูปภาพ
+            <div class="flex flex-row space-x-3">
               <div
-                class="absolute w-full h-full items-center rounded-full cursor-pointer"
+                v-on:click="uploadImage()"
+                class="relative flex justify-center w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
               >
-                <input
-                  type="file"
-                  @change="handleFileUpload($event)"
-                  class="cursor-pointer"
-                />
+                อัพโหลดรูปภาพ
+                <div
+                  class="absolute w-full h-full items-center rounded-full cursor-pointer"
+                >
+                  <input
+                    type="file"
+                    @change="handleFileUpload($event)"
+                    class="cursor-pointer"
+                  />
+                </div>
+              </div>
+              <div v-if="file != ''" class="text-[#007AFF] flex flex-col justify-center">
+                {{ file.name }}
               </div>
             </div>
-            <img v-if="preview" :src="preview" />
-            <!-- <div
-              class="w-fit my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
-            >
-              <input
-                type="file"
-                @change="handleFileUpload($event)"
-              />
-            </div> -->
+
+            <!-- <img v-if="preview" :src="preview" /> -->
 
             <div v-for="(engage, i) in reportEngageDate" :key="i">
               <div class="mb-4">
@@ -465,7 +463,7 @@ export default {
       showModal: false,
       loading: false,
       sentReport: false,
-      file: {},
+      file: '',
       categoryLists: [
         {
           id: 1,

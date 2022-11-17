@@ -290,7 +290,7 @@ export default {
     },
     logout() {
       fetch(`${process.env.VUE_APP_API_URL}/logout`, {
-        method: "POST",
+        method: "PUT",
         headers: {
           "content-Type": "application/json",
           Authorization: `Bearer ${this.token}`,

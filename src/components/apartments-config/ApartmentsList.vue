@@ -215,7 +215,7 @@
               @click="insertBuildingAndRoom()"
               class="cursor-pointer w-fit py-2 px-5 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
-              ต่อไป
+              บันทึก
             </div>
           </div>
         </div>
@@ -309,13 +309,14 @@ export default {
       );
       const data = res.json();
       return data.then(async (res) => {
-        if (res.message == "Insert success") {
-          await this.insertRooms(res.BuildingId);
+        console.log(typeof(res.buildingId));
+        if (res.buildingId != 0) {
+          await this.insertRooms(res.buildingId);
         }
       });
     },
     async insertRooms(buildingId) {
-      //////////////////////////////
+      console.log(buildingId);
       this.add(buildingId);
       try {
         const res = await fetch(
@@ -327,9 +328,9 @@ export default {
               Authorization: `Bearer ${this.token}`,
             },
             body: JSON.stringify({
-              BuildingId: buildingId,
-              Rooms: this.rooms,
-              UpdateBy: parseInt(localStorage.getItem("id")),
+              buildingId: buildingId,
+              rooms: this.rooms,
+              updateBy: parseInt(localStorage.getItem("id")),
             }),
           }
         );

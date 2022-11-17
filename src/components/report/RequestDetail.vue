@@ -88,7 +88,7 @@
             <div
               class="h-2 w-20"
               :class="
-                this.tempStatus == 'accept'
+                true
                   ? 'bg-rangmod-stat-yellow'
                   : 'bg-rangmod-stat-gray'
               "
@@ -96,7 +96,7 @@
             <div
               class="rounded-full h-24 w-24 border-2"
               :class="
-                this.tempStatus == 'accept'
+                true
                   ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
                   : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
               "
@@ -105,7 +105,7 @@
                 class="items-center w-full h-full flex flex-col justify-center"
               >
                 <img
-                  v-if="this.tempStatus == 'accept'"
+                  v-if="true"
                   src="@/assets/images/success.png"
                   class="h-16 w-16 mx-auto"
                 />
@@ -123,7 +123,7 @@
             <div
               class="h-2 w-20"
               :class="
-                this.tempStatus == 'prepare'
+                true
                   ? 'bg-rangmod-stat-yellow'
                   : 'bg-rangmod-stat-gray'
               "
@@ -131,7 +131,7 @@
             <div
               class="rounded-full h-24 w-24 border-2"
               :class="
-                this.tempStatus == 'prepare'
+                true
                   ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
                   : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
               "
@@ -140,7 +140,7 @@
                 class="items-center w-full h-full flex flex-col justify-center"
               >
                 <img
-                  v-if="this.tempStatus == 'prepare'"
+                  v-if="true"
                   src="@/assets/images/sand.png"
                   class="h-16 w-16 mx-auto"
                 />
@@ -158,7 +158,7 @@
             <div
               class="h-2 w-20"
               :class="
-                this.tempStatus == 'success'
+                true
                   ? 'bg-rangmod-stat-yellow'
                   : 'bg-rangmod-stat-gray'
               "
@@ -166,7 +166,7 @@
             <div
               class="rounded-full h-24 w-24 border-2"
               :class="
-                this.tempStatus == 'success'
+                true
                   ? 'border-rangmod-stat-green bg-rangmod-stat-light-green'
                   : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
               "
@@ -175,7 +175,7 @@
                 class="items-center w-full h-full flex flex-col justify-center"
               >
                 <img
-                  v-if="this.tempStatus == 'success'"
+                  v-if="true"
                   src="@/assets/images/check.png"
                   class="h-16 w-16 mx-auto"
                 />
@@ -201,13 +201,37 @@
                 v-for="(status, i) in activateStatus"
                 :key="i"
                 class="flex flex-col-reverse items-start relative"
+                :class="
+                  openReportStatus
+                    ? 'max-h-min h-fit delay-150'
+                    : 'max-h-[0vh] '
+                "
               >
-                <div class="flex flex-col items-start -mt-4">
+                <div
+                  class="flex flex-col items-start -mt-4"
+                  :class="
+                    openReportStatus
+                      ? 'max-h-min h-fit delay-150'
+                      : 'max-h-[0vh] '
+                  "
+                >
                   <div
                     v-show="status.divider"
                     class="w-0.5 h-16 bg-rangmod-step-yellow ml-[2.75px] z-10"
+                    :class="
+                      openReportStatus
+                        ? 'max-h-min h-fit delay-150'
+                        : 'max-h-[0vh] '
+                    "
                   ></div>
-                  <div class="flex flex-row justify-start items-center -mt-4">
+                  <div
+                    class="flex flex-row justify-start items-center -mt-4"
+                    :class="
+                      openReportStatus
+                        ? 'max-h-min h-fit delay-150'
+                        : 'max-h-[0vh] '
+                    "
+                  >
                     <div
                       v-show="status.isActive"
                       class="w-2 h-2 rounded-full border z-20"
@@ -217,7 +241,15 @@
                           : 'border-rangmod-step-yellow bg-white'
                       "
                     ></div>
-                    <div v-show="status.isActive" class="px-3 text-base">
+                    <div
+                      v-show="status.isActive"
+                      class="px-3 text-base"
+                      :class="
+                        openReportStatus
+                          ? 'max-h-min h-fit delay-150'
+                          : 'max-h-[0vh] '
+                      "
+                    >
                       {{ status.th }} ({{ dateShowFormat(status.createdAt) }})
                     </div>
                   </div>
@@ -332,8 +364,25 @@
               </div>
 
               <div class="flex flex-row space-x-2 ml-1 mb-5">
-                <div class="text-rangmod-black">รูปภาพ</div>
-                <div class="text-[#007AFF]">WinnieZero.JPG</div>
+                <div class="text-rangmod-black">ดูรูปภาพ</div>
+                <div
+                  @click="previewImage(reportDetail.imageId)"
+                  class="text-[#007AFF] cursor-pointer items-center hover:shadow-md"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    fill="currentColor"
+                    class="bi bi-image"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                    <path
+                      d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
 
@@ -366,7 +415,8 @@
                           >
                             {{ splitTime(date.date) }}
                           </div>
-                          <div v-if="!isCancel"
+                          <div
+                            v-if="!isCancel"
                             class="flex flex-col justify-center h-full absolute -right-10"
                           >
                             <div
@@ -399,21 +449,20 @@
                   <div class="text-rangmod-purple my-5">ข้อมูลช่าง</div>
                   <div v-if="!isCancel">
                     <div
-                    v-if="!isEdit"
-                    @click="isEdit = !isEdit"
-                    class="w-fit h-fit px-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
-                  >
-                    แก้ไข
+                      v-if="!isEdit"
+                      @click="isEdit = !isEdit"
+                      class="w-fit h-fit px-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+                    >
+                      แก้ไข
+                    </div>
+                    <div
+                      v-else
+                      @click="addMaintainer()"
+                      class="w-fit h-fit px-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+                    >
+                      บันทึก
+                    </div>
                   </div>
-                  <div
-                    v-else
-                    @click="addMaintainer()"
-                    class="w-fit h-fit px-2 text-lg rounded-full text-center border-2 text-rangmod-black bg-rangmod-light-yellow shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
-                  >
-                    บันทึก
-                  </div>
-                  </div>
-                  
                 </div>
 
                 <div class="w-full flex flex-row space-x-4">
@@ -571,6 +620,7 @@
         class="flex justify-end space-x-4"
       >
         <div
+        v-if="reportDetail.status != 'S9'"
           @click="openPostpone()"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-ppbtn-blue shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-ppbtn-blue hover:text-rangmod-ppbtn-blue hover:shadow-none"
         >
@@ -578,7 +628,7 @@
         </div>
 
         <div
-        v-if="this.reportDetail.status == 'S9'"
+          v-if="this.reportDetail.status == 'S9'"
           @click="actionButton('cancel')"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-red shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-red hover:text-rangmod-red hover:shadow-none"
         >
@@ -586,6 +636,7 @@
         </div>
 
         <div
+        v-if="reportDetail.status != 'S9'"
           @click="(saveModal = true), (modalbg = true)"
           class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-purple shadow-xl cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
         >
@@ -594,13 +645,47 @@
       </div>
     </div>
     <div
-      :class="
-        modalbg
-          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
-          : 'hidden opacity-0'
-      "
-      v-on:click="modalbg = !modalbg"
+      v-if="modalbg"
+      class="bg-black fixed inset-0 opacity-60 visible z-[70]"
     ></div>
+    <transition name="bounce">
+      <div
+        v-show="showImage"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
+      >
+        <div
+          class="w-[440px] h-[440px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <!-- Closed -->
+          <div class="flex justify-end">
+            <div
+              @click="(showImage = !showImage), (modalbg = false)"
+              class="cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          <div class="items-center">
+            <div class="w-80 h-80 z-[150] mx-auto">
+              <img :src="this.image" class="" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
     <transition name="bounce">
       <div
         v-show="showModal"
@@ -748,7 +833,9 @@
             </div>
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                v-on:click="(hasReject = true), test()"
+                v-on:click="
+                  (hasReject = true), (modalbg = false), (showModal = false)
+                "
                 class="w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 ยืนยัน
@@ -763,6 +850,10 @@
         v-show="saveModal"
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
+        <div
+          v-if="loading || sentEngage"
+          class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+        ></div>
         <div
           class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
@@ -883,6 +974,40 @@
                   </div>
                 </div>
               </div>
+              <div
+                v-if="loading"
+                class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+              >
+                <lottie-player
+                  autoplay
+                  loop
+                  mode="normal"
+                  src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+                  class="w-40 h-40"
+                >
+                </lottie-player>
+              </div>
+              <div
+                v-if="sentEngage"
+                class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+              >
+                <div
+                  class="text-rangmod-green items-center bg-white rounded-full"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="100"
+                    height="100"
+                    fill="currentColor"
+                    class="bi bi-check-circle-fill"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                    />
+                  </svg>
+                </div>
+              </div>
             </div>
 
             <div v-if="hasReject" class="flex flex-col">
@@ -936,9 +1061,43 @@
                 v-on:click="
                   hasReject ? actionButton('reject') : actionButton('accept')
                 "
-                class="w-32 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+                class="w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 ยืนยัน
+              </div>
+            </div>
+            <div
+              v-if="loading"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <lottie-player
+                autoplay
+                loop
+                mode="normal"
+                src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+                class="w-40 h-40"
+              >
+              </lottie-player>
+            </div>
+            <div
+              v-if="sentEngage"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <div
+                class="text-rangmod-green items-center bg-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100"
+                  height="100"
+                  fill="currentColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
               </div>
             </div>
           </div>
@@ -954,6 +1113,9 @@ export default {
     return {
       token: localStorage.getItem("token"),
       empId: localStorage.getItem("id"),
+      showImage: false,
+      loading: false,
+      sentEngage: false,
       showModal: false,
       saveModal: false,
       modalbg: false,
@@ -1291,15 +1453,24 @@ export default {
       return newDate.length;
     },
     isCancel() {
-      return this.reportDetail.status == 'S6'
-    }
+      return this.reportDetail.status == "S6" || this.reportDetail.status == 'S9';
+    },
+    statusIsPrepare() {
+      if (this.reportDetail.status == "S4") {
+        return true;
+      }
+      return false;
+    },
   },
   mounted() {
     this.create();
   },
   methods: {
     test() {
-      console.log(this.postponeDetail);
+      console.log(this.modalbg);
+      console.log(this.sentEngage);
+      console.log(this.saveModal);
+      console.log(this.loading);
     },
     checkSelectedDate(date) {
       if (this.reportEngage.selectedDate == date.id) {
@@ -1497,28 +1668,41 @@ export default {
     },
     async actionButton(action) {
       if (action == "accept") {
+        this.modalbg = false;
+        this.loading = true;
         if (this.hasNewCategory) {
           const res3 = await this.changeCategory(this.newCategory.engName);
           console.log(res3);
         }
-        if (this.selectedMaintainer.id != 0) {
-          const res2 = await this.assignMaintainer(this.selectedMaintainer);
-          console.log(res2);
-        }
-        if (this.selectedFixDate.id != 0) {
+        if (this.selectedMaintainer.id != 0 && this.selectedFixDate.id != 0) {
           const res1 = await this.selectPlanFixDate(this.selectedFixDate.id);
-          console.log(res1);
+          const res2 = await this.assignMaintainer(this.selectedMaintainer);
+          console.log(res1.message);
+          console.log(res2.message);
+          if (res1.message == "success" && res2.message == "success") {
+            await this.updateStatus("S4", "").then(async (res) => {
+              console.log(res);
+              if (res == "success") {
+                this.loading = false;
+                this.sentEngage = true;
+                setTimeout(() => {
+                  this.sentEngage = false;
+                }, 1500);
+                setTimeout(async () => {
+                  this.saveModal = false;
+                  this.modalbg = false;
+                  this.sentEngage = false;
+                  this.loading = false;
+                  await this.reloadData();
+                }, 2500);
+              }
+              // console.log(this.modalBg);
+              // console.log(this.sentEngage);
+              // console.log(this.saveModal);
+              // console.log(this.loading);
+            });
+          }
         }
-        // if (
-        //   this.hasNewCategory &&
-        //   this.selectedMaintainer.id != 0 &&
-        //   this.selectedFixDate.id != 0
-        // ) {
-        await this.updateStatus("S4", "").then(async () => {
-          this.reloadData();
-          this.saveModal = false;
-          this.modalbg = false;
-        });
 
         // }
 
@@ -1926,6 +2110,11 @@ export default {
       }
       console.log(dates);
       return dates;
+    },
+    previewImage(image) {
+      this.modalbg = true;
+      this.showImage = true;
+      this.image = `${process.env.VUE_APP_API_URL}/download_report_image/${image}`;
     },
   },
 };

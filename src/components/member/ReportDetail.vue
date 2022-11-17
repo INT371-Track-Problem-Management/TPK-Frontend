@@ -264,8 +264,25 @@
               </div>
 
               <div class="flex flex-row space-x-2 ml-1 mb-5">
-                <div class="text-rangmod-black">รูปภาพ</div>
-                <div class="text-[#007AFF]">WinnieZero.JPG</div>
+                <div class="text-rangmod-black">ดูรูปภาพ</div>
+                <div
+                  @click="previewImage(reportDetail.imageId)"
+                  class="text-[#007AFF] cursor-pointer items-center hover:shadow-md"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="28"
+                    height="28"
+                    fill="currentColor"
+                    class="bi bi-image"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                    <path
+                      d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
 
@@ -578,12 +595,10 @@
           </div>
         </div>
       </div>
-      <div
-        class="flex flex-row space-x-4 justify-end"
-      >
+      <div class="flex flex-row space-x-4 justify-end">
         <div
           @click="
-            (this.showFinish = !this.showFinish), (this.modalBg = !this.modalBg)
+            (this.showFinish = !this.showFinish), (this.modalbg = !this.modalbg)
           "
           class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
         >
@@ -595,12 +610,12 @@
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
           <div
+            v-if="reportDetail.status == 'R1'"
             @click="
               (showPostpone = !showPostpone),
-                (modalBg = !modalBg),
+                (modalbg = !modalbg),
                 formatSendDate(emptyEngage)
             "
-            v-if="!this.isEngageDateNow"
             class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-ppbtn-blue shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-ppbtn-blue hover:text-rangmod-ppbtn-blue hover:shadow-none"
           >
             แก้ไขวันนัด
@@ -621,7 +636,7 @@
           class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
         >
           <div
-            @click="(showCancel = !showCancel), (modalBg = !modalBg)"
+            @click="(showCancel = !showCancel), (modalbg = !modalbg)"
             v-if="!this.isEngageDateNow"
             class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
           >
@@ -631,13 +646,47 @@
       </div>
 
       <div
-        :class="
-          modalBg
-            ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
-            : 'hidden opacity-0'
-        "
-        v-on:click="modalBg = !modalBg"
+        v-if="modalbg"
+        class="bg-black fixed inset-0 opacity-60 visible z-[70]"
       ></div>
+      <transition name="bounce">
+        <div
+          v-show="showImage"
+          class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
+        >
+          <div
+            class="w-[440px] h-[440px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          >
+            <!-- Closed -->
+            <div class="flex justify-end">
+              <div
+                @click="(showImage = !showImage), (modalbg = false)"
+                class="cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="items-center">
+              <div class="w-80 h-80 z-[150] mx-auto">
+                <img :src="this.image" class="" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
 
       <transition name="bounce">
         <div
@@ -650,7 +699,7 @@
             <!-- Closed -->
             <div class="flex justify-end">
               <div
-                @click="(showPostpone = false), (modalBg = false)"
+                @click="(showPostpone = false), (modalbg = false)"
                 class="cursor-pointer"
               >
                 <svg
@@ -719,7 +768,7 @@
               </div>
               <div class="flex flex-row space-x-4 justify-end">
                 <div
-                  @click="(showPostpone = false), (modalBg = false)"
+                  @click="(showPostpone = false), (modalbg = false)"
                   class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 shadow-sm cursor-pointer transition-all border-rangmod-red text-rangmod-red hover:bg-rangmod-red hover:border-white hover:text-white hover:shadow-none"
                 >
                   ยกเลิก
@@ -747,7 +796,7 @@
             <!-- Closed -->
             <div class="flex justify-end">
               <div
-                @click="(showFinish = false), (modalBg = false)"
+                @click="(showFinish = false), (modalbg = false)"
                 class="cursor-pointer"
               >
                 <svg
@@ -788,6 +837,19 @@
               ></textarea>
             </div>
 
+            <!-- <div>
+              <div class="flex flex-col">
+              <div class="w-full">
+                <div class="mb-5">
+                  <div class="text-rangmod-black">ว/ด/ป เวลา</div>
+                  <div
+                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  >
+                    {{ splitDate(fixDate) }}
+                  </div>
+                </div>
+              </div>
+            </div>
             <div class="flex flex-col">
               <div class="w-full">
                 <div class="mb-5">
@@ -795,11 +857,13 @@
                   <div
                     class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                   >
-                    {{ engageDateTimeShowFormat(oldEngage) }}
+                    {{ splitTime(fixDate) }}
                   </div>
                 </div>
               </div>
             </div>
+            </div> -->
+            
 
             <div class="flex flex-row space-x-4 justify-end">
               <div
@@ -819,12 +883,16 @@
           class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
+            v-if="loading || sentCancel"
+            class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+          ></div>
+          <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
             <div class="flex justify-end">
               <div
-                @click="(showCancel = false), (modalBg = false)"
+                @click="(showCancel = false), (modalbg = false)"
                 class="cursor-pointer"
               >
                 <svg
@@ -871,6 +939,41 @@
                 ยกเลิกนัด
               </div>
             </div>
+
+            <div
+              v-if="loading"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <lottie-player
+                autoplay
+                loop
+                mode="normal"
+                src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+                class="w-40 h-40"
+              >
+              </lottie-player>
+            </div>
+            <div
+              v-if="sentCancel"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <div
+                class="text-rangmod-green items-center bg-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100"
+                  height="100"
+                  fill="currentColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -886,7 +989,7 @@
             <!-- Closed -->
             <div class="flex justify-end">
               <div
-                @click="(showReviewModal = false), (modalBg = false)"
+                @click="(showReviewModal = false), (modalbg = false)"
                 class="cursor-pointer"
               >
                 <svg
@@ -1023,13 +1126,16 @@ export default {
       createdBy: localStorage.getItem("id"),
       reportDetail: {},
       reportEngage: {},
-      modalBg: false,
+      loading: false,
+      showImage: false,
+      modalbg: false,
       showModal: false,
       showFinish: false,
       showCancel: false,
       showPostpone: false,
       showReviewModal: false,
       showCancelModal: false,
+      sentCancel: false,
       isPostpone: false,
       // isCancel: false,
       isReview: false,
@@ -1186,7 +1292,7 @@ export default {
         description: "",
         newEngageDate: [],
       },
-
+      fixDate: '',
       assignedMaintainer: {},
       isEngageDateNow: false,
       rates: [
@@ -1382,8 +1488,11 @@ export default {
   },
   computed: {
     isCancel() {
-      return this.reportDetail.status == 'S6'
-    }
+      return this.reportDetail.status == "S6";
+    },
+    statusIsAccept() {
+      return true;
+    },
   },
   mounted() {
     this.create();
@@ -1393,14 +1502,13 @@ export default {
       for (let i in this.reportEngage.fixDate) {
         if (this.reportEngage.fixDate[i].id == this.reportEngage.selectedDate) {
           console.log(this.reportEngage.fixDate[i].date);
-          const select = new Date(this.reportEngage.fixDate[i].date)
-          console.log(select);
-          console.log(Date.now());
+          // const select = new Date(this.reportEngage.fixDate[i].date);
+          // console.log(select);
+          // console.log(Date.now());
+          this.fixDate = this.reportEngage.fixDate[i].date
           break;
         }
       }
-      
-
     },
     test() {
       const date = new Date(Date.now());
@@ -1437,7 +1545,7 @@ export default {
         });
       }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
-      this.filterSelectedDate()
+      this.filterSelectedDate();
     },
     async getReportById(reportId) {
       const res = await fetch(
@@ -1576,7 +1684,7 @@ export default {
       //     }, 2000);
       //     setTimeout(() => {
       //       this.showPostpone = false;
-      //       this.modalBg = false;
+      //       this.modalbg = false;
       //     }, 3000);
       //   } else {
       //     alert("error");
@@ -1584,16 +1692,19 @@ export default {
       // });
     },
     async cancel() {
+      this.modalbg = false;
+      this.loading = true;
       const res = await this.updateStatus("S9");
       if (res == "success") {
-        await this.reloadData();
-        this.isCancel = true;
+        this.loading = false;
+        this.sentCancel = true;
         setTimeout(() => {
-          this.isCancel = false;
-        }, 2000);
-        setTimeout(() => {
+          this.sentCancel = false;
+        }, 1500);
+        setTimeout(async () => {
           this.showCancel = false;
-          this.modalBg = false;
+          this.sentCancel = false;
+          await this.reloadData();
         }, 2500);
       } else {
         alert("error");
@@ -1723,7 +1834,7 @@ export default {
           }, 2000);
           setTimeout(() => {
             this.showReviewModal = false;
-            this.modalBg = false;
+            this.modalbg = false;
           }, 2500);
           return "success";
         } else {
@@ -1792,6 +1903,11 @@ export default {
       if (period == "ALL") {
         return this.periodTimeList.ALL;
       }
+    },
+    previewImage(image) {
+      this.modalbg = true;
+      this.showImage = true;
+      this.image = `${process.env.VUE_APP_API_URL}/download_report_image/${image}`;
     },
   },
 };
