@@ -4,16 +4,16 @@
       &nbsp;
     </div>
 
-    <div class="container mx-auto px-5">
+    <div class="w-full h-fit px-10">
       <div
-        class="flex flex-col lg:flex-row justify-center lg:justify-between py-6"
+        class="flex flex-col xse:flex-row justify-center xse:justify-between py-6 xse:space-y-0 space-y-5"
       >
-        <RouterLink to="/" class="mx-auto items-center lg:mx-0">
-          <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-32">
+        <RouterLink to="/" class="mx-0 items-center">
+          <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-32 mx-auto">
         </RouterLink>
 
         <div
-          class="flex flex-row space-between lg:space-x-5 content-center mx-auto lg:mx-0 py-4 lg:py-0 text-sm sm:text-base"
+          class="flex flex-row lg:space-x-5 justify-center mx-0 py-0 text-base"
         >
           <RouterLink
             to="/login"

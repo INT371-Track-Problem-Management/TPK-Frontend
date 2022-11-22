@@ -2,7 +2,7 @@
   <div
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
-    <div class="text-xl">ค้นหาการรายงานปัญหา</div>
+    <div class="text-xl">ค้นหาข้อมูลช่างซ่อม</div>
 
     <hr class="my-4 border-rangmod-purple" />
 
@@ -10,11 +10,11 @@
       class="flex flex-col md:flex-row md:space-x-2 justify-start my-6 w-fit mx-auto md:mx-0"
     >
       <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">รหัสรายงาน</div>
+        <div class="w-2/5 text-right lg:w-max text-md">ชื่อ</div>
         <div>
           <input
             @keyup.enter="search()"
-            v-model="searchItem.reportId"
+            v-model="searchItem.fname"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -22,11 +22,11 @@
       </div>
 
       <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">หัวข้อปัญหา</div>
+        <div class="w-2/5 text-right lg:w-max text-md">นามสกุล</div>
         <div>
           <input
             @keyup.enter="search()"
-            v-model="searchItem.title"
+            v-model="searchItem.lname"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -34,11 +34,12 @@
       </div>
 
       <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">ห้อง</div>
+        <div class="w-2/5 text-right lg:w-max text-md">เบอร์โทร</div>
         <div>
           <input
             @keyup.enter="search()"
-            v-model="searchItem.roomNum"
+            v-model="searchItem.phone"
+            maxlength="10"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -79,16 +80,16 @@ export default {
   data() {
     return {
       searchItem: {
-        reportId: "",
-        title: "",
-        roomNum: "",
+        fname: "",
+        lname: "",
+        phone: "",
       },
     };
   },
 
   methods: {
     search() {
-      this.$parent.searchReportList(this.searchItem);
+      this.$parent.searchMaintainerList(this.searchItem);
     },
   },
 };

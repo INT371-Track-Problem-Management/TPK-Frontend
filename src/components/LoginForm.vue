@@ -1,36 +1,63 @@
 <template>
   <div class="px-6">
-    <div class="bg-white max-w-md mx-auto mt-4 px-10 py-6 rounded-xl shadow-md">
+    <div
+      class="bg-white max-w-md min-w-[320px] mx-auto mt-4 px-5 py-6 rounded-xl shadow-md"
+    >
       <div class="text-rangmod-black text-2xl">เข้าสู่ระบบ</div>
       <hr class="my-4" />
-      <div class="mb-4">
-        <div class="text-rangmod-black px-1">อีเมล์</div>
-        <div
-          class="border border-rangmod-gray rounded-xl px-3"
-          :class="this.validate.email ? 'border-red-500 border-2' : ''"
+      <div
+        v-if="loading"
+        class="bg-black fixed inset-0 opacity-60 visible z-[80]"
+      ></div>
+      <div
+        v-if="loading"
+        class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+      >
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+          class="w-40 h-40"
         >
+        </lottie-player>
+      </div>
+      <div class="mb-4">
+        <div class="flex flex-row">
+          <div class="text-rangmod-black px-1">อีเมล</div>
+          <div v-if="this.validate.email" class="text-rangmod-red px-1">
+            * กรุณาใส่อีเมล
+          </div>
+          <div v-if="this.fail" class="text-rangmod-red px-1">
+            * อีเมลไม่ถูกต้อง
+          </div>
+        </div>
+        <div class="border border-rangmod-gray rounded-xl px-3">
           <input
             v-model="email"
             type="email"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.email ? 'placeholder-red-500' : ''"
-            :placeholder="this.validate.email ? 'กรุณาใส่อีเมล' : ''"
           />
         </div>
       </div>
 
       <div class="mb-4">
-        <div class="text-rangmod-black px-1">รหัสผ่าน</div>
-        <div
-          class="border border-rangmod-gray rounded-xl px-3 relative"
-          :class="this.validate.password ? 'border-red-500 border-2' : ''"
-        >
+        <div class="flex flex-row">
+          <div class="text-rangmod-black px-1">รหัสผ่าน</div>
+          <div v-if="this.validate.password" class="text-rangmod-red px-1">
+            * กรุณาใส่รหัสผ่าน
+          </div>
+          <div v-if="this.fail" class="text-rangmod-red px-1">
+            * รหัสผ่านไม่ถูกต้อง
+          </div>
+        </div>
+        <div class="border border-rangmod-gray rounded-xl px-3 relative">
           <input
+            @keyup.enter="doLogin()"
             v-model="password"
+            minlenght="4"
             :type="textPassword"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.password ? 'placeholder-red-500' : ''"
-            :placeholder="this.validate.password ? 'กรุณาใส่รหัสผ่าน' : ''"
           />
 
           <div
@@ -62,7 +89,7 @@
       <div class="mt-10">
         <div @click="doLogin()">
           <div
-            class="w-full my-4 py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            class="w-full my-4 py-2 rounded-full text-center text-white border-2 border-rangmod-purple bg-rangmod-purple shadow-md cursor-pointer transition-all hover:border-rangmod-light-purple-2 hover:bg-rangmod-light-purple-2"
           >
             เข้าสู่ระบบ
           </div>
@@ -70,7 +97,7 @@
 
         <RouterLink to="/register">
           <div
-            class="w-full my-4 py-2 rounded-full text-center text-rangmod-purple border-2 border-rangmod-purple transition-all hover:bg-rangmod-purple hover:text-white"
+            class="w-full my-4 py-2 rounded-full text-center text-rangmod-purple border-2 border-rangmod-purple hover:bg-rangmod-light-pink transition-all bg-white shadow-md"
           >
             สมัครสมาชิก
           </div>
@@ -93,7 +120,6 @@ export default {
   data() {
     return {
       textPassword: "password",
-      // type: "member",
       email: "",
       password: "",
       token: "",
@@ -107,39 +133,42 @@ export default {
         email: false,
         password: false,
       },
+      fail: false,
+      loading: false,
     };
   },
   mounted() {
-    if(localStorage.getItem("token")) {
-      this.goToPage(localStorage.getItem("role"))
+    if (localStorage.getItem("token")) {
+      this.goToPage(localStorage.getItem("role"));
     }
-    console.log(process.env.VUE_APP_API_URL);
   },
   methods: {
     validation() {
-      this.email == ""
-        ? (this.validate.email = true)
-        : (this.validate.email = false);
-      this.password == ""
-        ? (this.validate.password = true)
-        : (this.validate.password = false);
+      this.validate.email = this.email == "";
+      this.validate.password = this.password == "";
+      return this.validate.email || this.validate.password;
     },
 
     async doLogin() {
       if (!this.validation()) {
-        fetch(`${process.env.VUE_APP_API_URL}/login`, {
+        this.loading = true;
+        const res = await fetch(`${process.env.VUE_APP_API_URL}/login`, {
           method: "POST",
           headers: { "content-Type": "application/json" },
           body: JSON.stringify({
             email: this.email,
             password: this.password,
           }),
-        })
-          .then((response) => {
-            const res = response.json();
-            return res;
-          })
-          .then((res) => {
+        });
+        const data = res.json();
+        return data.then(async (res) => {
+          this.loading = false;
+          if (res == "Unatutherize") {
+            this.fail = true;
+            setTimeout(() => {
+              this.fail = false;
+            }, 2000);
+          } else {
             this.token = res.token;
             this.userLogin.id = this.parseJwt(this.token).id;
             this.userLogin.email = this.parseJwt(this.token).email;
@@ -150,23 +179,47 @@ export default {
             localStorage.setItem("role", this.userLogin.role);
             localStorage.setItem("token", this.token);
             localStorage.setItem("username", res.name);
-            console.log(this.userLogin);
-          })
-          .then(() => {
+            const image = this.getProfileMedia(this.userLogin.email);
+            console.log(image);
+            localStorage.setItem("profileMedia", image);
             if (this.userLogin.status == true) {
               this.goToPage(this.userLogin.role);
             } else {
               console.log("failed login");
             }
-          });
+          }
+        });
+      } else {
+        setTimeout(() => {
+          this.validate.email = false;
+          this.validate.password = false;
+        }, 2000);
       }
     },
-    goToPage(userRole) {
-      if (userRole == "A") {
-        this.$router.push(`/dashboard/member`);
+    async getProfileMedia(email) {
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/service/profileMedia/${email}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      if (res.status == 404) {
+        return null;
+      } else {
+        const binaryData = await res.arrayBuffer();
+        const base64 = this.arrayBufferToBase64(binaryData);
+        const dataUrl = `data:image/*;base64,${base64}`;
+        return dataUrl;
       }
-
-      if (userRole == "E") {
+    },
+    arrayBufferToBase64(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    },
+    goToPage(userRole) {
+      if (userRole == "E" || userRole == "A") {
         this.$router.push(`/dashboard/member`);
       }
 

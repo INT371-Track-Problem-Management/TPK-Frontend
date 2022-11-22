@@ -8,14 +8,14 @@
       class="cursor-pointer"
       :class="
         handleMenu
-          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
+          ? 'bg-black fixed inset-0 opacity-60 visible z-[100]'
           : 'hidden opacity-0'
       "
       v-on:click="handleMenu = !handleMenu"
     ></div>
 
     <div
-      class="bg-white mx-auto fixed inset-y-0 duration-300 transition-right overflow-scroll z-50 w-80 shadow-xl"
+      class="bg-white mx-auto fixed inset-y-0 duration-300 transition-right overflow-scroll z-[110] w-80 shadow-xl"
       :class="handleMenu ? 'left-0' : '-left-full'"
     >
       <div
@@ -134,8 +134,10 @@
     </div>
 
     <div class="w-full mx-auto">
-      <div class="flex flex-row justify-between py-2 pl-5 pr-10">
-        <div class="w-40 xl:w-32 flex flex-row items-center space-x-4">
+      <div
+        class="flex flex-row justify-between py-2 px-5 ssm-2:px-10 transition-all"
+      >
+        <div class="w-40 flex flex-row justify-start items-center py-1">
           <div
             class="px-2 cursor-pointer xl:hidden"
             v-on:click="handleMenu = !handleMenu"
@@ -156,10 +158,21 @@
             </svg>
           </div>
           <div
-            class="rounded-full cursor-pointer py-1 px-2 hover:scale-110 transition ease-in-out delay-150 hover:bg-rangmod-pink"
+            class="rounded-full cursor-pointer hover:scale-110 transition ease-in-out delay-150 h-fit w-fit hover:bg-rangmod-pink"
           >
-            <RouterLink :to="this.role == 'E' ? '/dashboard/member' : '/member/myroom'" @click="closeMenu()" class="mx-auto items-center lg:mx-0">
-              <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-fit" />
+            <RouterLink
+              :to="
+                this.role == 'E' || this.role == 'A'
+                  ? '/dashboard/member'
+                  : '/member/myroom'
+              "
+              @click="closeMenu()"
+              class="h-full w-full items-start"
+            >
+              <img
+                src="@/assets/images/LOGO-rangmod.png"
+                class="h-full w-full"
+              />
             </RouterLink>
           </div>
         </div>
@@ -171,7 +184,13 @@
             showProfileMenu ? 'scale-110 bg-rangmod-pink' : 'scale-100 bg-none'
           "
         >
-          <div class="w-10 h-10 rounded-full bg-rangmod-gray"></div>
+          <div class="w-10 h-10 rounded-full bg-rangmod-light-gray">
+            <img
+              v-if="profileMedia != null"
+              :src="profileMedia"
+              class="rounded-full w-full h-full"
+            />
+          </div>
           <div class="text-rangmod-black">{{ username }}</div>
         </div>
       </div>
@@ -254,6 +273,7 @@ export default {
       token: localStorage.getItem("token"),
       handleMenu: false,
       showProfileMenu: false,
+      // profileMedia: ''
     };
   },
   computed: {
@@ -266,10 +286,44 @@ export default {
     username() {
       return localStorage.getItem("username");
     },
+    profileMedia() {
+      return localStorage.getItem("profileMedia")
+    },
+  },
+  mounted() {
+    // this.getProfileMedia();
+    console.log(this.profileMedia == null);
+    console.log(this.profileMedia);
   },
   methods: {
+    async getProfileMedia() {
+      if (this.profileMedia != null) {
+        return localStorage.getItem("profileMedia");
+      } else {
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/service/profileMedia/${this.email}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+          }
+        );
+        if (res.status == 404) {
+          localStorage.setItem("profileMedia", null);
+        } else {
+          const binaryData = await res.arrayBuffer();
+          const base64 = this.arrayBufferToBase64(binaryData);
+          const dataUrl = `data:image/*;base64,${base64}`;
+          localStorage.setItem("profileMedia", dataUrl);
+        }
+      }
+    },
+    arrayBufferToBase64(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    },
     selectMenu(index, listIndex, isItemList) {
-      this.closeMenu()
+      this.closeMenu();
 
       if (!isItemList) {
         this.menuList.forEach((menu, i) => {
@@ -290,20 +344,20 @@ export default {
     },
     logout() {
       fetch(`${process.env.VUE_APP_API_URL}/logout`, {
-        method: "POST",
+        method: "DELETE",
         headers: {
           "content-Type": "application/json",
           Authorization: `Bearer ${this.token}`,
         },
       });
       // const data = res.json();
-      localStorage.clear()
+      localStorage.clear();
       this.$router.push("/login");
       // return res
       // this.closeMenu()
     },
     toProfilePage(role) {
-      this.closeMenu()
+      this.closeMenu();
       if (role == "E" || role == "A") {
         this.$router.push(`/owner/profile`);
       }
@@ -323,7 +377,7 @@ export default {
           }
         });
       });
-    }
+    },
   },
 };
 </script>

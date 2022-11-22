@@ -72,7 +72,7 @@
 
 <script>
 
-import RepairForm from "@/components/repair_status/RepairForm.vue";
+import RepairForm from "@/components/repair_status/RepairDetail.vue";
 
 export default {
 

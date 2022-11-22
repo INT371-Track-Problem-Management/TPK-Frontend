@@ -1,16 +1,16 @@
 <template>
   <div>
-    <RepairStatus />
+    <RepairDetail />
   </div>
 </template>
 
 <script>
 
-import RepairStatus from "@/components/repair_status/RepairStatus.vue";
+import RepairDetail from "@/components/repair_status/RepairDetail.vue";
 
 export default {
   name: "RepairStatusPage",
-  components: { RepairStatus },
+  components: { RepairDetail },
 
   data() {
     return {
