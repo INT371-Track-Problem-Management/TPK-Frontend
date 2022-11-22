@@ -90,7 +90,7 @@
     <transition name="bounce">
       <div
         v-show="showDetailModal"
-        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
+        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
@@ -229,7 +229,9 @@
 
           <div class="flex flex-row space-x-4 justify-end">
             <div
-              v-on:click="showDetailModal = !showDetailModal"
+              v-on:click="
+                (showDetailModal = !showDetailModal), (modalbg = !modalbg)
+              "
               class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
             >
               ยืนยัน
@@ -507,7 +509,11 @@ export default {
     async create() {
       this.loadingData = true;
       this.memberList = await this.getCustomers();
-      this.filteredMember = this.memberList;
+      this.filteredMember = this.memberList.filter((member) => {
+        if (member.roomNum != "") {
+          return member;
+        }
+      });
       if (this.filteredMember.length > 0) {
         this.loadingData = false;
       }
@@ -593,7 +599,7 @@ export default {
           }
         );
         const data = res.json();
-        return data.then((data) => {
+        return data.then(async (data) => {
           if (data.message == "success") {
             this.loading = false;
             this.assignedCustomer = true;
@@ -605,6 +611,12 @@ export default {
               this.clearData();
               this.searchId = "";
             }, 2500);
+            this.memberList = await this.getCustomers();
+            this.filteredMember = this.memberList.filter((member) => {
+              if (member.roomNum != "") {
+                return member;
+              }
+            });
           } else {
             this.loading = false;
           }

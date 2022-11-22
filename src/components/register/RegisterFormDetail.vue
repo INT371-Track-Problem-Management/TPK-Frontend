@@ -48,7 +48,7 @@
               <div v-if="validate.dob" class="text-rangmod-red px-1">
                 *กรุณาใส่วันเกิด
               </div>
-              <div v-if="!invalidAge" class="text-rangmod-red px-1">
+              <div v-if="validate.age " class="text-rangmod-red px-1">
                 *กรุณาใส่วันเกิดใหม่
               </div>
             </div>
@@ -188,7 +188,7 @@
       </div>
 
       <div
-        v-if="loading || registeredCustomer"
+        v-if="loading || registeredCustomer || emailError"
         class="bg-black fixed inset-0 opacity-60 visible z-[100]"
       ></div>
       <div
@@ -222,6 +222,14 @@
             />
           </svg>
         </div>
+      </div>
+      <div
+        v-if="emailError"
+        class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+      >
+      <div class="px-20 py-10 bg-white text-rangmod-red rounded-xl text-center">
+        อีเมลนี้ถูกใช้งานแล้ว <br><br> กรุณาใส่อีเมลใหม่
+      </div>
       </div>
     </div>
   </div>
@@ -263,17 +271,19 @@ export default {
         dob: false,
         phone: false,
         address: false,
+        age: false,
       },
       registeredCustomer: false,
+      emailError: false
     };
   },
   computed: {
     age() {
       return this.calculateAge(this.dob);
     },
-    invalidAge() {
-      return this.age < 0;
-    },
+    // invalidAge() {
+    //   return this.age < 0;
+    // },
   },
   mounted() {
     // console.log(this.email)
@@ -296,6 +306,7 @@ export default {
       this.address == ""
         ? (this.validate.address = true)
         : (this.validate.address = false);
+      this.age < 0 ? (this.validate.age = true) : (this.validate.age = false);
       return (
         this.validate.fname ||
         this.validate.lname ||
@@ -303,7 +314,7 @@ export default {
         this.validate.dob ||
         this.validate.phone ||
         this.validate.address ||
-        this.invalidAge
+        this.validate.age 
       );
     },
     async registerCustomer() {
@@ -328,11 +339,14 @@ export default {
           }
         );
         const data = res.json();
-        return data.then(async (res) => {
-          console.log(res);
-          if (res == "this email can not use!!!") {
-            alert("อีเมลนี้ใช้ไม่ได้!!!");
-            this.$router.push(`/register`);
+        return data.then((res) => {
+          if (res.Message.includes('Duplicate entry')) {
+            this.loading = false;
+            this.emailError = true;
+            setTimeout(() => {
+              this.emailError = false;
+              this.$router.push(`/register`);
+            }, 3000);
           } else {
             this.loading = false;
             this.registeredCustomer = true;
@@ -352,6 +366,7 @@ export default {
           this.validate.dob = false;
           this.validate.phone = false;
           this.validate.address = false;
+          this.validate.age = false;
         }, 3000);
       }
     },
@@ -360,7 +375,6 @@ export default {
       let birthDate = new Date(dob);
       let difference = currentDate - birthDate;
       let age = Math.floor(difference / 31557600000);
-      console.log(age);
       return age;
     },
   },

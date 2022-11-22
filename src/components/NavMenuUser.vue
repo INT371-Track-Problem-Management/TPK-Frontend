@@ -273,7 +273,7 @@ export default {
       token: localStorage.getItem("token"),
       handleMenu: false,
       showProfileMenu: false,
-      // profileMedia: ''
+      profileMedia: ''
     };
   },
   computed: {
@@ -286,20 +286,12 @@ export default {
     username() {
       return localStorage.getItem("username");
     },
-    profileMedia() {
-      return localStorage.getItem("profileMedia")
-    },
   },
   mounted() {
-    // this.getProfileMedia();
-    console.log(this.profileMedia == null);
-    console.log(this.profileMedia);
+    this.getProfileMedia();
   },
   methods: {
     async getProfileMedia() {
-      if (this.profileMedia != null) {
-        return localStorage.getItem("profileMedia");
-      } else {
         const res = await fetch(
           `${process.env.VUE_APP_API_URL}/service/profileMedia/${this.email}`,
           {
@@ -315,9 +307,9 @@ export default {
           const binaryData = await res.arrayBuffer();
           const base64 = this.arrayBufferToBase64(binaryData);
           const dataUrl = `data:image/*;base64,${base64}`;
-          localStorage.setItem("profileMedia", dataUrl);
+          this.profileMedia = dataUrl
         }
-      }
+      // }
     },
     arrayBufferToBase64(buffer) {
       return btoa(String.fromCharCode(...new Uint8Array(buffer)));

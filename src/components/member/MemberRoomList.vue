@@ -6,33 +6,17 @@
     <hr class="my-4 border-rangmod-purple" />
 
     <div
-      class="w-full bg-white"
-      :class="!noInRoom ? '' : 'py-48'"
+      v-if="!noInRoom"
+      class="grid grid-cols-1 xse:grid-cols-2 sm:grid-cols-3 2xmd:grid-cols-4 lg:grid-cols-5 gap-5 my-5 px-0 py-2"
     >
-      <!-- <div
-        v-show="buildingLists.length > 0"
-        class="flex justify-start px-2 md:px-12"
-      >
-        <div
-          @click="(showAddModal = !showAddModal), (modalBg = !modalBg)"
-          class="cursor-pointer w-20 bg-rangmod-purple text-white border-2 border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
-        >
-          + เพิ่ม
-        </div>
-      </div> -->
-
-      <div
-        v-if="!noInRoom"
-        class="grid grid-cols-1 xse:grid-cols-2 sm:grid-cols-3 2xmd:grid-cols-4 lg:grid-cols-5 gap-5 my-5 px-0 py-2"
-      >
-        <div v-for="(room, i) in roomLists" :key="i">
-          <transition name="bounce" appear>
-            <RouterLink
+      <div v-for="(room, i) in roomLists" :key="i">
+        <transition name="bounce" appear>
+          <RouterLink
             :to="{
               name: 'member-myroom-room-report',
-              params: { id: room.roomId , roomNum: room.roomNum},
+              params: { id: room.roomId, roomNum: room.roomNum },
             }"
-            >
+          >
             <div
               class="cursor-pointer w-full border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
             >
@@ -53,21 +37,24 @@
                 {{ room.roomNum }}
               </div>
             </div>
-            </RouterLink>
-          </transition>
-        </div>
+          </RouterLink>
+        </transition>
       </div>
-
     </div>
-    <div  v-if="loading" class="flex justify-center">
+    <div v-if="loading" class="flex justify-center">
       <lottie-player
-      autoplay
-      loop
-      mode="normal"
-      src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
-      class="w-40 h-40"
-    >
-    </lottie-player>
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
+    <div v-if="noInRoom" class="mx-auto w-full">
+      <div class="text-rangmod-black my-10 mx-auto w-fit">
+        ไม่มีห้องที่พักอยู่
+      </div>
     </div>
   </div>
 </template>
@@ -91,12 +78,12 @@ export default {
     };
   },
   computed: {
-    loading() {
-      if(this.roomLists.length == 0) {
-        return true
-      }
-      return false
-    }
+    // loading() {
+    //   if (this.roomLists.length == 0) {
+    //     return true;
+    //   }
+    //   return false;
+    // },
   },
   mounted() {
     this.create();
@@ -108,8 +95,10 @@ export default {
     },
     async getAllRoomByCustomerId() {
       try {
+        this.loading = true
         const res = await fetch(
-          `${process.env.VUE_APP_API_URL}/customer/getAllRoomByCustomerId/`+parseInt(localStorage.getItem('id')),
+          `${process.env.VUE_APP_API_URL}/customer/getAllRoomByCustomerId/` +
+            parseInt(localStorage.getItem("id")),
           {
             method: "GET",
             headers: {
@@ -118,15 +107,17 @@ export default {
             },
           }
         );
-        const data = res.json()
+        const data = res.json();
         return data.then((data) => {
-          if(data == null) {
-            this.noInRoom = true
-            console.log('not in any room');
+          if (data == null) {
+            this.loading = false
+            this.noInRoom = true;
+            console.log("not in any room");
           } else {
-            return data
+            this.loading = false
+            return data;
           }
-        })
+        });
       } catch (e) {
         console.log(e);
       }

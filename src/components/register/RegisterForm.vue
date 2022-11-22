@@ -9,10 +9,7 @@
       <div class="mb-4">
         <div class="flex flex-row">
           <div class="text-rangmod-black px-1">อีเมล</div>
-          <div
-            v-if="this.validate.confirmPassword"
-            class="text-rangmod-red px-1"
-          >
+          <div v-if="this.validate.email" class="text-rangmod-red px-1">
             *กรุณาใส่อีเมล
           </div>
         </div>
@@ -28,11 +25,11 @@
       <div class="mb-4">
         <div class="flex flex-row">
           <div class="text-rangmod-black px-1">รหัสผ่าน</div>
-          <div
-            v-if="this.validate.confirmPassword"
-            class="text-rangmod-red px-1"
-          >
+          <div v-if="validate.password" class="text-rangmod-red px-1">
             *กรุณาใส่รหัสผ่าน
+          </div>
+          <div v-else-if="needMoreLetter" class="text-rangmod-red px-1">
+            *ต้องการอย่างต่ำ 4 ตัวอักษร
           </div>
         </div>
         <div class="border border-rangmod-gray rounded-xl px-3 relative">
@@ -71,10 +68,10 @@
       <div class="mb-4">
         <div class="flex flex-row">
           <div class="text-rangmod-black px-1">ยืนยันรหัสผ่าน</div>
-          <div
-            v-if="this.validate.confirmPassword"
-            class="text-rangmod-red px-1"
-          >
+          <div v-if="validate.confirmPassword" class="text-rangmod-red px-1">
+            *กรุณาใส่รหัสผ่านยืนยัน
+          </div>
+          <div v-else-if="!checkDupPwd()" class="text-rangmod-red px-1">
             *รหัสผ่านไม่ตรงกัน
           </div>
         </div>
@@ -148,6 +145,7 @@ export default {
         password: false,
         confirmPassword: false,
       },
+      needMoreLetter: false,
     };
   },
   methods: {
@@ -162,14 +160,28 @@ export default {
         ? (this.validate.confirmPassword = true)
         : (this.validate.confirmPassword = false);
       return (
-        this.validate.email &&
-        this.validate.password &&
+        this.validate.email ||
+        this.validate.password ||
         this.validate.confirmPassword
       );
     },
-
+    checkDupPwd() {
+      return this.password == this.confirmPassword;
+    },
+    checkMinLetter() {
+      return this.password.length >= 4;
+    },
     register() {
-      if (!this.validation()) {
+      if (this.validation() && !this.checkMinLetter()) {
+        this.needMoreLetter = true;
+        setTimeout(() => {
+          this.needMoreLetter = false;
+        }, 3000);
+      } else if (
+        !this.validation() &&
+        this.checkDupPwd() &&
+        this.checkMinLetter()
+      ) {
         this.$router.push({
           name: "register-form",
           params: { email: this.email, password: this.password },
