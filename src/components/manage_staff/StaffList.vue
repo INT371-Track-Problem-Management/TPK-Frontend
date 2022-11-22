@@ -17,8 +17,23 @@
         <div class="text-center">ลงทะเบียนพนักงาน</div>
       </div>
     </div>
-
-    <table class="w-full text-rangmod-black mb-10 hidden md:table">
+    <div
+      v-if="loadingData"
+      class="w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
+    <div v-else-if="noData" class="mx-auto w-full">
+      <div class="text-rangmod-black my-10 mx-auto w-fit">ไม่มีผู้ดูแล</div>
+    </div>
+    <table v-else class="w-full text-rangmod-black mb-10 hidden md:table">
       <tr class="bg-rangmod-light-pink">
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัส</th>
@@ -778,16 +793,6 @@
         </div>
       </div>
     </transition>
-    <div v-if="loading" class="flex justify-center">
-      <lottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
-        class="w-40 h-40"
-      >
-      </lottie-player>
-    </div>
   </div>
 </template>
 
@@ -804,6 +809,8 @@ export default {
       showAddStaff2: false,
       showDeleteModal: false,
       modalbg: false,
+      noData: false,
+      loadingData: true,
       loading: true,
       openGender: false,
       registeredStaff: false,
@@ -869,8 +876,11 @@ export default {
       const data = res.json();
       return data.then((data) => {
         if (data.employees) {
-          this.loading = false;
+          this.loadingData = false;
           return data.employees;
+        } else {
+          this.loadingData = false
+          this.noData = true
         }
       });
     },
