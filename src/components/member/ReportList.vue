@@ -293,7 +293,7 @@ export default {
       category: "",
       description: "",
       status: "S1",
-      createdBy: localStorage.getItem("id"),
+      customerId: localStorage.getItem("id"),
       loadingData: false,
       isActivateCategory: false,
       categoryLists: [
@@ -529,7 +529,7 @@ export default {
     async create() {
       this.loadingData = true;
       this.token = localStorage.getItem("token");
-      this.createdBy = parseInt(localStorage.getItem("id"));
+      this.customerId = parseInt(localStorage.getItem("id"));
       this.reportList = await this.getReport();
       this.filteredReport = this.reportList;
       if (this.reportList) {
@@ -547,7 +547,7 @@ export default {
     },
     async getReport() {
       const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/customer/reports`,
+        `${process.env.VUE_APP_API_URL}/customer/reports?customerId=${this.customerId}`,
         {
           method: "GET",
           headers: {

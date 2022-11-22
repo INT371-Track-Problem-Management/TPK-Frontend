@@ -400,13 +400,8 @@
             </div>
 
             <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">สถานะ</div>
-              <div
-                class="border border-rangmod-gray rounded-xl bg-rangmod-light-gray px-3 w-full text-rangmod-black outline-none leading-10 tracking-wider"
-              >
-                <div v-if="!searchCustomer.status">&nbsp;</div>
-                {{ searchCustomer.status }}
-              </div>
+              <div class="text-rangmod-black ml-1">&nbsp;</div>
+
             </div>
           </div>
 

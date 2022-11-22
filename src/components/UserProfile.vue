@@ -24,7 +24,11 @@
             v-else
             class="bg-rangmod-light-gray rounded-full w-full h-full absolute flex flex-col justify-center"
           >
-            <img v-if="profileMedia" :src="profileMedia" class="rounded-full w-full h-full" />
+            <img
+              v-if="profileMedia"
+              :src="profileMedia"
+              class="rounded-full w-full h-full"
+            />
           </div>
           <svg
             @click="editProfileMedia()"
@@ -263,18 +267,18 @@
 
       <div v-show="!isEditForm" class="flex flex-col">
         <div
+          @click="isEditForm = !isEditForm"
+          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
+        >
+          แก้ไขโปรไฟล์
+        </div>
+        <div
           @click="
             (showChangePwdModal = !showChangePwdModal), (modalbg = !modalbg)
           "
           class="cursor-pointer mx-auto my-2 text-lg text-rangmod-light-blue"
         >
           เปลี่ยนรหัสผ่าน
-        </div>
-        <div
-          @click="isEditForm = !isEditForm"
-          class="cursor-pointer w-32 md:w-40 mx-auto my-2 py-2 text-lg rounded-full text-center text-black border-2 border-white bg-rangmod-light-yellow shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-yellow hover:text-rangmod-light-yellow hover:shadow-none"
-        >
-          แก้ไขโปรไฟล์
         </div>
       </div>
       <div v-show="isEditForm" class="flex flex-row">
@@ -612,17 +616,16 @@ export default {
         }
       );
       console.log(res);
-      if(res.status == 404) {
-        this.profileMedia = ''
+      if (res.status == 404) {
+        this.profileMedia = "";
       } else {
         const binaryData = await res.arrayBuffer();
-      const base64 = this.arrayBufferToBase64(binaryData);
-      const dataUrl = `data:image/*;base64,${base64}`;
-      this.profileMedia = dataUrl;
-      localStorage.setItem('profileMedia',dataUrl)
-      console.log(localStorage.getItem('profileMedia'));
+        const base64 = this.arrayBufferToBase64(binaryData);
+        const dataUrl = `data:image/*;base64,${base64}`;
+        this.profileMedia = dataUrl;
+        localStorage.setItem("profileMedia", dataUrl);
+        console.log(localStorage.getItem("profileMedia"));
       }
-      
     },
     arrayBufferToBase64(buffer) {
       return btoa(String.fromCharCode(...new Uint8Array(buffer)));
@@ -763,8 +766,8 @@ export default {
       }
     },
     cancelChangeProfileMedia() {
-      this.preview = ''
-      this.file = ''
+      this.preview = "";
+      this.file = "";
     },
     editProfileMedia() {
       document.getElementById("uploadImage").click();
@@ -786,8 +789,9 @@ export default {
     async uploadImage(file) {
       let formData = new FormData();
       formData.append("image", file);
-      let path = this.profileMedia == '' ? 'uploadProfile' : 'profile/update/media'
-      let method = this.profileMedia == '' ? 'POST' : 'PUT'
+      let path =
+        this.profileMedia == "" ? "uploadProfile" : "profile/update/media";
+      let method = this.profileMedia == "" ? "POST" : "PUT";
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/service/${path}/${this.email}`,
         {
@@ -800,8 +804,8 @@ export default {
       );
       const data = res.json();
       return data.then(async (res) => {
-        if(res == 'success') {
-          this.cancelChangeProfileMedia()
+        if (res == "success") {
+          this.cancelChangeProfileMedia();
           await this.getProfileMedia();
         }
       });
