@@ -9,7 +9,7 @@
         class="flex flex-col xse:flex-row justify-center xse:justify-between py-6 xse:space-y-0 space-y-5"
       >
         <RouterLink to="/" class="mx-0 items-center">
-          <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-32 mx-auto">
+          <img src="@/assets/images/LOGO-rangmod.png" class="h-fit w-32 mx-auto object-contain">
         </RouterLink>
 
         <div
