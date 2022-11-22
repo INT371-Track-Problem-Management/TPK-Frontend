@@ -17,8 +17,23 @@
         <div class="text-center">ลงทะเบียนช่างซ่อม</div>
       </div> -->
     </div>
-
-    <table class="w-full text-rangmod-black mb-10 hidden md:table">
+    <div
+      v-if="loading"
+      class="w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
+    <div v-else-if="noData" class="mx-auto w-full">
+      <div class="text-rangmod-black my-10 mx-auto w-fit">ไม่มีผู้พักอาศัย</div>
+    </div>
+    <table v-else class="w-full text-rangmod-black mb-10 hidden md:table">
       <tr class="bg-rangmod-light-pink">
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัส</th>
@@ -128,20 +143,7 @@
         </div> -->
       </div>
     </div>
-    <div
-      v-if="modalBg"
-      class="bg-black fixed inset-0 opacity-60 visible z-[80]"
-    ></div>
-    <div v-if="loading" class="flex justify-center">
-      <lottie-player
-        autoplay
-        loop
-        mode="normal"
-        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
-        class="w-40 h-40"
-      >
-      </lottie-player>
-    </div>
+   
   </div>
 </template>
 
@@ -154,6 +156,7 @@ export default {
       token: localStorage.getItem("token"),
       role: localStorage.getItem("role"),
       loading: false,
+      noData: false,
       maintainerList: [
         {
           maintainerId: 1,

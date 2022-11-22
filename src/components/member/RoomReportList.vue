@@ -508,7 +508,10 @@
                   class="text-rangmod-black ml-1 flex flex-row space-x-1"
                 >
                   <div>วันและเวลาที่นัด</div>
-                  <div v-if="validateDate[i].date" class="text-rangmod-red font-sm">
+                  <div
+                    v-if="validateDate[i].date"
+                    class="text-rangmod-red font-sm"
+                  >
                     *ใส่วันเวลาใหม่
                   </div>
                 </div>
@@ -517,7 +520,10 @@
                   class="text-rangmod-black ml-1 flex flex-row space-x-1"
                 >
                   <div>วันและเวลา ({{ i + 1 }})</div>
-                  <div v-if="validateDate[i].date" class="text-rangmod-red font-sm">
+                  <div
+                    v-if="validateDate[i].date"
+                    class="text-rangmod-red font-sm"
+                  >
                     *ใส่วันเวลาใหม่
                   </div>
                 </div>
@@ -1094,8 +1100,8 @@ export default {
       }
     },
     async sendReport() {
-      const validForm = this.validation()
-      const validDate = this.checkfixDate()
+      const validForm = this.validation();
+      const validDate = this.checkfixDate();
       console.log(validForm);
       console.log(validDate);
       if (!this.validation() && this.checkfixDate()) {
@@ -1150,14 +1156,14 @@ export default {
         });
       } else {
         setTimeout(() => {
-          for(let i in this.validateDate) {
-            this.validateDate[i].date = false
+          for (let i in this.validateDate) {
+            this.validateDate[i].date = false;
           }
-          this.validate.title = false
-          this.validate.description = false
-          this.validate.categoriesReport = false
-          this.validate.file = false
-        },2000)
+          this.validate.title = false;
+          this.validate.description = false;
+          this.validate.categoriesReport = false;
+          this.validate.file = false;
+        }, 2000);
       }
     },
     async uploadImage() {
@@ -1191,6 +1197,43 @@ export default {
       this.title = "";
       this.description = "";
       this.category = "";
+      this.reportForSend = {
+        categoriesReport: "",
+        title: "",
+        reportDes: "",
+        status: "S1",
+        roomId: parseInt(this.$route.params.id),
+        buildingId: 0,
+        step: 1,
+        dates: [{ date: "" }, { date: "" }, { date: "" }, { date: "" }],
+        updateBy: parseInt(localStorage.getItem("id")),
+      };
+      this.engageForSend = [
+        {
+          date: "",
+          time: "",
+          period: "",
+          datetime: "",
+        },
+        {
+          date: "",
+          time: "",
+          period: "",
+          datetime: "",
+        },
+        {
+          date: "",
+          time: "",
+          period: "",
+          datetime: "",
+        },
+        {
+          date: "",
+          time: "",
+          period: "",
+          datetime: "",
+        },
+      ];
     },
     dateFormat(inputDate) {
       const date = new Date(inputDate);

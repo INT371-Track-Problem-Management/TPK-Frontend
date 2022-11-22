@@ -6,7 +6,26 @@
     <div class="text-xl">ข้อมูลการรายงานปัญหา</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="flex flex-col ssm-2:flex-row justify-end items-end space-x-4 transition-all">
+    <div
+      v-if="loadingData"
+      class="w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
+    <div v-else-if="noData" class="mx-auto w-full">
+      <div class="text-rangmod-black my-10 mx-auto w-fit">ไม่มีรายงานปัญหา</div>
+    </div>
+    <div
+      v-else
+      class="flex flex-col ssm-2:flex-row justify-end items-end space-x-4 transition-all"
+    >
       <div class="mb-4 relative">
         <div
           @click="openStatusFilter = !openStatusFilter"
@@ -270,6 +289,8 @@ export default {
       openSortFilter: false,
       openStatusFilter: false,
       loading: false,
+      loadingData: false,
+      noData: false,
       filterItem: {
         sort: { eng: "reportId", name: "รหัสรายงาน" },
         status: {
@@ -447,6 +468,10 @@ export default {
         if (res.length > 0) {
           this.loading = false;
           return res;
+        } else {
+          this.loading = false;
+          this.noData = true;
+          return null;
         }
         // return res
       });

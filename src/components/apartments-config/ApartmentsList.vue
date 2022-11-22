@@ -11,7 +11,7 @@
     >
       <div v-show="buildingLists.length > 0" class="flex justify-start">
         <div
-          @click="(showAddModal = !showAddModal), (modalBg = !modalBg)"
+          @click="(showAddModal = !showAddModal), (modalbg = !modalbg)"
           class="cursor-pointer w-20 bg-rangmod-purple text-white border-2 border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
         >
           + เพิ่ม
@@ -63,7 +63,7 @@
 
       <div v-else class="w-1/2 mx-auto text-center justify-center">
         <div class="my-4">ยังไม่มีอาพาร์ตเม้นต์ในระบบ</div>
-        <div @click="(showAddModal = !showAddModal), (modalBg = !modalBg)">
+        <div @click="(showAddModal = !showAddModal), (modalbg = !modalbg)">
           <div
             class="w-20 mx-auto bg-rangmod-purple text-white border border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
           >
@@ -267,7 +267,7 @@ export default {
   data() {
     return {
       token: localStorage.getItem("token"),
-      modalBg: false,
+      modalbg: false,
       showAddModal: false,
       addError: false,
       addBuilding: {
@@ -366,8 +366,9 @@ export default {
             setTimeout(() => {
               this.addedBuilding = false;
             }, 2000);
-            setTimeout(() => {
+            setTimeout(async () => {
               this.showAddModal = false;
+              this.buildingLists = await this.getBuildings();
             }, 2500);
           } else {
             alert("การเพิ่มหอพักผิดพลาด");
