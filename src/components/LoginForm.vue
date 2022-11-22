@@ -145,10 +145,12 @@ export default {
   methods: {
     validation() {
       this.validate.email = this.email == "";
-      this.validate.password = this.password == "";
+      this.validate.password = this.password == "" || !this.checkMinLetter();
       return this.validate.email || this.validate.password;
     },
-
+    checkMinLetter() {
+      return this.password.length >= 4;
+    },
     async doLogin() {
       if (!this.validation()) {
         this.loading = true;
@@ -162,13 +164,15 @@ export default {
         });
         const data = res.json();
         return data.then(async (res) => {
+          console.log(res);
           this.loading = false;
           if (res == "Unatutherize") {
             this.fail = true;
             setTimeout(() => {
               this.fail = false;
             }, 2000);
-          } else {
+          } 
+          else {
             this.token = res.token;
             this.userLogin.id = this.parseJwt(this.token).id;
             this.userLogin.email = this.parseJwt(this.token).email;

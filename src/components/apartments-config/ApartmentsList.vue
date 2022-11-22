@@ -11,7 +11,7 @@
     >
       <div
         v-show="buildingLists.length > 0"
-        class="flex justify-start px-2 md:px-12"
+        class="flex justify-start"
       >
         <div
           @click="(showAddModal = !showAddModal), (modalBg = !modalBg)"
@@ -37,7 +37,7 @@
               }"
             >
               <div
-                class="cursor-pointer w-full border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
+                class="cursor-pointer w-full bg-white shadow-lg border rounded-3xl py-2 transition-all hover:font-bold hover:opacity-90 text-rangmod-purple hover:text-white hover:bg-rangmod-purple"
               >
                 <div class="items-center my-5 flex justify-center">
                   <svg
@@ -55,7 +55,7 @@
                     />
                   </svg>
                 </div>
-                <div class="text-center my-2 text-base">
+                <div class="text-center mx-auto my-2 text-base truncate w-3/5">
                   {{ building.buildingName }}
                 </div>
               </div>
@@ -250,6 +250,7 @@ export default {
       token: localStorage.getItem("token"),
       modalBg: false,
       showAddModal: false,
+      addError: false,
       addBuilding: {
         name: "",
         floor: 1,
@@ -349,6 +350,10 @@ export default {
             }, 2500);
           } else {
             alert("การเพิ่มหอพักผิดพลาด");
+            this.addError = true
+            setTimeout(() => {
+              this.addError = false;
+            }, 2000);
           }
         });
       } catch (e) {

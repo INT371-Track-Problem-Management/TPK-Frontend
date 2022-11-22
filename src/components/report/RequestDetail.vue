@@ -402,7 +402,7 @@
     </div>
     <hr class="my-12 border-rangmod-purple" />
     <!-- <RepairForm :report="reportById"/> -->
-    <div class="mx-16">
+    <div class="ssm:mx-16 mx-0">
       <div class="flex lg:flex-row flex-col-reverse lg:justify-between mb-6">
         <div class="w-full flex lg:justify-start justify-center">
           <div class="flex flex-col justify-start md:w-4/5 w-full">
@@ -539,7 +539,9 @@
                     วันและเวลา ({{ i }})
                   </div>
                   <div class="flex flex-col">
-                    <div class="flex flex-col ssm:flex-row ssm:space-x-2 space-y-2 ssm:space-y-0 ssm:justify-between">
+                    <div
+                      class="flex flex-col xse:flex-row xse:space-x-2 space-y-2 xse:space-y-0 xse:justify-between"
+                    >
                       <div class="flex flex-col w-full">
                         <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                         <div
@@ -566,7 +568,7 @@
               </div>
             </div>
 
-            <div v-else class="flex flex-col">
+            <div v-else class="flex flex-col ssm:mr-0 mr-10">
               <div v-for="(date, i) in reportEngage.fixDate" :key="i">
                 <div class="mb-4">
                   <div v-if="i == 0" class="text-rangmod-black ml-1">
@@ -576,7 +578,9 @@
                     วันและเวลา ({{ i + 1 }})
                   </div>
                   <div class="flex flex-col">
-                    <div class="flex flex-row space-x-2 justify-between">
+                    <div
+                      class="flex flex-col xse:flex-row xse:space-x-2 space-y-2 xse:space-y-0 xse:justify-between"
+                    >
                       <div class="flex flex-col w-full">
                         <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                         <div
@@ -700,69 +704,46 @@
                   </div>
                 </div>
 
-                <div class="w-full flex flex-row space-x-2 relative">
-                  <div class="w-full">
-                    <div class="text-rangmod-black ml-1">ชื่อ</div>
-                    <div class="mb-5">
-                      <div
-                        v-if="!isEdit"
-                        class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
-                      >
-                        <div>
-                          {{ selectedMaintainer.fname }}
-                        </div>
-                      </div>
-                      <input
-                        v-else
-                        v-model="maintainer.fname"
-                        type="text"
-                        class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-white"
-                      />
-                    </div>
-                  </div>
-                  <div class="w-full">
-                    <div class="text-rangmod-black ml-1">นามสกุล</div>
-                    <div class="mb-5">
-                      <div
-                        v-if="!isEdit"
-                        class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
-                      >
-                        <div>
-                          {{ selectedMaintainer.lname }}
-                        </div>
-                      </div>
-                      <input
-                        v-else
-                        v-model="maintainer.lname"
-                        type="text"
-                        class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-white"
-                      />
-                    </div>
-                  </div>
-                  <div class="w-fit" v-if="!isEdit">
-                    <div class="text-rangmod-black ml-1">&nbsp;</div>
-                    <div class="mb-5">
-                      <div
-                        @click="openMaintainer = !openMaintainer"
-                        class="w-fit h-fit cursor-pointer transition-all items-center hover:shadow-lg rounded-full"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="28"
-                          height="28"
-                          fill="currentColor"
-                          stroke="currentColor"
-                          stroke-width="1"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          viewBox="0 0 512 512"
-                          class="text-rangmod-light-purple-2 transition-all rounded-full"
-                          :class="openMaintainer ? 'rotate-180' : ''"
+                <div class="w-full flex flex-row mx-auto relative">
+                  <div
+                    class="mb-5 w-full flex flex-col ssm-3:flex-row ssm-3:space-x-2 space-y-1 ssm-3:space-y-0 relative"
+                  >
+                    <div class="w-full">
+                      <div class="text-rangmod-black ml-1">ชื่อ</div>
+                      <div class="">
+                        <div
+                          v-if="!isEdit"
+                          class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
                         >
-                          <path
-                            d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM390.6 246.6l-112 112C272.4 364.9 264.2 368 256 368s-16.38-3.125-22.62-9.375l-112-112c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L256 290.8l89.38-89.38c12.5-12.5 32.75-12.5 45.25 0S403.1 234.1 390.6 246.6z"
-                          />
-                        </svg>
+                          <div class="truncate max-w-full min-w-full">
+                            {{ selectedMaintainer.fname }}
+                          </div>
+                        </div>
+                        <input
+                          v-else
+                          v-model="maintainer.fname"
+                          type="text"
+                          class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-white"
+                        />
+                      </div>
+                    </div>
+                    <div class="w-full">
+                      <div class="text-rangmod-black ml-1">นามสกุล</div>
+                      <div class="">
+                        <div
+                          v-if="!isEdit"
+                          class="flex justify-between items-center truncate w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-rangmod-light-gray"
+                        >
+                          <div class="truncate min-w-max">
+                            {{ selectedMaintainer.lname }}
+                          </div>
+                        </div>
+                        <input
+                          v-else
+                          v-model="maintainer.lname"
+                          type="text"
+                          class="flex justify-between items-center w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider bg-white"
+                        />
                       </div>
                     </div>
                   </div>
@@ -798,6 +779,65 @@
                       </div>
                     </div>
                   </div>
+                  <div class="w-fit ml-2" v-if="!isEdit">
+                    <div class="text-rangmod-black ml-1">&nbsp;</div>
+                    <div class="">
+                      <div
+                        @click="openMaintainer = !openMaintainer"
+                        class="w-fit h-fit cursor-pointer transition-all items-center hover:shadow-lg rounded-full"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="28"
+                          height="28"
+                          fill="currentColor"
+                          stroke="currentColor"
+                          stroke-width="1"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          viewBox="0 0 512 512"
+                          class="text-rangmod-light-purple-2 transition-all rounded-full"
+                          :class="openMaintainer ? 'rotate-180' : ''"
+                        >
+                          <path
+                            d="M256 0C114.6 0 0 114.6 0 256c0 141.4 114.6 256 256 256s256-114.6 256-256C512 114.6 397.4 0 256 0zM390.6 246.6l-112 112C272.4 364.9 264.2 368 256 368s-16.38-3.125-22.62-9.375l-112-112c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0L256 290.8l89.38-89.38c12.5-12.5 32.75-12.5 45.25 0S403.1 234.1 390.6 246.6z"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- <div
+                    class="w-full absolute flex flex-col mt-16"
+                    :class="
+                      openMaintainer
+                        ? 'py-2 px-4 transition-all max-h-60 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
+                        : 'max-h-[0vh]'
+                    "
+                  >
+                    <div
+                      v-for="(mtn, i) in maintainerLists"
+                      :key="i"
+                      class="w-full flex justify-end"
+                      :class="
+                        openMaintainer
+                          ? ' max-h-60 h-fit hover:font-bold cursor-pointer'
+                          : 'max-h-[0vh]'
+                      "
+                    >
+                      <div
+                        @click="
+                          (selectedMaintainer = mtn), (openMaintainer = false)
+                        "
+                        :class="
+                          openMaintainer
+                            ? 'transition-all w-full max-h-60 h-fit py-2 text-right'
+                            : 'opacity-0 max-h-[0vh]'
+                        "
+                      >
+                        {{ mtn.fname }} {{ mtn.lname }}
+                      </div>
+                    </div>
+                  </div> -->
                 </div>
                 <div class="text-rangmod-black ml-1">เบอร์ติดต่อช่าง</div>
                 <div class="mb-5">
@@ -1030,10 +1070,10 @@
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
-          class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white ssm:px-5 px-0 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <!-- Closed -->
-          <div class="flex justify-end">
+          <div class="flex justify-end mr-5 ssm:mr-0">
             <div @click="closePostpone()" class="cursor-pointer">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -1066,10 +1106,18 @@
                     ></textarea>
                   </div>
                 </div>
-                <div class="text-rangmod-black ml-1">
-                  จำนวนช่วงเวลาที่ขอเปลี่ยน
+                <div class="flex flex-row">
+                  <div class="text-rangmod-black ml-1">
+                    จำนวนช่วงเวลาที่ขอเปลี่ยน
+                  </div>
+                  <div
+                    v-if="countPostponeDate == 7"
+                    class="text-rangmod-red ml-1"
+                  >
+                    *จำนวนวันสูงสุดแล้ว
+                  </div>
                 </div>
-                <div class="w-3/5">
+                <div class="ssm:w-3/5 w-full">
                   <div class="mb-5 flex flex-row space-x-2">
                     <input
                       v-model="countPostponeDate"
@@ -1129,7 +1177,7 @@
                         </div>
                       </div>
 
-                      <div class="flex flex-row space-x-2 justify-between">
+                      <div class="flex flex-col ssm:flex-row ssm:space-x-2 ssm:space-y-0 space-y-2 justify-between">
                         <div class="flex flex-col w-full">
                           <input
                             v-model="engage.date"
@@ -1138,7 +1186,7 @@
                           />
                         </div>
                         <div
-                          class="flex flex-row space-x-2 w-full items-center"
+                          class="flex flex-row ssm:space-x-2 space-x-4 w-full items-center"
                         >
                           <div
                             v-for="(period, i) in engage.period.dayPeriod"
@@ -1171,7 +1219,7 @@
             </div>
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                v-on:click="
+                v-on:click=" checkReject(),
                   (hasReject = true), (modalbg = false), (showModal = false)
                 "
                 class="w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
@@ -1880,64 +1928,6 @@ export default {
       selectedFixDate: {
         id: 0,
       },
-      mainStatus: {
-        // not use
-        sent: {
-          src: "@/assets/images/sent.png",
-          border: "border-rangmod-stat-yellow",
-          bg: "bg-rangmod-stat-light-green",
-        },
-        success: {
-          src: "@/assets/images/success.png",
-          border: "border-rangmod-stat-yellow",
-          bg: "bg-rangmod-stat-light-green",
-        },
-        success_bw: {
-          src: "@/assets/images/success_bw.png",
-          border: "border-rangmod-stat-gray",
-          bg: "bg-rangmod-stat-light-gray",
-        },
-        sand: {
-          src: "@/assets/images/sand.png",
-          border: "border-rangmod-stat-yellow",
-          bg: "bg-rangmod-stat-light-green",
-        },
-        sand_bw: {
-          src: "@/assets/images/sand_bw.png",
-          border: "border-rangmod-stat-gray",
-          bg: "bg-rangmod-stat-light-gray",
-        },
-        check: {
-          src: "@/assets/images/check.png",
-          border: "border-rangmod-stat-yellow",
-          bg: "bg-rangmod-stat-light-green",
-        },
-        check_bw: {
-          src: "@/assets/images/check_bw.png",
-          border: "border-rangmod-stat-gray",
-          bg: "bg-rangmod-stat-light-gray",
-        },
-        sent_red: {
-          src: "@/assets/images/sent.png",
-          border: "border-rangmod-stat-red",
-          bg: "bg-rangmod-stat-light-red",
-        },
-        success_red: {
-          src: "@/assets/images/success.png",
-          border: "border-rangmod-stat-red",
-          bg: "bg-rangmod-stat-light-red",
-        },
-        sand_red: {
-          src: "@/assets/images/sand.png",
-          border: "border-rangmod-stat-red",
-          bg: "bg-rangmod-stat-light-red",
-        },
-        cancelled: {
-          src: "@/assets/images/cancelled.png",
-          border: "border-rangmod-stat-red",
-          bg: "bg-rangmod-stat-light-red",
-        },
-      },
       currentFixDate: "",
       allStatus: [],
     };
@@ -1972,7 +1962,7 @@ export default {
     this.create();
   },
   methods: {
-    test() {},
+    checkReject() {},
     async create() {
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
@@ -2038,30 +2028,6 @@ export default {
       );
       const data = res.json();
       return data;
-      // return data.then(async (data) => {
-      //   if (data.engageId == 0) {
-      //     this.reportDetail = await this.getReportById();
-      //   } else {
-      //     this.reportDetail = data;
-      //     this.reportEngageDate[0].datetime = this.engageShowFormat(
-      //       this.reportDetail.date1
-      //     );
-      //     this.reportEngageDate[1].datetime = this.engageShowFormat(
-      //       this.reportDetail.date2
-      //     );
-      //     this.reportEngageDate[2].datetime = this.engageShowFormat(
-      //       this.reportDetail.date3
-      //     );
-      //     this.reportEngageDate[3].datetime = this.engageShowFormat(
-      //       this.reportDetail.date4
-      //     );
-      //     this.reportEngageDate[0].ogdatetime = this.reportDetail.date1;
-      //     this.reportEngageDate[1].ogdatetime = this.reportDetail.date2;
-      //     this.reportEngageDate[2].ogdatetime = this.reportDetail.date3;
-      //     this.reportEngageDate[3].ogdatetime = this.reportDetail.date4;
-      //     await this.getAssignedMaintainer(data.maintainerId);
-      //   }
-      // });
     },
     async getAssignedMaintainer(maintainerId) {
       const res = await fetch(
@@ -2076,16 +2042,11 @@ export default {
       );
       const data = res.json();
       return data;
-      // .then((data) => {
-      //   if (data.maintainerId != 0) {
-      //     this.assignedMaintainer = data;
-      //   }
-      // });
     },
     async addMaintainer() {
-      this.ivlMaintainer.fname = this.maintainer.fname == "" ? true : false;
-      this.ivlMaintainer.lname = this.maintainer.lname == "" ? true : false;
-      this.ivlMaintainer.phone = this.maintainer.phone == "" ? true : false;
+      this.ivlMaintainer.fname = this.maintainer.fname == "";
+      this.ivlMaintainer.lname = this.maintainer.lname == "";
+      this.ivlMaintainer.phone = this.maintainer.phone == "";
       if (
         this.ivlMaintainer.fname ||
         this.ivlMaintainer.lname ||
@@ -2192,7 +2153,38 @@ export default {
         this.loading = true;
         if (this.hasNewCategory) {
           const res3 = await this.changeCategory(this.newCategory.engName);
+          if (res3.message == "success") {
+            this.loading = false;
+            this.sentEngage = true;
+            setTimeout(() => {
+              this.sentEngage = false;
+            }, 1500);
+            setTimeout(async () => {
+              this.saveModal = false;
+              this.hasNewCategory = false;
+              await this.reloadData();
+            }, 2500);
+          }
           console.log(res3);
+        }
+        if (
+          this.selectedMaintainer.id != this.currentMtn.maintainerId &&
+          this.selectedFixDate
+        ) {
+          const res2 = await this.assignMaintainer(this.selectedMaintainer);
+          if (res2.message == "success") {
+            this.loading = false;
+            this.sentEngage = true;
+            setTimeout(() => {
+              this.sentEngage = false;
+            }, 1500);
+            setTimeout(async () => {
+              this.saveModal = false;
+              this.hasNewCategory = false;
+              await this.reloadData();
+            }, 2500);
+          }
+          console.log(res2);
         }
         if (this.selectedMaintainer.id != 0 && this.selectedFixDate.id != 0) {
           const res1 = await this.selectPlanFixDate(this.selectedFixDate.id);
@@ -2210,6 +2202,7 @@ export default {
                 }, 1500);
                 setTimeout(async () => {
                   this.saveModal = false;
+                  this.hasNewCategory = false;
                   await this.reloadData();
                 }, 2500);
               }

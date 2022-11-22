@@ -415,10 +415,10 @@
       </lottie-player>
     </div>
     <!-- <ReportForm :report="reportDetail"/> -->
-    <div v-else class="mx-16">
-      <div class="flex flex-row justify-between mb-6">
-        <div class="w-full flex justify-start">
-          <div class="flex flex-col justify-start w-3/5">
+    <div v-else class="ssm:mx-16 mx-0">
+      <div class="flex lg:flex-row flex-col-reverse lg:justify-between mb-6">
+        <div class="w-full flex lg:justify-start justify-center">
+          <div class="flex flex-col justify-start md:w-4/5 w-full">
             <div class="pr-0">
               <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
               <div class="mb-5">
@@ -432,7 +432,7 @@
               <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
               <div class="mb-5">
                 <div
-                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider truncate max-w-max"
+                  class="min-w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider truncate max-w-max"
                 >
                   {{ reportDetail.title }}
                 </div>
@@ -674,13 +674,15 @@
         </div>
 
         <!-- </div> -->
-        <div class="w-full flex justify-end">
-          <div class="flex flex-col space-y-8 h-fit w-4/5">
+        <div class="w-full flex lg:justify-end justify-center">
+          <div
+            class="flex flex-col space-y-8 md:h-fit h-full md:w-4/5 w-full mb-6"
+          >
             <div
-              class="border border-rangmod-purple bg-white rounded-3xl h-fit px-10 w-full"
+              class="border border-rangmod-purple bg-white rounded-3xl h-fit xse-2:px-10 px-5 w-full"
               :class="reportEngage.maintainerId != 0 ? '' : 'hidden'"
             >
-              <div class="hidden md:flex flex-col justify-start w-full">
+              <div class="flex flex-col justify-start w-full">
                 <div class="text-rangmod-purple my-5">ข้อมูลช่าง</div>
                 <div class="w-full flex flex-row space-x-4">
                   <div class="w-full">
@@ -719,7 +721,7 @@
               </div>
             </div>
             <div
-              class="border border-rangmod-purple bg-rangmod-light-pink rounded-3xl px-10 w-full h-[440px] overflow-y-scroll no-scrollbar"
+              class="border border-rangmod-purple bg-rangmod-light-pink rounded-3xl xse-2:px-10 px-5 w-full h-[440px] overflow-y-scroll no-scrollbar"
               :class="this.reportDetail.status == 'R1' ? '' : 'hidden'"
             >
               <div class="">
@@ -779,7 +781,7 @@
           </div>
         </div>
       </div>
-      <div class="flex flex-row space-x-4 justify-end">
+      <div v-if="isToday" class="flex flex-row space-x-4 justify-end">
         <div
           @click="
             (this.showFinish = !this.showFinish), (this.modalbg = !this.modalbg)
@@ -791,7 +793,7 @@
       </div>
       <div v-if="!isCancel" class="flex justify-end space-x-4">
         <div
-          class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
+          class=""
         >
           <div
             v-if="reportDetail.status == 'R1'"
@@ -806,7 +808,7 @@
           </div>
         </div>
         <div
-          class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
+          class=""
         >
           <div
             @click="showCancel = !showCancel"
@@ -817,7 +819,7 @@
           </div>
         </div>
         <div
-          class="ml-auto grid grid-cols-2 gap-1 justify-items-end md:flex justify-end md:space-x-4"
+          class=""
         >
           <div
             @click="(showCancel = !showCancel), (modalbg = !modalbg)"
@@ -1668,12 +1670,20 @@ export default {
       ],
       newEngageForSelect: [],
       newEngageForSend: [],
-      allStatus: []
+      allStatus: [],
     };
   },
   computed: {
     isCancel() {
-      return this.reportDetail.status == "S6";
+      return this.reportDetail.status == 'S6' || this.reportDetail.status == 'S9'
+    },
+    isToday() {
+      if(this.fixDate == '') {
+        return false
+      }
+      const date = new Date(this.fixDate)
+      const now = new Date();
+      return (date.getHours() == 0 ? date.getDate()-1 : date.getDate()) == now.getDate()
     },
     statusIsPrepare() {
       return this.allStatus.includes("S4");
@@ -1693,13 +1703,12 @@ export default {
   },
   mounted() {
     this.create();
-    console.log();
+    console.log(this.isToday);
   },
   methods: {
     filterSelectedDate() {
       for (let i in this.reportEngage.fixDate) {
         if (this.reportEngage.fixDate[i].id == this.reportEngage.selectedDate) {
-          console.log(this.reportEngage.fixDate[i].date);
           this.fixDate = this.reportEngage.fixDate[i].date;
           break;
         }
@@ -1751,20 +1760,24 @@ export default {
       }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
       this.filterSelectedDate();
-      const now = new Date();
-      const temp1 = this.splitDateOg(this.fixDate);
-      const temp2 = this.setUpperFloor(temp1);
-      const date1 = new Date(temp1);
-      const date2 = new Date(temp2);
-      const tt1 = now - date1;
-      const tt2 = now - date2;
-      console.log(now - 0);
-      console.log(now - date1);
-      console.log(now - date2);
-      console.log(date1 - date2);
-      console.log(tt1 - tt2 <= date2 - date1); // use
+      // const date = new Date(this.fixDate)
+      // const now = new Date();
+      // console.log(date.getHours() == 0 ? date.getDate()-1 : date.getDate());
+      // console.log(now.getDate());
+      // console.log(date.getHours() == 0 ? date.getDate()-1 : date.getDate() == now.getDate());
+      // const temp1 = this.splitDateOg(this.fixDate);
+      // const temp2 = this.setUpperFloor(temp1);
+      // const date1 = new Date(temp1);
+      // const date2 = new Date(temp2);
+      // const tt1 = now - date1;
+      // const tt2 = now - date2;
+      // console.log(now - 0);
+      // console.log(now - date1);
+      // console.log(now - date2);
+      // console.log(date1 - date2);
+      // console.log(tt1 - tt2 <= date2 - date1);
       // console.log(this.setUpperFloor(temp));
-      // console.log(now);
+      console.log(this.isToday);
     },
     async getReportById(reportId) {
       const res = await fetch(

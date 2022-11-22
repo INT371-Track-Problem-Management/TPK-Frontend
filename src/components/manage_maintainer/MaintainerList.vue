@@ -11,11 +11,11 @@
       class="w-44 my-5 cursor-pointer"
       @click="(showAddStaff1 = !showAddStaff1), (modalBg = !modalBg)"
     >
-      <div
+      <!-- <div
         class="items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
       >
         <div class="text-center">ลงทะเบียนช่างซ่อม</div>
-      </div>
+      </div> -->
     </div>
 
     <table class="w-full text-rangmod-black mb-10 hidden md:table">
@@ -25,7 +25,7 @@
         <th class="py-4">ชื่อ-นามสกุล</th>
         <th class="py-4">จำนวนครั้งที่ซ่อม</th>
         <th class="py-4">คะแนนเฉลี่ยที่ได้</th>
-        <th class="py-4">&nbsp;</th>
+        <!-- <th class="py-4">&nbsp;</th> -->
       </tr>
       <tr
         v-for="(maintainer, i) in filteredMaintainer"
@@ -60,7 +60,7 @@
             ></path>
           </svg>
         </td>
-        <td
+        <!-- <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
           @click="
             (showStaffDetail = !showStaffDetail),
@@ -69,7 +69,7 @@
           "
         >
           <div>รายละเอียด</div>
-        </td>
+        </td> -->
       </tr>
     </table>
 
@@ -120,12 +120,12 @@
           </div>
         </div>
 
-        <div
+        <!-- <div
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
           @click="getDetail(maintainer.customerId)"
         >
           <div>รายละเอียด</div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div
