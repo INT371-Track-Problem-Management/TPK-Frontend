@@ -8,7 +8,7 @@
 
     <div class="flex flex-col md:flex-row md:space-x-2 justify-start my-6 w-fit mx-auto md:mx-0">
       <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">รหัสผู้พัก</div>
+        <div class="w-2/5 text-right lg:w-max text-md">รหัส</div>
         <div>
           <input
             @keyup.enter="search()"
@@ -37,6 +37,18 @@
           <input
             @keyup.enter="search()"
             v-model="searchItem.lname"
+            type="text"
+            class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+          />
+        </div>
+      </div>
+
+      <div class="flex flex-row space-x-2 items-center mb-2">
+        <div class="w-2/5 text-right lg:w-max text-md">ห้อง</div>
+        <div>
+          <input
+            @keyup.enter="search()"
+            v-model="searchItem.roomNum"
             type="text"
             class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
           />
@@ -77,7 +89,7 @@ export default {
         customerId: "",
         fname: "",
         lname: "",
-        // roomNum: "",
+        roomNum: "",
       },
     };
   },

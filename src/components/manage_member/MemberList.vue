@@ -19,7 +19,7 @@
         <th class="py-4">ลำดับ</th>
         <th class="py-4">รหัส</th>
         <th class="py-4">ชื่อ-นามสกุล</th>
-        <th class="py-4">ว/ด/ป ลงทะเบียน</th>
+        <th class="py-4">ห้อง</th>
         <th class="py-4"></th>
       </tr>
       <tr
@@ -35,7 +35,7 @@
           {{ member.fname }} {{ member.lname }}
         </td>
         <td class="text-center py-4 whitespace-nowrap">
-          {{ splitDate(member.createAt) }}
+          {{ filterRoomNum(member.roomNum) }}
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
@@ -69,8 +69,8 @@
           <div>{{ member.lname }}</div>
         </div>
         <div class="flex flex-row justify-between">
-          <div>ว/ด/ป ลงทะเบียน</div>
-          <div>{{ splitDate(member.createAt) }}</div>
+          <div>ห้อง</div>
+          <div>{{ filterRoomNum(member.roomNum) }}</div>
         </div>
 
         <div
@@ -210,7 +210,7 @@
           </div>
 
           <div class="mb-4 flex flex-row space-x-2">
-            <div class="text-rangmod-black">
+            <div class="text-rangmod-black w-full">
               <div class="text-rangmod-black ml-1">สถานะ</div>
 
               <div class="border-rangmod-gray rounded-xl">
@@ -221,6 +221,9 @@
                   class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
                 />
               </div>
+            </div>
+            <div class="text-rangmod-black w-full">
+              <div class="text-rangmod-black ml-1">&nbsp;</div>
             </div>
           </div>
 
@@ -329,7 +332,7 @@
           </div>
 
           <div class="mb-4 flex flex-row space-x-2">
-            <div class="text-rangmod-black w-full">
+            <!-- <div class="text-rangmod-black w-full">
               <div class="text-rangmod-black ml-1">วันเกิด</div>
               <div
                 class="border border-rangmod-gray rounded-xl bg-rangmod-light-gray px-3 w-full text-rangmod-black outline-none leading-10 tracking-wider"
@@ -337,7 +340,7 @@
                 <div v-if="!searchCustomer.dateOfBirth">&nbsp;</div>
                 {{ searchCustomer.dateOfBirth }}
               </div>
-            </div>
+            </div> -->
 
             <div class="text-rangmod-black w-full">
               <div class="text-rangmod-black ml-1">อายุ</div>
@@ -401,7 +404,6 @@
 
             <div class="text-rangmod-black w-full">
               <div class="text-rangmod-black ml-1">&nbsp;</div>
-
             </div>
           </div>
 
@@ -643,7 +645,16 @@ export default {
         dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
       return showDate;
     },
+    filterRoomNum(roomNum) {
+      if (roomNum == "") {
+        return "-";
+      }
+      return roomNum;
+    },
     spiltBuilding(room) {
+      if (room == "") {
+        return "-";
+      }
       const res = room.toString().split("");
       res.pop();
       res.pop();
@@ -665,44 +676,12 @@ export default {
       this.filteredMember = this.filteredMember.filter((member) => {
         return member.lname.includes(searchItem.lname);
       });
+      this.filteredMember = this.filteredMember.filter((member) => {
+        return member.roomNum.includes(searchItem.roomNum);
+      });
     },
   },
 };
 </script>
 
-<style>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* .bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-} */
-</style>
+<style></style>
