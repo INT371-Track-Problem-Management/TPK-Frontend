@@ -302,14 +302,13 @@ export default {
           }
         );
         if (res.status == 404) {
-          localStorage.setItem("profileMedia", null);
+          this.profileMedia = null
         } else {
           const binaryData = await res.arrayBuffer();
           const base64 = this.arrayBufferToBase64(binaryData);
           const dataUrl = `data:image/*;base64,${base64}`;
           this.profileMedia = dataUrl
         }
-      // }
     },
     arrayBufferToBase64(buffer) {
       return btoa(String.fromCharCode(...new Uint8Array(buffer)));

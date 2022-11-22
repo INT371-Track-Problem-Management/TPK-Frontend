@@ -519,11 +519,29 @@
             <div v-if="reportDetail.status == 'R1'" class="flex flex-col">
               <div v-for="(date, i) in emptyEngage" :key="i">
                 <div class="mb-4">
-                  <div v-if="i == 0" class="text-rangmod-black ml-1">
-                    วันและเวลาที่นัด
+                  <div
+                    v-if="i == 0"
+                    class="text-rangmod-black ml-1 flex flex-row space-x-1"
+                  >
+                    <div>วันและเวลาที่นัด</div>
+                    <div
+                      v-if="validateDate[i].date"
+                      class="text-rangmod-red font-sm"
+                    >
+                      *ใส่วันเวลาใหม่
+                    </div>
                   </div>
-                  <div v-else class="text-rangmod-black ml-1">
-                    วันและเวลา ({{ i + 1 }})
+                  <div
+                    v-else
+                    class="text-rangmod-black ml-1 flex flex-row space-x-1"
+                  >
+                    <div>วันและเวลา ({{ i + 1 }})</div>
+                    <div
+                      v-if="validateDate[i].date"
+                      class="text-rangmod-red font-sm"
+                    >
+                      *ใส่วันเวลาใหม่
+                    </div>
                   </div>
                   <div class="flex flex-col">
                     <div class="flex flex-row space-x-2 justify-between">
@@ -781,53 +799,62 @@
           </div>
         </div>
       </div>
-      <div v-if="isToday" class="flex flex-row space-x-4 justify-end">
+      <div v-if="!isFinish">
+        <div v-if="isToday" class="flex flex-row space-x-4 justify-end">
+          <div
+            @click="
+              (this.showFinish = !this.showFinish),
+                (this.modalbg = !this.modalbg)
+            "
+            class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
+          >
+            แก้ไขปัญหาเสร็จสิ้น
+          </div>
+        </div>
+        <div v-if="!isCancel && !isToday" class="flex justify-end space-x-4">
+          <div class="">
+            <div
+              v-if="reportDetail.status == 'R1'"
+              @click="formatSendDate(emptyEngage)"
+              class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-purple shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              บันทึก
+            </div>
+          </div>
+          <div class="">
+            <div
+              @click="showCancel = !showCancel"
+              v-if="
+                !this.isEngageDateNow &&
+                !isCancel &&
+                reportDetail.status != 'R1'
+              "
+              class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-purple shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              บันทึก
+            </div>
+          </div>
+          <div class="">
+            <div
+              @click="(showCancel = !showCancel), (modalbg = !modalbg)"
+              v-if="!this.isEngageDateNow && !isCancel"
+              class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
+            >
+              ยกเลิกนัด
+            </div>
+          </div>
+        </div>
+      </div>
+      <div v-else class="flex justify-end space-x-4">
         <div
           @click="
-            (this.showFinish = !this.showFinish), (this.modalbg = !this.modalbg)
+            (this.showReview = !this.showReview),
+              (this.modalbg = !this.modalbg),
+              getReview()
           "
           class="w-48 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-green shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-green hover:text-rangmod-green hover:shadow-none"
         >
-          แก้ไขปัญหาเสร็จสิ้น
-        </div>
-      </div>
-      <div v-if="!isCancel" class="flex justify-end space-x-4">
-        <div
-          class=""
-        >
-          <div
-            v-if="reportDetail.status == 'R1'"
-            @click="
-              (showPostpone = !showPostpone),
-                (modalbg = !modalbg),
-                formatSendDate(emptyEngage)
-            "
-            class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-ppbtn-blue shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-ppbtn-blue hover:text-rangmod-ppbtn-blue hover:shadow-none"
-          >
-            แก้ไขวันนัด
-          </div>
-        </div>
-        <div
-          class=""
-        >
-          <div
-            @click="showCancel = !showCancel"
-            v-if="!this.isEngageDateNow"
-            class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-purple shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
-          >
-            บันทึก
-          </div>
-        </div>
-        <div
-          class=""
-        >
-          <div
-            @click="(showCancel = !showCancel), (modalbg = !modalbg)"
-            v-if="!this.isEngageDateNow"
-            class="w-40 my-4 py-2 text-lg rounded-full text-center border-2 text-white bg-rangmod-light-red shadow-lg cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
-          >
-            ยกเลิกนัด
-          </div>
+          ดูความคิดเห็น
         </div>
       </div>
 
@@ -879,6 +906,10 @@
           v-show="showPostpone"
           class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
+          <div
+            v-if="loading || sentPostpone"
+            class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+          ></div>
           <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
@@ -967,6 +998,40 @@
                 </div>
               </div>
             </div>
+            <div
+              v-if="loading"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <lottie-player
+                autoplay
+                loop
+                mode="normal"
+                src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+                class="w-40 h-40"
+              >
+              </lottie-player>
+            </div>
+            <div
+              v-if="sentPostpone"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <div
+                class="text-rangmod-green items-center bg-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100"
+                  height="100"
+                  fill="currentColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </transition>
@@ -1023,39 +1088,12 @@
               ></textarea>
             </div>
 
-            <!-- <div>
-              <div class="flex flex-col">
-              <div class="w-full">
-                <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป เวลา</div>
-                  <div
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  >
-                    {{ splitDate(fixDate) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="flex flex-col">
-              <div class="w-full">
-                <div class="mb-5">
-                  <div class="text-rangmod-black">ว/ด/ป เวลา</div>
-                  <div
-                    class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  >
-                    {{ splitTime(fixDate) }}
-                  </div>
-                </div>
-              </div>
-            </div>
-            </div> -->
-
             <div class="flex flex-row space-x-4 justify-end">
               <div
                 v-on:click="openReview()"
                 class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
-                แก้ไขปัญหาเสร็จสิ้น
+                แก้ไขเสร็จสิ้น
               </div>
             </div>
           </div>
@@ -1169,6 +1207,10 @@
           class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
         >
           <div
+            v-if="loading || sentReview"
+            class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+          ></div>
+          <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
             <!-- Closed -->
@@ -1203,7 +1245,9 @@
                   @click="scored(rate.score)"
                   class="cursor-pointer"
                   :class="
-                    rate.hover || rate.isActive ? 'text-rangmod-yellow' : ''
+                    rate.hover || rate.isActive
+                      ? 'text-rangmod-light-yellow'
+                      : 'text-rangmod-light-gray'
                   "
                 >
                   <svg
@@ -1240,66 +1284,108 @@
                 ยืนยัน
               </div>
             </div>
+            <div
+              v-if="loading"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <lottie-player
+                autoplay
+                loop
+                mode="normal"
+                src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+                class="w-40 h-40"
+              >
+              </lottie-player>
+            </div>
+            <div
+              v-if="sentReview"
+              class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+            >
+              <div
+                class="text-rangmod-green items-center bg-white rounded-full"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="100"
+                  height="100"
+                  fill="currentColor"
+                  class="bi bi-check-circle-fill"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </transition>
+
+      <transition name="bounce">
+        <div
+          v-show="showReview"
+          class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
+        >
+          <div
+            class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          >
+            <!-- Closed -->
+            <div class="flex justify-end">
+              <div
+                @click="(showReview = false), (modalbg = false)"
+                class="cursor-pointer"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div class="text-2xl text-rangmod-purple mb-5">
+              คะแนนและความคิดเห็น
+            </div>
+
+            <div class="flex flex-row space-x-4 justify-center mb-5">
+              <div v-for="i in review.score" :key="i">
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="60"
+                    height="60"
+                    fill="currentColor"
+                    class="bi bi-star-fill text-rangmod-light-yellow"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-rangmod-black">ความคิดเห็น</div>
+            <div class="mb-5">
+              <textarea
+                v-model="review.des"
+                class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+              ></textarea>
+            </div>
           </div>
         </div>
       </transition>
     </div>
-    <!-- <transition name="bounce">
-      <div
-        v-if="isPostpone"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 px-6"
-      >
-        <div
-          class="max-w-xs min-w-[320px] h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl"
-        >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ทำการเลือกวันนัดซ่อมสำเร็จ
-          </div>
-        </div>
-      </div>
-    </transition>
-    <transition name="bounce">
-      <div
-        v-if="accepted"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
-      >
-        <div
-          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ทำการรับเรื่องรายงานแล้ว
-          </div>
-        </div>
-      </div>
-    </transition>
-    <transition name="bounce">
-      <div
-        v-if="isCancel"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
-      >
-        <div
-          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ทำการยกเลิกรายงานแล้ว
-          </div>
-        </div>
-      </div>
-    </transition>
-    <transition name="bounce">
-      <div
-        v-if="isReview"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10"
-      >
-        <div
-          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ทำการให้คะแนนและแสดงความคิดเห็นแล้ว
-          </div>
-        </div>
-      </div>
-    </transition> -->
   </div>
 </template>
 
@@ -1322,9 +1408,9 @@ export default {
       showReviewModal: false,
       showCancelModal: false,
       sentCancel: false,
-      isPostpone: false,
+      sentPostpone: false,
       // isCancel: false,
-      isReview: false,
+      sentReview: false,
       openReportStatus: false,
       tempStatus: "waiting",
       categoryLists: [
@@ -1671,24 +1757,38 @@ export default {
       newEngageForSelect: [],
       newEngageForSend: [],
       allStatus: [],
+      validateDate: [
+        { date: false },
+        { date: false },
+        { date: false },
+        { date: false },
+      ],
     };
   },
   computed: {
+    isFinish() {
+      return this.reportDetail.status == "S7";
+    },
     isCancel() {
-      return this.reportDetail.status == 'S6' || this.reportDetail.status == 'S9'
+      return (
+        this.reportDetail.status == "S6" || this.reportDetail.status == "S9"
+      );
     },
     isToday() {
-      if(this.fixDate == '') {
-        return false
+      if (this.fixDate == "") {
+        return false;
       }
-      const date = new Date(this.fixDate)
+      const date = new Date(this.fixDate);
       const now = new Date();
-      return (date.getHours() == 0 ? date.getDate()-1 : date.getDate()) == now.getDate()
+      return (
+        (date.getHours() == 0 ? date.getDate() - 1 : date.getDate()) ==
+        now.getDate()
+      );
     },
     statusIsPrepare() {
       return this.allStatus.includes("S4");
     },
-    statusIsPostpone() {
+    statussentPostpone() {
       return this.allStatus.includes("R1");
     },
     statusIsFinish() {
@@ -1706,6 +1806,48 @@ export default {
     console.log(this.isToday);
   },
   methods: {
+    checkfixDate() {
+      const date = new Date();
+      const now = date.getDate();
+      const date1 = new Date(this.newEngageForSend[0].date);
+      const date2 = new Date(this.newEngageForSend[1].date);
+      const date3 = new Date(this.newEngageForSend[2].date);
+      const date4 = new Date(this.newEngageForSend[3].date);
+      console.log(date1);
+      console.log(date1.getDate());
+      console.log(now);
+      console.log(date1.getDate() - now);
+      if (date1.getDate() - now >= 1) {
+        if (date2 - date1 >= 3600000) {
+          if (date3 - date2 >= 3600000) {
+            if (date4 - date3 >= 3600000) {
+              console.log(true);
+              console.log(this.validateDate);
+              return true;
+            } else {
+              this.validateDate[3].date = true;
+              console.log(false);
+              console.log(this.validateDate);
+              return false;
+            }
+          } else {
+            this.validateDate[2].date = true;
+            console.log(false);
+            console.log(this.validateDate);
+            return false;
+          }
+        } else {
+          this.validateDate[1].date = true;
+          console.log(false);
+          console.log(this.validateDate);
+          return false;
+        }
+      } else {
+        this.validateDate[0].date = true;
+        console.log(false);
+        return false;
+      }
+    },
     filterSelectedDate() {
       for (let i in this.reportEngage.fixDate) {
         if (this.reportEngage.fixDate[i].id == this.reportEngage.selectedDate) {
@@ -1760,23 +1902,6 @@ export default {
       }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
       this.filterSelectedDate();
-      // const date = new Date(this.fixDate)
-      // const now = new Date();
-      // console.log(date.getHours() == 0 ? date.getDate()-1 : date.getDate());
-      // console.log(now.getDate());
-      // console.log(date.getHours() == 0 ? date.getDate()-1 : date.getDate() == now.getDate());
-      // const temp1 = this.splitDateOg(this.fixDate);
-      // const temp2 = this.setUpperFloor(temp1);
-      // const date1 = new Date(temp1);
-      // const date2 = new Date(temp2);
-      // const tt1 = now - date1;
-      // const tt2 = now - date2;
-      // console.log(now - 0);
-      // console.log(now - date1);
-      // console.log(now - date2);
-      // console.log(date1 - date2);
-      // console.log(tt1 - tt2 <= date2 - date1);
-      // console.log(this.setUpperFloor(temp));
       console.log(this.isToday);
     },
     async getReportById(reportId) {
@@ -1806,30 +1931,6 @@ export default {
       );
       const data = res.json();
       return data;
-      // return data.then(async (data) => {
-      //   if (data.engageId == 0) {
-      //     this.reportDetail = await this.getReportById();
-      //   } else {
-      //     this.reportDetail = data;
-      //     this.reportEngageDate[0].datetime = this.engageShowFormat(
-      //       this.reportDetail.date1
-      //     );
-      //     this.reportEngageDate[1].datetime = this.engageShowFormat(
-      //       this.reportDetail.date2
-      //     );
-      //     this.reportEngageDate[2].datetime = this.engageShowFormat(
-      //       this.reportDetail.date3
-      //     );
-      //     this.reportEngageDate[3].datetime = this.engageShowFormat(
-      //       this.reportDetail.date4
-      //     );
-      //     this.reportEngageDate[0].ogdatetime = this.reportDetail.date1;
-      //     this.reportEngageDate[1].ogdatetime = this.reportDetail.date2;
-      //     this.reportEngageDate[2].ogdatetime = this.reportDetail.date3;
-      //     this.reportEngageDate[3].ogdatetime = this.reportDetail.date4;
-      //     await this.getAssignedMaintainer(data.maintainerId);
-      //   }
-      // });
     },
     async getAssignedMaintainer(maintainerId) {
       const res = await fetch(
@@ -1889,6 +1990,8 @@ export default {
       return number < 10 ? "0" + number.toString() : number.toString();
     },
     async sendNewEngage(dates) {
+      this.modalbg = false;
+      this.loading = true;
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/newFixDate`,
         {
@@ -1906,28 +2009,27 @@ export default {
         }
       );
       const data = res.json();
-      return data;
-      // return data.then(async (data) => {
-      //   if (data.message == "success") {
-      //     await this.updateStatus("S8");
-      //     await this.reloadData();
-      //     this.isPostpone = true;
-      //     setTimeout(() => {
-      //       this.isPostpone = false;
-      //     }, 2000);
-      //     setTimeout(() => {
-      //       this.showPostpone = false;
-      //       this.modalbg = false;
-      //     }, 3000);
-      //   } else {
-      //     alert("error");
-      //   }
-      // });
+      return data.then(async (data) => {
+        if (data.message == "success") {
+          await this.updateStatus("S4", "");
+          this.loading = false;
+          this.sentPostpone = true;
+          setTimeout(() => {
+            this.sentPostpone = false;
+          }, 2000);
+          setTimeout(async () => {
+            this.showPostpone = false;
+            await this.reloadData();
+          }, 3000);
+        } else {
+          alert("error");
+        }
+      });
     },
     async cancel() {
       this.modalbg = false;
       this.loading = true;
-      const res = await this.updateStatus("S9");
+      const res = await this.updateStatus("S9", "");
       if (res == "success") {
         this.loading = false;
         this.sentCancel = true;
@@ -1936,25 +2038,35 @@ export default {
         }, 1500);
         setTimeout(async () => {
           this.showCancel = false;
-          this.sentCancel = false;
           await this.reloadData();
         }, 2500);
       } else {
         alert("error");
       }
     },
-    async finish() {
-      const res = this.updateStatus("S7");
-      if (res == "success") {
-        alert("success");
-      }
+    async getReview() {
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/service/report/review/${this.$route.params.id}`,
+        {
+          method: "GET",
+          headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((res) => {
+        console.log(res);
+        this.review = res;
+      });
     },
     postponeFormat(datetime) {
       const res = datetime.split("T");
       const res2 = res[1].split("Z");
       return res[0] + " " + res2[0];
     },
-    async updateStatus(status) {
+    async updateStatus(status, detail) {
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/statusReport`,
         {
@@ -1964,9 +2076,10 @@ export default {
             Authorization: `Bearer ${this.token}`,
           },
           body: JSON.stringify({
-            ReportId: parseInt(this.$route.params.id),
-            Status: status,
-            UpdateBy: parseInt(this.createdBy),
+            reportId: parseInt(this.$route.params.id),
+            status: status,
+            detail: detail,
+            updateBy: parseInt(this.createdBy),
           }),
         }
       );
@@ -2041,6 +2154,8 @@ export default {
       }, 500);
     },
     async reviewReport() {
+      this.modalbg = false;
+      this.loading = true;
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/endJobReview`,
         {
@@ -2061,13 +2176,14 @@ export default {
       const data = res.json();
       return data.then((data) => {
         if (data.message == "success") {
-          this.isReview = true;
+          this.loading = false;
+          this.sentReview = true;
           setTimeout(() => {
-            this.isReview = false;
+            this.sentReview = false;
           }, 2000);
-          setTimeout(() => {
+          setTimeout(async () => {
             this.showReviewModal = false;
-            this.modalbg = false;
+            await this.reloadData();
           }, 2500);
           return "success";
         } else {
@@ -2124,6 +2240,17 @@ export default {
           console.log(temp);
           this.newEngageForSend.push(temp);
         }
+      }
+      console.log(this.newEngageForSend);
+      if (this.checkfixDate()) {
+        this.showPostpone = true;
+        this.modalbg = true;
+      } else {
+        setTimeout(() => {
+          for (let i in this.validateDate) {
+            this.validateDate[i].date = false;
+          }
+        }, 2000);
       }
     },
     filterSlot(period) {

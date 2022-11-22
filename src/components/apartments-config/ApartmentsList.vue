@@ -9,10 +9,7 @@
       class="w-full bg-white"
       :class="buildingLists.length > 0 ? '' : 'py-48'"
     >
-      <div
-        v-show="buildingLists.length > 0"
-        class="flex justify-start"
-      >
+      <div v-show="buildingLists.length > 0" class="flex justify-start">
         <div
           @click="(showAddModal = !showAddModal), (modalBg = !modalBg)"
           class="cursor-pointer w-20 bg-rangmod-purple text-white border-2 border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
@@ -66,24 +63,24 @@
 
       <div v-else class="w-1/2 mx-auto text-center justify-center">
         <div class="my-4">ยังไม่มีอาพาร์ตเม้นต์ในระบบ</div>
-        <RouterLink to="/dashboard/config/apartment/add">
+        <div @click="(showAddModal = !showAddModal), (modalBg = !modalBg)">
           <div
             class="w-20 mx-auto bg-rangmod-purple text-white border border-rangmod-purple rounded-full text-center py-1 shadow-md transition-all hover:bg-transparent hover:text-rangmod-purple"
           >
             + เพิ่ม
           </div>
-        </RouterLink>
+        </div>
       </div>
     </div>
     <!-- Add --------------------------------------------------------------------------------------- -->
 
     <div
       :class="
-        modalBg
+        modalbg
           ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
           : 'hidden opacity-0'
       "
-      v-on:click="modalBg = !modalBg"
+      v-on:click="modalbg = !modalbg"
     ></div>
     <transition name="bounce">
       <div
@@ -91,11 +88,15 @@
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10"
       >
         <div
+          v-if="loading || addedBuilding"
+          class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+        ></div>
+        <div
           class="overflow-auto no-scrollbar h-[600px] font-primary bg-white w-4/5 lg:w-1/2 mx-auto my-4 p-10 rounded-xl shadow-md"
         >
           <div class="flex justify-end">
             <div
-              @click="(showAddModal = false), (modalBg = false), clearData()"
+              @click="(showAddModal = false), (modalbg = false), clearData()"
               class="cursor-pointer"
             >
               <svg
@@ -218,21 +219,39 @@
               บันทึก
             </div>
           </div>
-        </div>
-        <transition name="bounce">
+          <div
+            v-if="loading"
+            class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+          >
+            <lottie-player
+              autoplay
+              loop
+              mode="normal"
+              src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+              class="w-40 h-40"
+            >
+            </lottie-player>
+          </div>
           <div
             v-if="addedBuilding"
-            class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+            class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
           >
-            <div
-              class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-            >
-              <div class="text-2xl text-rangmod-purple my-5 text-center">
-                เพิ่มหอพักสำเร็จ
-              </div>
+            <div class="text-rangmod-green items-center bg-white rounded-full">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="100"
+                height="100"
+                fill="currentColor"
+                class="bi bi-check-circle-fill"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                />
+              </svg>
             </div>
           </div>
-        </transition>
+        </div>
       </div>
     </transition>
   </div>
@@ -278,20 +297,20 @@ export default {
       console.log(this.buildingLists);
     },
     async getBuildings() {
-        const res = await fetch(
-          `${process.env.VUE_APP_API_URL}/employee/allBuilding`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${this.token}`,
-            },
-          }
-        );
-        const data = res.json();
-        return data.then((res) => {
-          return res.buildings
-        })
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/employee/allBuilding`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((res) => {
+        return res.buildings;
+      });
     },
     async insertBuildingAndRoom() {
       const res = await fetch(
@@ -310,7 +329,7 @@ export default {
       );
       const data = res.json();
       return data.then(async (res) => {
-        console.log(typeof(res.buildingId));
+        console.log(typeof res.buildingId);
         if (res.buildingId != 0) {
           await this.insertRooms(res.buildingId);
         }
@@ -320,6 +339,8 @@ export default {
       console.log(buildingId);
       this.add(buildingId);
       try {
+        this.modalbg = false;
+        this.loading = true;
         const res = await fetch(
           `${process.env.VUE_APP_API_URL}/employee/rooms`,
           {
@@ -340,7 +361,7 @@ export default {
         return data.then(async (res) => {
           console.log(res);
           if (res.message == "success") {
-            // alert('เพิ่มหอพักสำเร็จ!!')
+            this.loading = false;
             this.addedBuilding = true;
             setTimeout(() => {
               this.addedBuilding = false;
@@ -350,7 +371,7 @@ export default {
             }, 2500);
           } else {
             alert("การเพิ่มหอพักผิดพลาด");
-            this.addError = true
+            this.addError = true;
             setTimeout(() => {
               this.addError = false;
             }, 2000);
