@@ -2,23 +2,13 @@
   <div
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
-    <div class="text-xl">ค้นหาข้อมูลผู้พักอาศัย</div>
+    <div class="text-xl">ค้นหาข้อมูลช่างซ่อม</div>
 
     <hr class="my-4 border-rangmod-purple" />
 
-    <div class="flex flex-col md:flex-row md:space-x-2 justify-start my-6 w-fit mx-auto md:mx-0">
-      <div class="flex flex-row space-x-2 items-center mb-2">
-        <div class="w-2/5 text-right lg:w-max text-md">รหัสผู้พัก</div>
-        <div>
-          <input
-            @keyup.enter="search()"
-            v-model="searchItem.customerId"
-            type="text"
-            class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-          />
-        </div>
-      </div>
-
+    <div
+      class="flex flex-col md:flex-row md:space-x-2 justify-start my-6 w-fit mx-auto md:mx-0"
+    >
       <div class="flex flex-row space-x-2 items-center mb-2">
         <div class="w-2/5 text-right lg:w-max text-md">ชื่อ</div>
         <div>
@@ -43,7 +33,23 @@
         </div>
       </div>
 
-      <div class="w-32 mx-auto mb-2 cursor-pointer items-center flex flex-row" @click="search()">
+      <div class="flex flex-row space-x-2 items-center mb-2">
+        <div class="w-2/5 text-right lg:w-max text-md">เบอร์โทร</div>
+        <div>
+          <input
+            @keyup.enter="search()"
+            v-model="searchItem.phone"
+            maxlength="10"
+            type="text"
+            class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+          />
+        </div>
+      </div>
+
+      <div
+        class="w-32 mx-auto mb-2 cursor-pointer items-center flex flex-row"
+        @click="search()"
+      >
         <div class="w-2/5 text-right lg:w-max text-md">&nbsp;</div>
         <div
           class="flex flex-row space-x-2 justify-center items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
@@ -74,17 +80,16 @@ export default {
   data() {
     return {
       searchItem: {
-        customerId: "",
         fname: "",
         lname: "",
-        // roomNum: "",
+        phone: "",
       },
     };
   },
 
   methods: {
     search() {
-      this.$parent.searchCustomerList(this.searchItem);
+      this.$parent.searchMaintainerList(this.searchItem);
     },
   },
 };

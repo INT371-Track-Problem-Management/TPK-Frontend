@@ -1,7 +1,6 @@
 <template>
   
   <div>
-    <SearchPanel />
     <RequestList />
   </div>
 
@@ -9,12 +8,11 @@
 
 <script>
 
-import SearchPanel from "@/components/report/SearchPanel.vue"
 import RequestList from "@/components/report/RequestList.vue"
 
 export default {
 
-  components: { SearchPanel, RequestList }
+  components: { RequestList }
 
 }
 </script>

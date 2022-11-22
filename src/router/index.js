@@ -7,12 +7,13 @@ import RegisterPage from "../views/register/RegisterPage.vue";
 import RegisterFormPage from "../views/register/RegisterFormPage.vue";
 import RepairStatusPage from "../views/RepairStatusPage.vue";
 
-import ApartmentsPage from "../views/apartments/ApartmentsPage.vue";
-import ApartmentsAddPage from "../views/apartments/addPage.vue";
-import ApartmentsSetRoomPage from "../views/apartments/setRoomPage.vue";
+// import ApartmentsPage from "../views/apartments/ApartmentsPage.vue";
+// import ApartmentsAddPage from "../views/apartments/addPage.vue";
+// import ApartmentsSetRoomPage from "../views/apartments/setRoomPage.vue";
 
 import DashBoardPage from "../views/DashBoardPage.vue";
 import DashboardMemberPage from "../views/dashboard/ManageMember.vue";
+import DashboardMaintainerPage from "../views/dashboard/MaintainerList.vue";
 import DashboardRoomStatusPage from "../views/dashboard/RoomStatus.vue";
 import DashboardRoomListPage from "../views/apartments-config/RoomList.vue";
 
@@ -51,13 +52,6 @@ const routes = [
     props: true,
     meta: { layout: "AppLayoutRegister" },
   },
-  // {
-  //   path: "/register/select",
-  //   name: "register-select",
-  //   component: RegisterSelectPage,
-  //   props: true,
-  //   meta: { layout: "AppLayoutRegister" },
-  // },
   {
     path: "/register/form",
     name: "register-form",
@@ -77,23 +71,23 @@ const routes = [
     component: RepairStatusPage,
   },
 
-  {
-    path: "/apartments",
-    name: "apartments",
-    component: ApartmentsPage,
-  },
-  {
-    path: "/apartments/add",
-    name: "apartments-add",
-    component: ApartmentsAddPage,
-    meta: { layout: "AppLayoutApartment" },
-  },
-  {
-    path: "/apartments/set_room",
-    name: "apartments-set-room",
-    component: ApartmentsSetRoomPage,
-    meta: { layout: "AppLayoutApartment" },
-  },
+  // {
+  //   path: "/apartments",
+  //   name: "apartments",
+  //   component: ApartmentsPage,
+  // },
+  // {
+  //   path: "/apartments/add",
+  //   name: "apartments-add",
+  //   component: ApartmentsAddPage,
+  //   meta: { layout: "AppLayoutApartment" },
+  // },
+  // {
+  //   path: "/apartments/set_room",
+  //   name: "apartments-set-room",
+  //   component: ApartmentsSetRoomPage,
+  //   meta: { layout: "AppLayoutApartment" },
+  // },
 
   {
     path: "/dashboard/content",
@@ -110,6 +104,17 @@ const routes = [
     path: "/dashboard/member",
     name: "dashboard-member",
     component: DashboardMemberPage,
+    meta: {
+      requiresAuth: true,
+      adminAuth: true,
+      userAuth: false,
+      layout: "AppLayoutAdmin",
+    },
+  },
+  {
+    path: "/dashboard/maintainer",
+    name: "dashboard-maintainer",
+    component: DashboardMaintainerPage,
     meta: {
       requiresAuth: true,
       adminAuth: true,
@@ -288,6 +293,15 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+  scrollBehavior() {
+    // if (to.hash) {
+      return {
+        // el: to.hash,
+        behavior: 'smooth',
+        to: 0
+      }
+    // }
+  }
 });
 
 router.beforeEach((to, from, next) => {

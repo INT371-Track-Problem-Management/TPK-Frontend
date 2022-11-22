@@ -1,7 +1,6 @@
 <template>
   
     <div>
-      <SearchPanel />
       <StaffList />
     </div>
   
@@ -9,12 +8,11 @@
   
   <script>
   
-  import SearchPanel from "@/components/manage_staff/SearchPanel.vue"
   import StaffList from "@/components/manage_staff/StaffList.vue"
   
   export default {
   
-    components: { SearchPanel, StaffList }
+    components: { StaffList }
   
   }
   </script>
