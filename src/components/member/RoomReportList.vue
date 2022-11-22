@@ -365,7 +365,7 @@
                   v-if="validate.categoriesReport"
                   class="text-rangmod-red px-1"
                 >
-                  *กรุณาใส่ประเภทปัญหา
+                  *จำเป็น
                 </div>
               </div>
 
@@ -442,7 +442,7 @@
               <div class="flex flex-row">
                 <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
                 <div v-if="validate.title" class="text-rangmod-red px-1">
-                  *กรุณาใส่หัวข้อปัญหา
+                  *จำเป็น
                 </div>
               </div>
               <div class="mb-3">
@@ -457,7 +457,7 @@
               <div class="flex flex-row">
                 <div class="text-rangmod-black ml-1">รายละเอียดปัญหา</div>
                 <div v-if="validate.title" class="text-rangmod-red px-1">
-                  *กรุณาใส่รายละเอียดปัญหา
+                  *จำเป็น
                 </div>
               </div>
               <div class="mb-3">
@@ -491,20 +491,40 @@
               >
                 {{ file.name }}
               </div>
+              <div
+                v-else-if="validate.file"
+                class="text-rangmod-red font-sm flex flex-col justify-center"
+              >
+                *จำเป็น
+              </div>
             </div>
 
             <!-- <img v-if="preview" :src="preview" /> -->
 
             <div v-for="(engage, i) in reportEngageDate" :key="i">
               <div class="mb-4">
-                <div v-if="i == 0" class="text-rangmod-black ml-1">
-                  วันและเวลาที่นัด
+                <div
+                  v-if="i == 0"
+                  class="text-rangmod-black ml-1 flex flex-row space-x-1"
+                >
+                  <div>วันและเวลาที่นัด</div>
+                  <div v-if="validateDate[i].date" class="text-rangmod-red font-sm">
+                    *ใส่วันเวลาใหม่
+                  </div>
                 </div>
-                <div v-else class="text-rangmod-black ml-1">
-                  วันและเวลา ({{ i + 1 }})
+                <div
+                  v-else
+                  class="text-rangmod-black ml-1 flex flex-row space-x-1"
+                >
+                  <div>วันและเวลา ({{ i + 1 }})</div>
+                  <div v-if="validateDate[i].date" class="text-rangmod-red font-sm">
+                    *ใส่วันเวลาใหม่
+                  </div>
                 </div>
                 <div class="flex flex-col">
-                  <div class="flex flex-col ssm:flex-row ssm:space-x-2 space-y-1 ssm:space-y-0 justify-between">
+                  <div
+                    class="flex flex-col ssm:flex-row ssm:space-x-2 space-y-1 ssm:space-y-0 justify-between"
+                  >
                     <div class="flex flex-col w-full">
                       <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                       <input
@@ -841,7 +861,15 @@ export default {
         title: false,
         description: false,
         categoriesReport: false,
+        file: false,
       },
+      validateDate: [
+        { date: false },
+        { date: false },
+        { date: false },
+        { date: false },
+      ],
+
       reportEngageDate: [
         {
           title: "date1",
@@ -972,16 +1000,90 @@ export default {
   },
   methods: {
     test() {
-      console.log(this.engageForSend);
+      // console.log(this.engageForSend);
+      // console.log(this.reportForSend.dates);
+
+      const date1 = new Date(this.reportForSend.dates[0].date);
+      const date2 = new Date(this.reportForSend.dates[1].date);
+      const date3 = new Date(this.reportForSend.dates[2].date);
+      const date4 = new Date(this.reportForSend.dates[3].date);
+      if (date2 - date1 >= 3600000) {
+        if (date3 - date2 >= 3600000) {
+          if (date4 - date3 >= 3600000) {
+            return true;
+          } else {
+            this.validate.date3 = true;
+            return false;
+          }
+        } else {
+          this.validate.date2 = true;
+          return false;
+        }
+      } else {
+        this.validate.date1 = true;
+        return false;
+      }
+    },
+    checkfixDate() {
+      const date = new Date();
+      const now = date.getDate();
+      const date1 = new Date(this.reportForSend.dates[0].date);
+      const date2 = new Date(this.reportForSend.dates[1].date);
+      const date3 = new Date(this.reportForSend.dates[2].date);
+      const date4 = new Date(this.reportForSend.dates[3].date);
+      console.log(date1.getDate());
+      console.log(now);
+      console.log(date1.getDate() - now);
+      if (date1.getDate() - now >= 1) {
+        if (date2 - date1 >= 3600000) {
+          if (date3 - date2 >= 3600000) {
+            if (date4 - date3 >= 3600000) {
+              console.log(true);
+              console.log(this.validateDate);
+              return true;
+            } else {
+              this.validateDate[3].date = true;
+              console.log(false);
+              console.log(this.validateDate);
+              return false;
+            }
+          } else {
+            this.validateDate[2].date = true;
+            console.log(false);
+            console.log(this.validateDate);
+            return false;
+          }
+        } else {
+          this.validateDate[1].date = true;
+          console.log(false);
+          console.log(this.validateDate);
+          return false;
+        }
+      } else {
+        this.validateDate[0].date = true;
+        console.log(false);
+        return false;
+      }
     },
     validation() {
-      this.title == ""
+      this.reportForSend.title == ""
         ? (this.validate.title = true)
         : (this.validate.title = false);
-      this.description == ""
+      this.reportForSend.description == ""
         ? (this.validate.description = true)
         : (this.validate.description = false);
-      return this.validate.title && this.validate.description;
+      this.reportForSend.categoriesReport == ""
+        ? (this.validate.categoriesReport = true)
+        : (this.validate.categoriesReport = false);
+      this.file == ""
+        ? (this.validate.file = true)
+        : (this.validate.file = false);
+      return (
+        this.validate.title ||
+        this.validate.description ||
+        this.validate.categoriesReport ||
+        this.validate.file
+      );
     },
     async create() {
       this.loadingData = true;
@@ -991,60 +1093,72 @@ export default {
         this.loadingData = false;
       }
     },
-    doFilter(id) {
-      console.log(`Filtered by ${id} !`);
-    },
-    doSort(id) {
-      console.log(`Sorted by ${id} !`);
-    },
     async sendReport() {
-      let formData = new FormData();
-      this.reportForSend.buildingId = this.buildingId;
-      let rfs = this.reportForSend;
-      this.modalBg = false;
-      this.loading = true;
-      let formJson = JSON.stringify({
-        title: rfs.title,
-        categoriesReport: rfs.categoriesReport,
-        reportDes: rfs.reportDes,
-        status: rfs.status,
-        roomId: rfs.roomId,
-        buildingId: rfs.buildingId,
-        step: rfs.step,
-        dates: rfs.dates,
-        updateBy: rfs.updateBy,
-      });
+      const validForm = this.validation()
+      const validDate = this.checkfixDate()
+      console.log(validForm);
+      console.log(validDate);
+      if (!this.validation() && this.checkfixDate()) {
+        let formData = new FormData();
+        this.reportForSend.buildingId = this.buildingId;
+        let rfs = this.reportForSend;
+        this.modalBg = false;
+        this.loading = true;
+        let formJson = JSON.stringify({
+          title: rfs.title,
+          categoriesReport: rfs.categoriesReport,
+          reportDes: rfs.reportDes,
+          status: rfs.status,
+          roomId: rfs.roomId,
+          buildingId: rfs.buildingId,
+          step: rfs.step,
+          dates: rfs.dates,
+          updateBy: rfs.updateBy,
+        });
 
-      formData.append("data", formJson);
-      formData.append("image", this.file);
+        formData.append("data", formJson);
+        formData.append("image", this.file);
 
-      const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/customer/report`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${this.token}`,
-          },
-          body: formData,
-        }
-      );
-      const data = res.json();
-      console.log(data);
-      return data.then(async (data) => {
-        if (typeof data === "number") {
-          this.loading = false;
-          this.sentReport = true;
-          setTimeout(() => {
-            this.sentReport = false;
-          }, 1500);
-          setTimeout(() => {
-            this.showModal = false;
-            this.clearData();
-          }, 2500);
-          this.reportList = await this.getReport();
-          this.filteredReport = this.reportList;
-        }
-      });
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/customer/report`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${this.token}`,
+            },
+            body: formData,
+          }
+        );
+        const data = res.json();
+        console.log(data);
+        return data.then(async (data) => {
+          if (typeof data === "number") {
+            this.loading = false;
+            this.sentReport = true;
+            setTimeout(() => {
+              this.sentReport = false;
+            }, 1500);
+            setTimeout(() => {
+              this.showModal = false;
+              this.clearData();
+            }, 2500);
+            this.reportList = await this.getReport();
+            this.filteredReport = this.reportList;
+          } else {
+            this.loading = false;
+          }
+        });
+      } else {
+        setTimeout(() => {
+          for(let i in this.validateDate) {
+            this.validateDate[i].date = false
+          }
+          this.validate.title = false
+          this.validate.description = false
+          this.validate.categoriesReport = false
+          this.validate.file = false
+        },2000)
+      }
     },
     async uploadImage() {
       document.getElementById("uploadImage").click();

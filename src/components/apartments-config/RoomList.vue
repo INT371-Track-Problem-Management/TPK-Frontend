@@ -5,9 +5,19 @@
     <div class="flex items-center">
       <div
         @click="this.$router.back()"
-        class="cursor-pointer hover:font-bold mx-4"
+        class="cursor-pointer hover:font-bold mr-2 items-center"
       >
-        {{ this.goback }}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          class="bi bi-chevron-left w-5 h-5"
+          viewBox="0 0 16 16"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+          />
+        </svg>
       </div>
       <div class="text-xl">ห้องพักอาคาร</div>
     </div>
@@ -215,6 +225,7 @@ export default {
     async create() {
       await this.getAllRoomByBuilding(this.$route.params.buildingId);
       await this.getRoomWithCustomerByBuildingId(this.$route.params.buildingId);
+      console.log(this.floorList);
     },
     async getAllRoomByBuilding(buildingId) {
       const res = await fetch(
@@ -234,8 +245,10 @@ export default {
       } else {
         const data = res.json();
         return data.then((data) => {
-          for (let floor in data.floors) {
-            this.floorList.push(data.floors[floor]);
+          if (this.floorList.length == 0) {
+            for (let floor in data.floors) {
+              this.floorList.push(data.floors[floor]);
+            }
           }
         });
       }
@@ -263,6 +276,7 @@ export default {
       });
     },
     showDetail(room) {
+      console.log(this.roomWithCustomerList);
       if (this.roomWithCustomerList.length == 0) {
         this.customerModal = { id: 0 };
       } else {
@@ -276,6 +290,7 @@ export default {
         }
       }
       this.customerModal.roomNum = room.roomNum;
+      console.log(this.customerModal);
       this.showModal = true;
     },
     async removeCustomer(room) {

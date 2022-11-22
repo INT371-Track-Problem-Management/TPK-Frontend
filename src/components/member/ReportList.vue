@@ -18,6 +18,11 @@
       >
       </lottie-player>
     </div>
+    <div v-else-if="noData" class="mx-auto w-full">
+      <div class="text-rangmod-black my-10 mx-auto w-fit">
+        ไม่มีรายงานปัญหา
+      </div>
+    </div>
     <div v-else>
       <div
         class="flex flex-col ssm-2:flex-row justify-end items-end space-x-4 transition-all"
@@ -558,7 +563,13 @@ export default {
       );
       const data = res.json();
       console.log(data);
-      return data;
+      return data.then((res) => {
+        if(res == null) {
+          this.loadingData = false; 
+          this.noData = true
+        }
+        return res
+      })
     },
     clearData() {
       this.title = "";
