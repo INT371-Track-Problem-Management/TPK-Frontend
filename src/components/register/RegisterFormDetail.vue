@@ -48,7 +48,7 @@
               <div v-if="validate.dob" class="text-rangmod-red px-1">
                 *กรุณาใส่วันเกิด
               </div>
-              <div v-if="validate.age " class="text-rangmod-red px-1">
+              <div v-if="validate.age" class="text-rangmod-red px-1">
                 *กรุณาใส่วันเกิดใหม่
               </div>
             </div>
@@ -144,7 +144,7 @@
             <div class="flex flex-row">
               <div class="text-rangmod-black ml-1">เบอร์มือถือ</div>
               <div v-if="validate.phone" class="text-rangmod-red px-1">
-                *กรุณาใส่เบอร์มือถือ
+                *กรุณาใส่เบอร์
               </div>
             </div>
             <input
@@ -227,9 +227,12 @@
         v-if="emailError"
         class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
       >
-      <div class="px-20 py-10 bg-white text-rangmod-red rounded-xl text-center">
-        อีเมลนี้ถูกใช้งานแล้ว <br><br> กรุณาใส่อีเมลใหม่
-      </div>
+        <div
+          class="px-20 py-10 bg-white text-rangmod-red rounded-xl text-center"
+        >
+          อีเมลนี้ถูกใช้งานแล้ว <br /><br />
+          กรุณาใส่อีเมลใหม่
+        </div>
       </div>
     </div>
   </div>
@@ -274,7 +277,7 @@ export default {
         age: false,
       },
       registeredCustomer: false,
-      emailError: false
+      emailError: false,
     };
   },
   computed: {
@@ -314,7 +317,7 @@ export default {
         this.validate.dob ||
         this.validate.phone ||
         this.validate.address ||
-        this.validate.age 
+        this.validate.age
       );
     },
     async registerCustomer() {
@@ -340,14 +343,9 @@ export default {
         );
         const data = res.json();
         return data.then((res) => {
-          if (res.Message.includes('Duplicate entry')) {
-            this.loading = false;
-            this.emailError = true;
-            setTimeout(() => {
-              this.emailError = false;
-              this.$router.push(`/register`);
-            }, 3000);
-          } else {
+          console.log(res);
+          if (res !== Number) {
+            console.log('success');
             this.loading = false;
             this.registeredCustomer = true;
             setTimeout(() => {
@@ -356,6 +354,13 @@ export default {
             setTimeout(() => {
               this.$router.push(`/login`);
             }, 2500);
+          } else {
+            this.loading = false;
+            this.emailError = true;
+            setTimeout(() => {
+              this.emailError = false;
+              this.$router.push(`/register`);
+            }, 3000);
           }
         });
       } else {
