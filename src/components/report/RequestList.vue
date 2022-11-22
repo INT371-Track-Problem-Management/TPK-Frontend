@@ -489,9 +489,6 @@ export default {
       });
     },
     statusFilter(status) {
-      // if(this.filterItem.sort.eng == 'reportId') {
-
-      // }
       this.filteredRequest = this.requestList;
       if (status.id == "A1") {
         this.filteredRequest = this.filteredRequest.filter((request) => {

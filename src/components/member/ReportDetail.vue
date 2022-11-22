@@ -59,7 +59,7 @@
         :class="openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '"
       >
         <div
-          class="md:px-16 mb-10 w-full"
+          class="z-10 md:px-16 mb-10 w-full"
           :class="
             openReportStatus
               ? 'delay-250 transition-all duration-200 max-h-min h-fit delay-150'
@@ -67,17 +67,51 @@
           "
         >
           <div
-            class="w-full"
+            class="z-10 w-full"
             :class="
               openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '
             "
           >
-            <div class="flex flex-row justify-center my-10 items-center w-full">
+            <div
+              class="z-10 flex flex-row justify-center my-10 items-center w-full"
+              :class="
+                openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '
+              "
+            >
               <div
-                class="items-center rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-yellow bg-rangmod-stat-light-yellow"
+                v-if="statusIsCancel1 || statusIsCancel2"
+                class="z-10 items-center rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-red bg-rangmod-stat-light-red"
+                :class="
+                  openReportStatus
+                    ? 'max-h-min h-fit delay-150'
+                    : 'max-h-[0vh] '
+                "
               >
                 <div
-                  class="items-center w-full h-full flex flex-col justify-center"
+                  class="z-10 items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    src="@/assets/images/sent.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  แจ้งปัญหา
+                </div>
+              </div>
+              <div
+                v-else
+                class="z-10 items-center rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-yellow bg-rangmod-stat-light-yellow"
+                :class="
+                  openReportStatus
+                    ? 'max-h-min h-fit delay-150'
+                    : 'max-h-[0vh] '
+                "
+              >
+                <div
+                  class="z-10 items-center w-full h-full flex flex-col justify-center"
                 >
                   <img
                     src="@/assets/images/sent.png"
@@ -92,15 +126,54 @@
               </div>
 
               <div
+                v-if="statusIsCancel1 || statusIsCancel2"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3 bg-rangmod-stat-red"
+              ></div>
+              <div
+                v-else
                 class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
                 :class="
-                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                  statusIsPrepare
+                    ? 'bg-rangmod-stat-yellow'
+                    : 'bg-rangmod-stat-gray'
                 "
               ></div>
               <div
+                v-if="statusIsCancel1 || statusIsCancel2"
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-red bg-rangmod-stat-light-red"
+              >
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    v-if="statusIsCancel2"
+                    src="@/assets/images/success.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                  <img
+                    v-else
+                    src="@/assets/images/cancelled.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  v-if="statusIsCancel2"
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  รับเรื่อง
+                </div>
+                <div
+                  v-else
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  ยกเลิก
+                </div>
+              </div>
+              <div
+                v-else
                 class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
                 :class="
-                  true
+                  statusIsPrepare
                     ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
                     : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
                 "
@@ -109,7 +182,7 @@
                   class="items-center w-full h-full flex flex-col justify-center"
                 >
                   <img
-                    v-if="true"
+                    v-if="statusIsPrepare"
                     src="@/assets/images/success.png"
                     class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
                   />
@@ -127,15 +200,48 @@
               </div>
 
               <div
+                v-if="statusIsCancel2"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3 bg-rangmod-stat-red"
+              ></div>
+              <div
+                v-else
                 class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
                 :class="
-                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                  statusIsPrepare
+                    ? 'bg-rangmod-stat-yellow'
+                    : 'bg-rangmod-stat-gray'
                 "
               ></div>
               <div
+                v-if="statusIsCancel2"
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-red bg-rangmod-stat-light-red"
+              >
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    src="@/assets/images/sand.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  v-if="statusIsCancel2"
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  รอดำเนินการ
+                </div>
+                <div
+                  v-else
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  ยกเลิก
+                </div>
+              </div>
+              <div
+                v-else
                 class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
                 :class="
-                  true
+                  statusIsPrepare
                     ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
                     : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
                 "
@@ -144,7 +250,7 @@
                   class="items-center w-full h-full flex flex-col justify-center"
                 >
                   <img
-                    v-if="true"
+                    v-if="statusIsPrepare"
                     src="@/assets/images/sand.png"
                     class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
                   />
@@ -162,15 +268,42 @@
               </div>
 
               <div
+                v-if="statusIsCancel2"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3 bg-rangmod-stat-red"
+              ></div>
+              <div
+                v-else
                 class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
                 :class="
-                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                  statusIsFinish
+                    ? 'bg-rangmod-stat-yellow'
+                    : 'bg-rangmod-stat-gray'
                 "
               ></div>
               <div
+                v-if="statusIsCancel2"
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-red bg-rangmod-stat-light-red"
+              >
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    v-if="statusIsCancel2"
+                    src="@/assets/images/cancelled.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  ยกเลิก
+                </div>
+              </div>
+              <div
+                v-else
                 class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
                 :class="
-                  true
+                  statusIsFinish
                     ? 'border-rangmod-stat-green bg-rangmod-stat-light-green'
                     : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
                 "
@@ -179,7 +312,7 @@
                   class="items-center w-full h-full flex flex-col justify-center"
                 >
                   <img
-                    v-if="true"
+                    v-if="statusIsFinish"
                     src="@/assets/images/check.png"
                     class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
                   />
@@ -299,7 +432,7 @@
               <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
               <div class="mb-5">
                 <div
-                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider truncate max-w-max"
                 >
                   {{ reportDetail.title }}
                 </div>
@@ -1535,18 +1668,28 @@ export default {
       ],
       newEngageForSelect: [],
       newEngageForSend: [],
+      allStatus: []
     };
   },
   computed: {
     isCancel() {
       return this.reportDetail.status == "S6";
     },
-    statusIsAccept() {
-      return true;
+    statusIsPrepare() {
+      return this.allStatus.includes("S4");
     },
-    // checkToday() {
-
-    // }
+    statusIsPostpone() {
+      return this.allStatus.includes("R1");
+    },
+    statusIsFinish() {
+      return this.allStatus.includes("S7");
+    },
+    statusIsCancel1() {
+      return this.allStatus.includes("S6") && this.allStatus.includes("S1");
+    },
+    statusIsCancel2() {
+      return this.allStatus.includes("S6") && this.allStatus.includes("S4");
+    },
   },
   mounted() {
     this.create();
@@ -1590,6 +1733,7 @@ export default {
         this.reportEngage.maintainerId
       );
       await this.getAllReportStatus(this.$route.params.id);
+      console.log(this.allStatus);
       this.postponeDetail.description = this.activateStatus[0].detail;
       for (let i in this.reportEngage.fixDate) {
         this.postponeDetail.newEngageDate.push({
@@ -1719,6 +1863,7 @@ export default {
           for (let j in this.statusList) {
             if (this.activateStatus[i].status == this.statusList[j].id) {
               this.activateStatus[i].th = this.statusList[j].name;
+              this.allStatus.push(this.activateStatus[i].status);
             }
           }
           this.activateStatus[i].isActive = true;

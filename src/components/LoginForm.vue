@@ -55,6 +55,7 @@
           <input
             @keyup.enter="doLogin()"
             v-model="password"
+            minlenght="4"
             :type="textPassword"
             class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
           />
@@ -179,8 +180,8 @@ export default {
             localStorage.setItem("token", this.token);
             localStorage.setItem("username", res.name);
             const image = this.getProfileMedia(this.userLogin.email);
+            console.log(image);
             localStorage.setItem("profileMedia", image);
-            console.log(localStorage.getItem("profileMedia"));
             if (this.userLogin.status == true) {
               this.goToPage(this.userLogin.role);
             } else {

@@ -186,7 +186,7 @@
         >
           <div class="w-10 h-10 rounded-full bg-rangmod-light-gray">
             <img
-              v-if="profileMedia != ''"
+              v-if="profileMedia != null"
               :src="profileMedia"
               class="rounded-full w-full h-full"
             />
@@ -293,6 +293,7 @@ export default {
   mounted() {
     // this.getProfileMedia();
     console.log(this.profileMedia == null);
+    console.log(this.profileMedia);
   },
   methods: {
     async getProfileMedia() {
