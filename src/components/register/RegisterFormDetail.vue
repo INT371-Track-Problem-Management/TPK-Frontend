@@ -1,228 +1,229 @@
 <template>
-  <div
-    class="font-primary bg-white w-4/5 md:w-2/3 lg:w-1/3 mx-auto my-4 p-10 rounded-xl shadow-md"
-  >
-    <div class="grid grid-cols-1 gap-4">
-      <div class="flex flex-row justify-between">
-        <div class="text-rangmod-purple text-3xl">กรอกข้อมูล</div>
-        <div class="text-rangmod-black text-xl">2/2</div>
-      </div>
+  <div class="px-6">
+    <div
+      class="bg-white max-w-md min-w-[320px] mx-auto mt-4 px-5 py-6 rounded-xl shadow-md"
+    >
+      <div class="grid grid-cols-1 gap-4">
+        <div class="flex flex-row justify-between">
+          <div class="text-rangmod-purple text-3xl">กรอกข้อมูล</div>
+          <div class="text-rangmod-black text-xl">2/2</div>
+        </div>
 
-      <hr class="my-4" />
+        <hr class="my-4" />
 
-      <div class="mb-4">
-        <div class="text-rangmod-black px-1">ชื่อ</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.fname ? 'border-rangmod-red border' : ''">
-          <input v-model="fname"
+        <div class="mb-4">
+          <div class="flex flex-row">
+            <div class="text-rangmod-black ml-1">ชื่อ</div>
+            <div v-if="validate.fname" class="text-rangmod-red px-1">
+              *กรุณาใส่ชื่อ
+            </div>
+          </div>
+          <input
+            v-model="fname"
             type="text"
-            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.fname ? 'placeholder-rangmod-red text-sm' : ''"
-            :placeholder="this.validate.fname ? 'กรุณาใส่ชื่อ' : ''"
+            class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
           />
         </div>
-      </div>
 
-      <div class="mb-4">
-        <div class="text-rangmod-black px-1">นามสกุล</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.lname ? 'border-rangmod-red border' : ''">
-          <input v-model="lname"
+        <div class="mb-4">
+          <div class="flex flex-row">
+            <div class="text-rangmod-black ml-1">นามสกุล</div>
+            <div v-if="validate.lname" class="text-rangmod-red px-1">
+              *กรุณาใส่นามสกุล
+            </div>
+          </div>
+          <input
+            v-model="lname"
             type="text"
-            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.lname ? 'placeholder-rangmod-red text-sm' : ''"
-            :placeholder="this.validate.lname ? 'กรุณาใส่นามสกุล' : ''"
+            class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
           />
         </div>
-      </div>
 
-      <div class="mb-4 grid se:grid-cols-2 grid-cols-1 gap-2">
-        <div class="text-rangmod-black px-1">
-          วันเกิด
-          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.dob ? 'border-rangmod-red border' : ''">
-            <input v-model="dob"
+        <div
+          class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0"
+        >
+          <div class="w-full">
+            <div class="flex flex-row">
+              <div class="text-rangmod-black ml-1">วันเกิด</div>
+              <div v-if="validate.dob" class="text-rangmod-red px-1">
+                *กรุณาใส่วันเกิด
+              </div>
+              <div v-if="!invalidAge" class="text-rangmod-red px-1">
+                *กรุณาใส่วันเกิดใหม่
+              </div>
+            </div>
+            <input
+              v-model="dob"
               type="date"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              :class="this.validate.dob ? 'placeholder-rangmod-red' : ''"
-              :placeholder="this.validate.dob ? 'กรุณาใส่วันเกิด' : ''"
+              class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
             />
           </div>
-        </div>
 
-        <div class="text-rangmod-black px-1">
-          อายุ
-          <div class="border border-rangmod-gray bg-rangmod-light-gray rounded-xl px-3">
-            <input v-model="age" min="1"
+          <div class="w-full">
+            <div class="text-rangmod-black ml-1">อายุ</div>
+            <input
+              v-model="age"
+              min="1"
               type="number"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider bg-rangmod-light-gray"
+              class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider bg-rangmod-light-gray"
               readonly
             />
           </div>
         </div>
-      </div>
 
-      <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
-        <div class="text-rangmod-black px-1">
-              เพศ
-              <div>
-                <select
-                  v-model="sex"
-                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider cursor-pointer"
-                >
-                  <option disabled value="">เลือกเพศ</option>
-                  <option value="M">ชาย</option>
-                  <option value="F">หญิง</option>
-                </select>
+        <div
+          class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0"
+        >
+          <div class="text-rangmod-black w-full">
+            <div class="flex flex-row">
+              <div class="text-rangmod-black ml-1">เพศ</div>
+              <div v-if="validate.sex" class="text-rangmod-red px-1">
+                *กรุณาใส่เพศ
               </div>
             </div>
+            <div class="relative">
+              <div
+                @click="openGender = !openGender"
+                class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider flex flex-row justify-between cursor-pointer items-center"
+              >
+                <div v-if="sex != ''" class="cursor-pointer">
+                  {{ sex.sexTH }}
+                </div>
+                <div v-else class="cursor-pointer">เลือกเพศ</div>
 
-        <div class="text-rangmod-black px-1">
-          เบอร์มือถือ
-          <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.phone ? 'border-rangmod-red border' : ''">
-            <input v-model="phone"
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
+                  viewBox="0 0 16 16"
+                  :class="
+                    openGender ? 'transition-all rotate-180' : 'transition-all'
+                  "
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                  />
+                </svg>
+              </div>
+              <div
+                class="w-full absolute flex flex-col"
+                :class="
+                  openGender
+                    ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray'
+                    : 'max-h-[0vh]'
+                "
+              >
+                <div
+                  v-for="(sex, i) in sexes"
+                  :key="i"
+                  class="w-full flex justify-end"
+                  :class="
+                    openGender
+                      ? ' max-h-min h-fit hover:font-bold cursor-pointer'
+                      : 'max-h-[0vh]'
+                  "
+                >
+                  <div
+                    @click="(this.sex = sex), (openGender = false)"
+                    :class="
+                      openGender
+                        ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                        : 'opacity-0 max-h-[0vh]'
+                    "
+                  >
+                    {{ sex.sexTH }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="w-full">
+            <div class="flex flex-row">
+              <div class="text-rangmod-black ml-1">เบอร์มือถือ</div>
+              <div v-if="validate.phone" class="text-rangmod-red px-1">
+                *กรุณาใส่เบอร์มือถือ
+              </div>
+            </div>
+            <input
+              v-model="phone"
               maxlength="10"
               type="text"
-              class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-              :class="this.validate.phone ? 'placeholder-rangmod-red text-sm' : ''"
-              :placeholder="this.validate.phone ? 'กรุณาใส่เบอร์โทรศัพท์' : ''"
+              class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
             />
           </div>
         </div>
-      </div>
 
-      <div class="mb-4">
-        <div class="text-rangmod-black px-1">ที่อยู่</div>
-        <div class="border border-rangmod-gray rounded-xl px-3" :class="this.validate.address ? 'border-rangmod-red border' : ''">
-          <textarea v-model="address"
-            class="w-full border-1 border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-            :class="this.validate.address ? 'placeholder-rangmod-red text-sm' : ''"
-            :placeholder="this.validate.address ? 'กรุณาใส่ที่อยู่' : ''"
+        <div class="mb-4">
+          <div class="flex flex-row">
+            <div class="text-rangmod-black ml-1">ที่อยู่</div>
+            <div v-if="validate.address" class="text-rangmod-red px-1">
+              *กรุณาใส่ที่อยู่
+            </div>
+          </div>
+          <textarea
+            v-model="address"
+            class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
           ></textarea>
         </div>
-      </div>
 
-      <div class="flex flex-row space-x-4 justify-center">
-        <RouterLink to="/register">
-          <div
-            class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
-          >
-            กลับ
-          </div>
-        </RouterLink>
+        <div class="flex flex-row space-x-4 justify-center">
+          <RouterLink to="/register">
+            <div
+              class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              กลับ
+            </div>
+          </RouterLink>
 
-        <!-- <RouterLink :to="`/register/form?type=${type}`"> -->
           <div
-            v-on:click="checkRole()"
+            v-on:click="registerCustomer()"
             class="w-32 md:w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
           >
             ยืนยัน
           </div>
-        <!-- </RouterLink> -->
+        </div>
+      </div>
+
+      <div
+        v-if="loading || registeredCustomer"
+        class="bg-black fixed inset-0 opacity-60 visible z-[100]"
+      ></div>
+      <div
+        v-if="loading"
+        class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+      >
+        <lottie-player
+          autoplay
+          loop
+          mode="normal"
+          src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+          class="w-40 h-40"
+        >
+        </lottie-player>
+      </div>
+      <div
+        v-if="registeredCustomer"
+        class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+      >
+        <div class="text-rangmod-green items-center bg-white rounded-full">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="100"
+            height="100"
+            fill="currentColor"
+            class="bi bi-check-circle-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+            />
+          </svg>
+        </div>
       </div>
     </div>
-
-    <div
-      :class="
-        showModal
-          ? 'bg-black fixed inset-0 opacity-60 visible z-80'
-          : 'hidden opacity-0'
-      "
-      v-on:click="showModal = !showModal"
-    ></div>
-
-    <transition>
-      <div
-        v-show="showModal"
-        class="fixed w-full h-fit z-90 inset-0 pb-20 pt-10"
-      >
-        <div
-          class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <!-- Closed -->
-          <div class="flex justify-end">
-            <div @click="showModal = false" class="cursor-pointer">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </div>
-          </div>
-          <div class="text-2xl text-rangmod-purple mb-5 text-center">
-            กรุณากรอกรหัสยืนยันตัวตน OTP ที่ส่งไปยังอีเมล
-            nopphasorn.pin@mail.kmutt.ac.th
-          </div>
-          <div class="flex flex-row space-x-0 justify-center">
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-            <div class="rounded-xl px-3 w-1/12">
-              <input maxlength="1"
-                type="text"
-                class="w-full border-2 border-rangmod-yellow text-rangmod-black bg-rangmod-light-yellow rounded-xl outline-none leading-10 tracking-wider text-center"
-              />
-            </div>
-          </div>
-
-          <div class="flex flex-row space-x-4 justify-center">
-            <div
-              v-on:click="delete 'delete'"
-              class="w-40 my-4 py-2 text-lg rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
-            >
-              ยืนยัน
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
-    <transition name="bounce">
-      <div
-        v-if="assignedCustomer"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
-      >
-        <div
-          class="w-fit h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
-        >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ลงทะเบียนผู้พักอาศัยสำเร็จ
-          </div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -234,14 +235,27 @@ export default {
       role: this.$route.params.role,
       email: this.$route.params.email,
       password: this.$route.params.password,
-      fname: '',
-      lname: '',
-      sex: '',
-      dob: '',
-      // age: 1,
-      phone: '',
-      address: '',
+      fname: "",
+      lname: "",
+      sex: "",
+      dob: "",
+      phone: "",
+      address: "",
       showModal: false,
+      openGender: false,
+      loading: false,
+      sexes: [
+        {
+          id: 1,
+          sexTH: "ชาย",
+          sexEN: "M",
+        },
+        {
+          id: 2,
+          sexTH: "หญิง",
+          sexEN: "F",
+        },
+      ],
       validate: {
         fname: false,
         lname: false,
@@ -250,13 +264,16 @@ export default {
         phone: false,
         address: false,
       },
-      assignedCustomer: false,
+      registeredCustomer: false,
     };
   },
   computed: {
     age() {
-      return this.calculateAge(this.dob)
-    }
+      return this.calculateAge(this.dob);
+    },
+    invalidAge() {
+      return this.age < 0;
+    },
   },
   mounted() {
     // console.log(this.email)
@@ -265,72 +282,88 @@ export default {
   },
   methods: {
     validation() {
-      this.fname == "" ? this.validate.fname = true : this.validate.fname = false
-      this.lname == "" ? this.validate.lname = true : this.validate.lname = false
-      this.sex == "" ? this.validate.sex = true : this.validate.sex = false
-      this.dob == "" ? this.validate.dob = true : this.validate.dob = false
-      this.phone == "" ? this.validate.phone = true : this.validate.phone = false
-      this.address == "" ? this.validate.address = true : this.validate.address = false
-      setTimeout(() => {
-        this.validate.fname = false;
-        this.validate.lname = false;
-        this.validate.sex = false;
-        this.validate.dob = false;
-        this.validate.phone = false;
-        this.validate.address = false;
-          }, 3000);
-      return this.validate.fname && this.validate.lname && this.validate.sex && this.validate.dob && this.validate.phone &&   this.validate.address
-    },
-    checkRole() {
-      this.registerCustomer()
+      this.fname == ""
+        ? (this.validate.fname = true)
+        : (this.validate.fname = false);
+      this.lname == ""
+        ? (this.validate.lname = true)
+        : (this.validate.lname = false);
+      this.sex == "" ? (this.validate.sex = true) : (this.validate.sex = false);
+      this.dob == "" ? (this.validate.dob = true) : (this.validate.dob = false);
+      this.phone == ""
+        ? (this.validate.phone = true)
+        : (this.validate.phone = false);
+      this.address == ""
+        ? (this.validate.address = true)
+        : (this.validate.address = false);
+      return (
+        this.validate.fname ||
+        this.validate.lname ||
+        this.validate.sex ||
+        this.validate.dob ||
+        this.validate.phone ||
+        this.validate.address ||
+        this.invalidAge
+      );
     },
     async registerCustomer() {
-      if(!this.validation()) {
-      const res = await fetch(`${process.env.VUE_APP_API_URL}/registerCustomer`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          Email: this.email,
-          Password: this.password,
-          Fname: this.fname,
-          Lname: this.lname,
-          Sex: this.sex,
-          DateOfBirth: this.dob,
-          Age: this.age,
-          Phone: this.phone,
-          Address: this.address,
-        })
+      if (!this.validation()) {
+        this.loading = true;
+        const res = await fetch(
+          `${process.env.VUE_APP_API_URL}/registerCustomer`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              email: this.email,
+              password: this.password,
+              fname: this.fname,
+              lname: this.lname,
+              sex: this.sex.sexEN,
+              dateOfBirth: this.dob,
+              age: this.age,
+              phone: this.phone,
+              address: this.address,
+            }),
+          }
+        );
+        const data = res.json();
+        return data.then(async (res) => {
+          console.log(res);
+          if (res == "this email can not use!!!") {
+            alert("อีเมลนี้ใช้ไม่ได้!!!");
+            this.$router.push(`/register`);
+          } else {
+            this.loading = false;
+            this.registeredCustomer = true;
+            setTimeout(() => {
+              this.registeredCustomer = false;
+            }, 2000);
+            setTimeout(() => {
+              this.$router.push(`/login`);
+            }, 2500);
+          }
+        });
+      } else {
+        setTimeout(() => {
+          this.validate.fname = false;
+          this.validate.lname = false;
+          this.validate.sex = false;
+          this.validate.dob = false;
+          this.validate.phone = false;
+          this.validate.address = false;
+        }, 3000);
       }
-      )
-      const data = res.json()
-      return data
-      .then(async (res) => {
-        res = await data
-        if(res == 'this email can not use!!!') {
-          alert('อีเมลนี้ใช้ไม่ได้!!!')
-          this.$router.push(`/register`);
-        } else {
-          // alert("ลงทะเบียนสำเร็จ!");
-          this.assignedCustomer = true
-          setTimeout(() => {
-            this.assignedCustomer = false
-          }, 2000)
-          setTimeout(() => {
-            this.$router.push(`/login`);
-          }, 2500)
-        }
-      })
-    }
     },
     calculateAge(dob) {
       let currentDate = new Date();
       let birthDate = new Date(dob);
       let difference = currentDate - birthDate;
-      let age = Math.floor(difference/31557600000);
-      console.log(age)
-      return age
-    }
-  }
+      let age = Math.floor(difference / 31557600000);
+      console.log(age);
+      return age;
+    },
+  },
 };
 </script>
 

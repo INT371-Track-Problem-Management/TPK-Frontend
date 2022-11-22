@@ -23,7 +23,7 @@
     </div>
     <hr class="my-5 border-rangmod-purple" />
 
-    <div class="flex flex-col mx-16">
+    <div class="flex flex-col mx-0 ssm-3:mx-16 transition-all">
       <div
         class="z-20 w-full mx-auto rounded-2xl bg-rangmod-light-pink py-2 px-4 flex flex-row justify-between border border-rangmod-purple cursor-pointer"
       >
@@ -59,7 +59,7 @@
         :class="openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '"
       >
         <div
-          class="px-16 mb-10"
+          class="md:px-16 mb-10 w-full"
           :class="
             openReportStatus
               ? 'delay-250 transition-all duration-200 max-h-min h-fit delay-150'
@@ -67,131 +67,138 @@
           "
         >
           <div
-            class="flex flex-row justify-center my-10 items-center"
+            class="w-full"
             :class="
               openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '
             "
           >
-            <div
-              class="items-center rounded-full h-24 w-24 border-2 border-rangmod-stat-yellow bg-rangmod-stat-light-yellow"
-            >
+            <div class="flex flex-row justify-center my-10 items-center w-full">
               <div
-                class="items-center w-full h-full flex flex-col justify-center"
+                class="items-center rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2 border-rangmod-stat-yellow bg-rangmod-stat-light-yellow"
               >
-                <img src="@/assets/images/sent.png" class="h-16 w-16 mx-auto" />
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    src="@/assets/images/sent.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  แจ้งปัญหา
+                </div>
               </div>
-              <div class="text-base font-primary text-center mt-2">
-                แจ้งปัญหา
-              </div>
-            </div>
 
-            <div
-              class="h-2 w-20"
-              :class="
-                this.tempStatus == 'accept'
-                  ? 'bg-rangmod-stat-yellow'
-                  : 'bg-rangmod-stat-gray'
-              "
-            ></div>
-            <div
-              class="rounded-full h-24 w-24 border-2"
-              :class="
-                this.tempStatus == 'accept'
-                  ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
-                  : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
-              "
-            >
               <div
-                class="items-center w-full h-full flex flex-col justify-center"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
+                :class="
+                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                "
+              ></div>
+              <div
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
+                :class="
+                  true
+                    ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
+                    : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
+                "
               >
-                <img
-                  v-if="this.tempStatus == 'accept'"
-                  src="@/assets/images/success.png"
-                  class="h-16 w-16 mx-auto"
-                />
-                <img
-                  v-else
-                  src="@/assets/images/success_bw.png"
-                  class="h-16 w-16 mx-auto"
-                />
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    v-if="true"
+                    src="@/assets/images/success.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                  <img
+                    v-else
+                    src="@/assets/images/success_bw.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  รับเรื่อง
+                </div>
               </div>
-              <div class="text-base font-primary text-center mt-2">
-                รับเรื่อง
-              </div>
-            </div>
 
-            <div
-              class="h-2 w-20"
-              :class="
-                this.tempStatus == 'prepare'
-                  ? 'bg-rangmod-stat-yellow'
-                  : 'bg-rangmod-stat-gray'
-              "
-            ></div>
-            <div
-              class="rounded-full h-24 w-24 border-2"
-              :class="
-                this.tempStatus == 'prepare'
-                  ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
-                  : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
-              "
-            >
               <div
-                class="items-center w-full h-full flex flex-col justify-center"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
+                :class="
+                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                "
+              ></div>
+              <div
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
+                :class="
+                  true
+                    ? 'border-rangmod-stat-yellow bg-rangmod-stat-light-yellow'
+                    : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
+                "
               >
-                <img
-                  v-if="this.tempStatus == 'prepare'"
-                  src="@/assets/images/sand.png"
-                  class="h-16 w-16 mx-auto"
-                />
-                <img
-                  v-else
-                  src="@/assets/images/sand_bw.png"
-                  class="h-16 w-16 mx-auto"
-                />
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    v-if="true"
+                    src="@/assets/images/sand.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                  <img
+                    v-else
+                    src="@/assets/images/sand_bw.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  รอดำเนินการ
+                </div>
               </div>
-              <div class="text-base font-primary text-center mt-2">
-                รอดำเนินการ
-              </div>
-            </div>
 
-            <div
-              class="h-2 w-20"
-              :class="
-                this.tempStatus == 'success'
-                  ? 'bg-rangmod-stat-yellow'
-                  : 'bg-rangmod-stat-gray'
-              "
-            ></div>
-            <div
-              class="rounded-full h-24 w-24 border-2"
-              :class="
-                this.tempStatus == 'success'
-                  ? 'border-rangmod-stat-green bg-rangmod-stat-light-green'
-                  : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
-              "
-            >
               <div
-                class="items-center w-full h-full flex flex-col justify-center"
+                class="ssm:h-2 ssm:w-10 md:w-20 h-1 w-3"
+                :class="
+                  true ? 'bg-rangmod-stat-yellow' : 'bg-rangmod-stat-gray'
+                "
+              ></div>
+              <div
+                class="rounded-full ssm:h-20 ssm:w-20 md:h-24 md:w-24 h-12 w-12 border-2"
+                :class="
+                  true
+                    ? 'border-rangmod-stat-green bg-rangmod-stat-light-green'
+                    : 'border-rangmod-stat-gray bg-rangmod-stat-light-gray'
+                "
               >
-                <img
-                  v-if="this.tempStatus == 'success'"
-                  src="@/assets/images/check.png"
-                  class="h-16 w-16 mx-auto"
-                />
-                <img
-                  v-else
-                  src="@/assets/images/check_bw.png"
-                  class="h-16 w-16 mx-auto"
-                />
-              </div>
-              <div class="text-base font-primary text-center mt-2">
-                เสร็จสิ้น
+                <div
+                  class="items-center w-full h-full flex flex-col justify-center"
+                >
+                  <img
+                    v-if="true"
+                    src="@/assets/images/check.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                  <img
+                    v-else
+                    src="@/assets/images/check_bw.png"
+                    class="ssm:h-12 ssm:w-12 md:h-16 md:w-16 mx-auto h-6 w-6"
+                  />
+                </div>
+                <div
+                  class="text-base font-primary text-center mt-2 hidden ssm:block"
+                >
+                  เสร็จสิ้น
+                </div>
               </div>
             </div>
           </div>
           <div
-            class="flex flex-row justify-start mt-28"
+            class="flex flex-row justify-start ssm:mt-28 mt-14 xse:px-12 ssm:px-10 px-2"
             :class="
               openReportStatus ? 'max-h-min h-fit delay-150' : 'max-h-[0vh] '
             "
@@ -201,13 +208,37 @@
                 v-for="(status, i) in activateStatus"
                 :key="i"
                 class="flex flex-col-reverse items-start relative"
+                :class="
+                  openReportStatus
+                    ? 'max-h-min h-fit delay-150'
+                    : 'max-h-[0vh] '
+                "
               >
-                <div class="flex flex-col items-start -mt-4">
+                <div
+                  class="flex flex-col items-start -mt-4"
+                  :class="
+                    openReportStatus
+                      ? 'max-h-min h-fit delay-150'
+                      : 'max-h-[0vh] '
+                  "
+                >
                   <div
                     v-show="status.divider"
                     class="w-0.5 h-16 bg-rangmod-step-yellow ml-[2.75px] z-10"
+                    :class="
+                      openReportStatus
+                        ? 'max-h-min h-fit delay-150'
+                        : 'max-h-[0vh] '
+                    "
                   ></div>
-                  <div class="flex flex-row justify-start items-center -mt-4">
+                  <div
+                    class="flex flex-row justify-start items-center -mt-4"
+                    :class="
+                      openReportStatus
+                        ? 'max-h-min h-fit delay-150'
+                        : 'max-h-[0vh] '
+                    "
+                  >
                     <div
                       v-show="status.isActive"
                       class="w-2 h-2 rounded-full border z-20"
@@ -217,7 +248,15 @@
                           : 'border-rangmod-step-yellow bg-white'
                       "
                     ></div>
-                    <div v-show="status.isActive" class="px-3 text-base">
+                    <div
+                      v-show="status.isActive"
+                      class="px-3 text-base"
+                      :class="
+                        openReportStatus
+                          ? 'max-h-min h-fit delay-150'
+                          : 'max-h-[0vh] '
+                      "
+                    >
                       {{ status.th }} ({{ dateShowFormat(status.createdAt) }})
                     </div>
                   </div>
@@ -229,9 +268,21 @@
       </div>
     </div>
     <hr class="my-12 border-rangmod-purple" />
-
+    <div
+      v-if="loadingData"
+      class="w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
     <!-- <ReportForm :report="reportDetail"/> -->
-    <div class="mx-16">
+    <div v-else class="mx-16">
       <div class="flex flex-row justify-between mb-6">
         <div class="w-full flex justify-start">
           <div class="flex flex-col justify-start w-3/5">
@@ -374,10 +425,10 @@
                             </svg>
                           </div>
                           <div
-                            class="w-full absolute flex flex-col"
+                            class="z-[100] w-full absolute flex flex-col"
                             :class="
                               date.isOpenDate
-                                ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-gray rounded-lg bg-white divide-y divide-rangmod-light-gray z-50'
+                                ? 'py-2 px-4 transition-all max-h-48 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
                                 : 'max-h-[0vh]'
                             "
                           >
@@ -445,10 +496,10 @@
                             </svg>
                           </div>
                           <div
-                            class="w-full absolute flex flex-col"
+                            class="z-[100] w-full absolute flex flex-col"
                             :class="
                               date.isOpenSlot
-                                ? 'py-2 px-4 transition-all max-h-56 h-fit border-2 border-rangmod-gray rounded-lg bg-white divide-y divide-rangmod-light-gray z-50 overflow-y-scroll no-scrollbar'
+                                ? 'py-2 px-4 transition-all max-h-48 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
                                 : 'max-h-[0vh]'
                             "
                           >
@@ -544,11 +595,11 @@
                     ขอเปลี่ยนวันนัด
                   </div>
                   <div class="w-full">
-                    <div class="text-rangmod-black ml-1">รายละเอียดปัญหา</div>
+                    <div class="text-rangmod-black ml-1">เหตุผล</div>
                     <div class="mb-5">
                       <textarea
                         v-model="postponeDetail.description"
-                        class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                        class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                         readonly
                       ></textarea>
                     </div>
@@ -567,7 +618,7 @@
                             <div class="flex flex-col w-full">
                               <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                               <div
-                                class="w-full border bg-white border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                                class="w-full border bg-rangmod-light-gray border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                               >
                                 {{ splitDate(engage.date) }}
                               </div>
@@ -578,7 +629,7 @@
                               </div>
                               <div class="flex flex-row relative">
                                 <div
-                                  class="w-full border bg-white border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                                  class="w-full border bg-rangmod-light-gray border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                                 >
                                   {{ filterPeriod(engage.period) }}
                                 </div>
@@ -863,7 +914,6 @@
               </div>
             </div>
             </div> -->
-            
 
             <div class="flex flex-row space-x-4 justify-end">
               <div
@@ -1126,6 +1176,7 @@ export default {
       createdBy: localStorage.getItem("id"),
       reportDetail: {},
       reportEngage: {},
+      loadingData: false,
       loading: false,
       showImage: false,
       modalbg: false,
@@ -1292,7 +1343,7 @@ export default {
         description: "",
         newEngageDate: [],
       },
-      fixDate: '',
+      fixDate: "",
       assignedMaintainer: {},
       isEngageDateNow: false,
       rates: [
@@ -1493,19 +1544,20 @@ export default {
     statusIsAccept() {
       return true;
     },
+    // checkToday() {
+
+    // }
   },
   mounted() {
     this.create();
+    console.log();
   },
   methods: {
     filterSelectedDate() {
       for (let i in this.reportEngage.fixDate) {
         if (this.reportEngage.fixDate[i].id == this.reportEngage.selectedDate) {
           console.log(this.reportEngage.fixDate[i].date);
-          // const select = new Date(this.reportEngage.fixDate[i].date);
-          // console.log(select);
-          // console.log(Date.now());
-          this.fixDate = this.reportEngage.fixDate[i].date
+          this.fixDate = this.reportEngage.fixDate[i].date;
           break;
         }
       }
@@ -1529,6 +1581,7 @@ export default {
       // console.log(this.newEngageForSelect);
     },
     async create() {
+      this.loadingData = true;
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
       // console.log(this.reportDetail);
@@ -1544,8 +1597,30 @@ export default {
           period: this.reportEngage.fixDate[i].period,
         });
       }
+      if (
+        this.reportDetail &&
+        this.reportEngage &&
+        this.assignedMaintainer &&
+        this.activateStatus
+      ) {
+        this.loadingData = false;
+      }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
       this.filterSelectedDate();
+      const now = new Date();
+      const temp1 = this.splitDateOg(this.fixDate);
+      const temp2 = this.setUpperFloor(temp1);
+      const date1 = new Date(temp1);
+      const date2 = new Date(temp2);
+      const tt1 = now - date1;
+      const tt2 = now - date2;
+      console.log(now - 0);
+      console.log(now - date1);
+      console.log(now - date2);
+      console.log(date1 - date2);
+      console.log(tt1 - tt2 <= date2 - date1); // use
+      // console.log(this.setUpperFloor(temp));
+      // console.log(now);
     },
     async getReportById(reportId) {
       const res = await fetch(
@@ -1909,25 +1984,17 @@ export default {
       this.showImage = true;
       this.image = `${process.env.VUE_APP_API_URL}/download_report_image/${image}`;
     },
+    splitDateOg(datetime) {
+      // this.setUpperFloor(datetime.split("T")[0]);
+      return datetime.split("T")[0];
+    },
+    setUpperFloor(datetime) {
+      const res = datetime.split("-");
+      // console.log(`${res[0]}-${res[1]}-${this.pad(parseInt(res[2])+1)}`);
+      return `${res[0]}-${res[1]}-${this.pad(parseInt(res[2]) + 1)}`;
+    },
   },
 };
 </script>
 
-<style>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-</style>
+<style></style>

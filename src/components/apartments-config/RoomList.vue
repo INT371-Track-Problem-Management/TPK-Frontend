@@ -242,8 +242,7 @@ export default {
     },
     async getRoomWithCustomerByBuildingId(buildingId) {
       const res = await fetch(
-        `${process.env.VUE_APP_API_URL}/employee/GetAllRoomWithCustomer/?buildingId=` +
-          buildingId,
+        `${process.env.VUE_APP_API_URL}/employee/GetAllRoomWithCustomer/${buildingId}`,
         {
           method: "GET",
           headers: {
@@ -284,7 +283,7 @@ export default {
         `${process.env.VUE_APP_API_URL}/employee/roomRemoveCustomer/?id=` +
           room.id,
         {
-          method: "GET",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${this.token}`,

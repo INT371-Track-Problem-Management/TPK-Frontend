@@ -1,11 +1,13 @@
 <template>
+  <SearchPanel />
   <div
     class="bg-white rounded-xl text-rangmod-black font-primary my-10 px-5 shadow-md py-2"
   >
     <div class="text-xl">ข้อมูลผู้ดูแล</div>
     <hr class="my-4 border-rangmod-purple" />
 
-    <div v-if="this.role == 'A'"
+    <div
+      v-if="this.role == 'A'"
       class="w-44 my-5 cursor-pointer"
       @click="(showAddStaff1 = !showAddStaff1), (modalBg = !modalBg)"
     >
@@ -22,12 +24,11 @@
         <th class="py-4">รหัส</th>
         <th class="py-4">ชื่อ-นามสกุล</th>
         <th class="py-4">อีเมล</th>
-        <!-- <th class="py-4">บทบาท</th> -->
-        <th class="py-4"></th>
-        <th class="py-4"></th>
+        <th class="py-4">&nbsp;</th>
+        <th class="py-4">&nbsp;</th>
       </tr>
       <tr
-        v-for="(staff, i) in staffList"
+        v-for="(staff, i) in filteredStaff"
         :key="i"
         class="border-b border-rangmod-light-gray transition-all hover:bg-rangmod-light-pink/60"
       >
@@ -38,16 +39,9 @@
         <td class="text-center py-4 whitespace-nowrap">
           {{ staff.fname }} {{ staff.lname }}
         </td>
-        <!-- <td class="text-center py-4 whitespace-nowrap">{{ staff.date }}</td> -->
         <td class="text-center py-4 whitespace-nowrap">{{ staff.email }}</td>
-        <!-- <td class="text-center py-4 whitespace-nowrap">
-          <div v-for="(status, j) in statusList" :key="j">
-            <div v-if="staff.status == status.id" :class="status.color">
-              {{ status.title }}
-            </div>
-          </div>
-        </td> -->
-        <td v-if="this.role == 'A'"
+        <td
+          v-if="this.role == 'A'"
           class="text-center py-4 text-rangmod-red cursor-pointer transition-all hover:font-bold"
           @click="deleteStaff(staff.employeeId), (modalBg = !modalBg)"
         >
@@ -55,7 +49,11 @@
         </td>
         <td
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="(showStaffDetail = !showStaffDetail), (modalBg = !modalBg), showDetail(staff)"
+          @click="
+            (showStaffDetail = !showStaffDetail),
+              (modalBg = !modalBg),
+              showDetail(staff)
+          "
         >
           <div>รายละเอียด</div>
         </td>
@@ -64,40 +62,48 @@
 
     <div class="flex flex-col md:hidden mb-10">
       <div
-        v-for="(staff, i) in staffList"
+        v-for="(staff, i) in filteredStaff"
         :key="i"
         class="w-full rounded-xl shadow-md p-4 mb-4"
       >
+        <div class="flex flex-row justify-between font-bold">
+          <div>{{ i + 1 }}</div>
+        </div>
+        <hr class="my-2 border-rangmod-gray" />
         <div class="flex flex-row justify-between">
           <div>รหัส</div>
           <div>{{ staff.employeeId }}</div>
         </div>
         <div class="flex flex-row justify-between">
-          <div>ชื่อ-นามสกุล</div>
-          <div>{{ staff.fname }} {{ staff.lname }}</div>
+          <div>ชื่อ</div>
+          <div>{{ staff.fname }}</div>
         </div>
         <div class="flex flex-row justify-between">
-          <div>ว/ด/ป ลงทะเบียน</div>
-          <div>{{ staff.date }}</div>
+          <div>นามสกุล</div>
+          <div>{{ staff.lname }}</div>
         </div>
         <div class="flex flex-row justify-between">
-          <div>ห้อง</div>
-          <div>{{ staff.room }}</div>
+          <div>อีเมล</div>
+          <div>{{ staff.email }}</div>
         </div>
-
-        <div v-for="(status, j) in statusList" :key="j">
+        <div class="flex flex-row justify-between">
+          <div>&nbsp;</div>
           <div
-            v-if="staff.status == status.id"
-            class="flex flex-row justify-between"
+            v-if="this.role == 'A'"
+            class="text-center pt-4 text-rangmod-red cursor-pointer transition-all hover:font-bold"
+            @click="deleteStaff(staff.employeeId), (modalBg = !modalBg)"
           >
-            <div>สถานะ</div>
-            <div :class="status.color">{{ status.title }}</div>
+            ลบ
           </div>
         </div>
 
         <div
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="(showStaffDetail = !showStaffDetail), (modalBg = !modalBg)"
+          @click="
+            (showStaffDetail = !showStaffDetail),
+              (modalBg = !modalBg),
+              showDetail(staff)
+          "
         >
           <div>รายละเอียด</div>
         </div>
@@ -114,12 +120,8 @@
     ></div>
     <!-- Add --------------------------------------------------------------------------------------- -->
     <div
-      :class="
-        modalBg
-          ? 'bg-black fixed inset-0 opacity-60 visible z-[80]'
-          : 'hidden opacity-0'
-      "
-      v-on:click="modalBg = !modalBg"
+      v-if="modalBg"
+      class="bg-black fixed inset-0 opacity-60 visible z-[80]"
     ></div>
 
     <transition name="bounce">
@@ -256,6 +258,10 @@
         class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
+          v-if="loading || registeredStaff"
+          class="bg-black fixed inset-0 opacity-60 visible z-[95]"
+        ></div>
+        <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
           <div class="flex justify-end">
@@ -287,44 +293,35 @@
           <hr class="my-4" />
 
           <div class="mb-4">
-            <div class="text-rangmod-black px-1">ชื่อ</div>
-            <!-- <div class=""> -->
+            <div class="text-rangmod-black px-1 ml-1">ชื่อ</div>
             <input
               v-model="addModal2.fname"
               type="text"
               class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
             />
-            <!-- </div> -->
           </div>
 
           <div class="mb-4">
-            <div class="text-rangmod-black px-1">นามสกุล</div>
-            <!-- <div class=""> -->
+            <div class="text-rangmod-black px-1 ml-1">นามสกุล</div>
             <input
               v-model="addModal2.lname"
               type="text"
               class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
             />
-            <!-- </div> -->
           </div>
 
-          <div class="mb-4 grid xse:grid-cols-2 grid-cols-1 gap-2">
-            <div class="text-rangmod-black px-1">
-              วันเกิด
-              <!-- <div class=""> -->
+          <div class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0">
+            <div class="w-full">
+              <div class="text-rangmod-black ml-1">วันเกิด</div>
               <input
                 v-model="addModal2.DateOfBirth"
                 type="date"
                 class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
               />
-              <!-- </div> -->
             </div>
 
-            <div class="text-rangmod-black px-1">
-              อายุ
-              <!-- <div
-                class="border border-rangmod-gray bg-rangmod-light-gray rounded-xl px-3"
-              > -->
+            <div class="w-full">
+              <div class="text-rangmod-black ml-1">อายุ</div>
               <input
                 v-model="age"
                 min="1"
@@ -332,77 +329,81 @@
                 class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider bg-rangmod-light-gray"
                 readonly
               />
-              <!-- </div> -->
             </div>
           </div>
 
-          <div class="mb-4 grid xse:grid-cols-2 gap-2 grid-cols-1">
-            <div class="text-rangmod-black px-1">
-              เพศ
-              <!-- <div class="border border-rangmod-gray rounded-xl px-3"> -->
-              <!-- <div
-                class="flex flex-row justify-between space-x-4 px-3 mr-3 rounded-xl outline-none leading-10 tracking-wider"
-              > -->
-
-              <div>
+          <div class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0">
+            <div class="text-rangmod-black w-full">
+              <div class="ml-1">เพศ</div>
+              <div class="relative">
                 <div
-                  @click="isActivateSex = !isActivateSex"
-                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider transition-all"
+                  @click="openGender = !openGender"
+                  class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider flex flex-row justify-between cursor-pointer items-center"
                 >
-                  <div class="flex items-center justify-between cursor-pointer">
-                    <!-- <div v-if="this.selectedMonth.id != 0 && this.selectedSex.id == 0" class="text-rangmod-red transition-all">*กรุณาเลือกเพศ</div> -->
-                    <div class="transition-all">
-                      {{ this.selectedSex.sexTH }}
-                    </div>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="16"
-                      height="16"
-                      fill="currentColor"
-                      class="bi bi-caret-down-fill"
-                      viewBox="0 0 16 16"
+                  <div v-if="addModal2.sex != ''" class="cursor-pointer">
+                    {{ addModal2.sex.sexTH }}
+                  </div>
+                  <div v-else class="cursor-pointer">เลือกเพศ</div>
+
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
+                    viewBox="0 0 16 16"
+                    :class="
+                      openGender
+                        ? 'transition-all rotate-180'
+                        : 'transition-all'
+                    "
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                    />
+                  </svg>
+                </div>
+                <div
+                  class="w-full absolute flex flex-col"
+                  :class="
+                    openGender
+                      ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray'
+                      : 'max-h-[0vh]'
+                  "
+                >
+                  <div
+                    v-for="(sex, i) in sexes"
+                    :key="i"
+                    class="w-full flex justify-end"
+                    :class="
+                      openGender
+                        ? ' max-h-min h-fit hover:font-bold cursor-pointer'
+                        : 'max-h-[0vh]'
+                    "
+                  >
+                    <div
+                      @click="(addModal2.sex = sex), (openGender = false)"
                       :class="
-                        isActivateSex
-                          ? 'transition-all rotate-180'
-                          : 'transition-all'
+                        openGender
+                          ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                          : 'opacity-0 max-h-[0vh]'
                       "
                     >
-                      <path
-                        d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-                      />
-                    </svg>
-                  </div>
-                  <transition name="bounce">
-                    <div v-show="isActivateSex" class="flex flex-row-reverse">
-                      <div
-                        class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
-                      >
-                        <div v-for="(sex, i) in sexes" :key="i">
-                          <div
-                            class="py-2 hover:font-bold text-right cursor-pointer"
-                            @click="
-                              (this.selectedSex = sex), (isActivateSex = true)
-                            "
-                          >
-                            {{ sex.sexTH }}
-                          </div>
-                        </div>
-                      </div>
+                      {{ sex.sexTH }}
                     </div>
-                  </transition>
+                  </div>
                 </div>
               </div>
             </div>
-            <div class="text-rangmod-black px-1">
-              เบอร์มือถือ
-              <!-- <div class=""> -->
+            <div class="w-full">
+              <div class="text-rangmod-black ml-1">เบอร์มือถือ</div>
               <input
                 v-model="addModal2.phone"
                 maxlength="10"
                 type="text"
                 class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
               />
-              <!-- </div> -->
             </div>
           </div>
 
@@ -433,19 +434,36 @@
             </div>
           </div>
         </div>
-      </div>
-    </transition>
-
-    <transition name="bounce">
-      <div
-        v-if="registeredStaff"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
-      >
         <div
-          class="w-1/6 h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+          v-if="loading"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
         >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            ลงทะเบียนผู้ดูแลสำเร็จ
+          <lottie-player
+            autoplay
+            loop
+            mode="normal"
+            src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+            class="w-40 h-40"
+          >
+          </lottie-player>
+        </div>
+        <div
+          v-if="registeredStaff"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+        >
+          <div class="text-rangmod-green items-center bg-white rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              fill="currentColor"
+              class="bi bi-check-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -627,11 +645,23 @@
         </div>
       </div>
     </transition>
+    <div v-if="loading" class="flex justify-center">
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
   </div>
 </template>
 
 <script>
+import SearchPanel from "@/components/manage_staff/SearchPanel.vue";
 export default {
+  components: { SearchPanel },
   data() {
     return {
       token: localStorage.getItem("token"),
@@ -640,18 +670,10 @@ export default {
       showAddStaff1: false,
       showAddStaff2: false,
       modalBg: false,
-
-      staffDetailModal: {
-        // employeeId: 1,
-        // fname: "ธนวินท์",
-        // lname: "วัตราเศรษฐ์",
-        // DateOfBirth: "21/08/2000",
-        // age: 22,
-        // sex: "ชาย",
-        // phone: "0804341156",
-        // address: "บ้าน",
-        // email: "thanawin.wnz@gmail.com",
-      },
+      loading: true,
+      openGender: false,
+      registeredStaff: false,
+      staffDetailModal: {},
       addModal1: {
         email: "",
         password: "",
@@ -662,38 +684,26 @@ export default {
         fname: "",
         lname: "",
         DateOfBirth: "",
-        // age: 1,
         sex: "",
         phone: "",
         address: "",
       },
       sexes: [
         {
-          id: 0,
-          sexTH: "เลือกเพศ",
-          sexEN: "selectSex",
-        },
-        {
           id: 1,
           sexTH: "ชาย",
-          sexEN: "male",
+          sexEN: "M",
         },
         {
           id: 2,
           sexTH: "หญิง",
-          sexEN: "female",
+          sexEN: "F",
         },
       ],
-      selectedSex: {
-        id: 0,
-        sexTH: "เลือกเพศ",
-        sexEN: "selectSex",
-      },
-      isActivateSex: false,
       staffList: [],
+      filteredStaff: [],
       textPassword: "password",
       textPasswordConfirm: "password",
-      registeredStaff: false,
     };
   },
   mounted() {
@@ -707,6 +717,7 @@ export default {
   methods: {
     async create() {
       this.staffList = await this.getStaffs();
+      this.filteredStaff = this.staffList;
     },
     async getStaffs() {
       const res = await fetch(
@@ -721,7 +732,10 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        return data.employees
+        if (data.employees) {
+          this.loading = false;
+          return data.employees;
+        }
       });
     },
     backStep() {
@@ -746,30 +760,32 @@ export default {
       this.clearData();
     },
     async registerStaff() {
-
+      this.loading = true;
+      this.modalBg = false;
       const res = await fetch(`${process.env.VUE_APP_API_URL}/registerOwner`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          Email: this.addModal1.email,
-          Password: this.addModal1.password,
-          Fname: this.addModal2.fname,
-          Lname: this.addModal2.lname,
-          Sex: this.addModal2.sex,
-          DateOfBirth: this.addModal2.DateOfBirth,
-          Age: this.age,
-          Phone: this.addModal2.phone,
-          Address: this.addModal2.address,
+          email: this.addModal1.email,
+          password: this.addModal1.password,
+          fname: this.addModal2.fname,
+          lname: this.addModal2.lname,
+          sex: this.addModal2.sex.sexEN,
+          dateOfBirth: this.addModal2.DateOfBirth,
+          age: this.age,
+          phone: this.addModal2.phone,
+          address: this.addModal2.address,
+          position: "staff",
         }),
       });
       const data = res.json();
       console.log(data);
       return data.then(async (res) => {
         if (res == "this email can not use!!!") {
+          this.loading = false;
           alert("อีเมลนี้ใช้ไม่ได้!!!");
         } else {
-          // alert("ลงทะเบียนสำเร็จ!");
-          this.staffList = await this.getStaffs();
+          this.loading = false;
           this.registeredStaff = true;
           setTimeout(() => {
             this.registeredStaff = false;
@@ -777,15 +793,17 @@ export default {
           setTimeout(() => {
             this.showAddStaff2 = false;
           }, 2500);
-          this.modalBg = false;
+          this.staffList = await this.getStaffs();
           this.clearData();
         }
       });
     },
     showDetail(staff) {
-      this.staffDetailModal = staff
-      this.staffDetailModal.dateOfBirth = this.dateShowFormat(staff.dateOfBirth)
-      this.staffDetailModal.sex = staff.sex == 'M' ? 'ชาย' : 'หญิง'
+      this.staffDetailModal = staff;
+      this.staffDetailModal.dateOfBirth = this.dateShowFormat(
+        staff.dateOfBirth
+      );
+      this.staffDetailModal.sex = staff.sex == "M" ? "ชาย" : "หญิง";
       // staffDetailModal: {
       //   employeeId: 1,
       //   fname: "ธนวินท์",
@@ -836,45 +854,22 @@ export default {
       });
       return formatedDate;
     },
+    searchStaffList(searchItem) {
+      this.filteredStaff = this.staffList;
+      this.filteredStaff = this.filteredStaff.filter((maintainer) => {
+        return maintainer.employeeId
+          .toString()
+          .includes(searchItem.employeeId.toString());
+      });
+      this.filteredStaff = this.filteredStaff.filter((maintainer) => {
+        return maintainer.fname.includes(searchItem.fname);
+      });
+      this.filteredStaff = this.filteredStaff.filter((maintainer) => {
+        return maintainer.lname.includes(searchItem.lname);
+      });
+    },
   },
 };
 </script>
 
-<style>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-/* .bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-} */
-select {
-  -webkit-appearance: none;
-}
-</style>
+<style></style>

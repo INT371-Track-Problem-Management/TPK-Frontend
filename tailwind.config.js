@@ -6,8 +6,11 @@ module.exports = {
   theme: {
     screens: {
         'se': '375px',
+        'xse-2': '425px',
         'xse': '466px',
         'ssm': '500px',
+        'ssm-2': '550px',
+        'ssm-3': '600px',
         'sm': '650px',
         'md': '768px',
         'xmd': '830px',
@@ -28,8 +31,8 @@ module.exports = {
         'rangmod-light-gray': "#EEEEEE",
         'rangmod-fog': "#F8F8F8",
         'rangmod-pink': "#FFECEC", 
-        'rangmod-dark-pink': "#FF8477",
         'rangmod-light-pink': "#F6F2FF",
+        'rangmod-light-purple-2': "#AAA0FF",
         'rangmod-light-purple': "#8699FF",
         'rangmod-purple': "#7364FF",
         'rangmod-light-yellow': "#FFE996",
@@ -42,6 +45,7 @@ module.exports = {
         'rangmod-dark-blue': "#4A80AA",
         'rangmod-light-blue': "#66C5FF",
         'rangmod-green': "#64BD79",
+        'rangmod-dark-pink': "#FF8EDF",
 
         'rangmod-cat-red': "#EB797D",
         'rangmod-cat-orange': "#FB9460",
@@ -66,6 +70,7 @@ module.exports = {
         'rangmod-selected-green' : "#64BD79",
 
         'rangmod-ppbtn-blue' : "#77ADFF",
+        'rangmod-ppbtn-purple' : "#CC33FF",
 
         'rangmod-font-light-purple' : "#A57CFF",
         'rangmod-font-purple' : "#7364FF",

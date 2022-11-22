@@ -4,158 +4,142 @@
   >
     <div class="text-xl">แดชบอร์ด</div>
     <hr class="my-4 border-rangmod-purple" />
-    <div class="flex flex-row space-x-2">
-      <!-- <div
-        @click="isActivateBoth = !isActivateBoth"
-        class="h-auto flex flex-col w-1/4 my-4 py-2 rounded-3xl text-rangmod-black border-2 border-rangmod-light-gray transition-all"
-        :class="isActivateBoth ? '' : 'hover:bg-rangmod-light-gray'"
-      >
-        <div class="flex items-center justify-between cursor-pointer px-4">
-          <div>{{ this.selectedBoth }}</div>
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-caret-down-fill"
-            viewBox="0 0 16 16"
-            :class="
-              isActivateBoth ? 'transition-all rotate-180' : 'transition-all'
-            "
-          >
-            <path
-              d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
-            />
-          </svg>
-        </div>
-        <transition name="bounce">
-          <div v-show="isActivateBoth" class="flex flex-row-reverse">
-            <div
-              class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
-            >
-              <div v-for="(both, i) in boths" :key="i">
-                <div
-                  class="py-2 hover:font-bold text-right cursor-pointer"
-                  @click="(this.selectedBoth = both), (isActivateBoth = true)"
-                >
-                  {{ both }}
-                </div>
-              </div>
+    <div class="mb-5 flex flex-col xse:flex-row xse:space-x-2 space-y-2 mx-2 max-w-screen-ssm-2">
+      <div class="w-full relative">
+        <div
+          @click="isActivateMonth = !isActivateMonth"
+          class="w-full bg-white border border-rangmod-light-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
+        >
+          <div class="cursor-pointer flex flex-row">
+            <div class="cursor-pointer">
+              {{ selectedMonth.name }}
             </div>
           </div>
-        </transition>
-      </div> -->
-
-      <div
-        @click="isActivateMonth = !isActivateMonth"
-        class="h-auto flex flex-col sm:w-1/4 ssm:w-1/3 w-1/2 my-4 py-2 rounded-3xl text-rangmod-black border-2 border-rangmod-light-gray transition-all"
-        :class="isActivateMonth ? '' : 'hover:bg-rangmod-light-gray'"
-      >
-        <div class="flex items-center justify-between cursor-pointer px-4">
-          <div>{{ this.selectedMonth.name }}</div>
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-caret-down-fill"
+            class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
             viewBox="0 0 16 16"
             :class="
               isActivateMonth ? 'transition-all rotate-180' : 'transition-all'
             "
           >
             <path
-              d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+              fill-rule="evenodd"
+              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
             />
           </svg>
         </div>
-        <transition name="bounce">
-          <div v-show="isActivateMonth" class="flex flex-row-reverse">
+        <div
+          class="z-[100] w-full absolute flex flex-col"
+          :class="
+            isActivateMonth
+              ? 'py-2 px-4 transition-all max-h-56 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
+              : 'max-h-[0vh]'
+          "
+        >
+          <div
+            v-for="(month, i) in months"
+            :key="i"
+            class="w-full flex justify-end"
+            :class="
+              isActivateMonth
+                ? 'max-h-56 h-fit hover:font-bold cursor-pointer'
+                : 'max-h-[0vh]'
+            "
+          >
             <div
-              class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
+              @click="
+                (selectedMonth = month),
+                  (isActivateMonth = false),
+                  getDashboard()
+              "
+              :class="
+                isActivateMonth
+                  ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                  : 'opacity-0 max-h-[0vh]'
+              "
             >
-              <div v-for="(month, i) in months" :key="i">
-                <div
-                  class="py-2 hover:font-bold text-right cursor-pointer"
-                  @click="
-                    (this.selectedMonth = month),
-                      (isActivateMonth = true),
-                      getDashboard()
-                  "
-                >
-                  {{ month.name }}
-                </div>
-              </div>
+              {{ month.name }}
             </div>
           </div>
-        </transition>
+        </div>
       </div>
-
-      <div
-        @click="isActivateYear = !isActivateYear"
-        class="h-auto flex flex-col sm:w-1/4 ssm:w-1/3 w-1/2 my-4 py-2 rounded-3xl text-rangmod-black border-2 border-rangmod-light-gray transition-all"
-        :class="
-          isActivateYear
-            ? ''
-            : 'hover:bg-rangmod-light-gray' &&
-              this.selectedMonth.id != 0 &&
-              this.selectedYear.id == 0
-            ? 'border-rangmod-light-red'
-            : ''
-        "
-      >
-        <div class="flex items-center justify-between cursor-pointer px-4">
-          <div
-            v-if="this.selectedMonth.id != 0 && this.selectedYear.id == 0"
-            class="text-rangmod-red transition-all"
-          >
-            *กรุณาเลือกปี
+      <div class="w-full relative">
+        <div
+          @click="isActivateYear = !isActivateYear"
+          class="w-full bg-white border border-rangmod-light-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
+        >
+          <div class="cursor-pointer flex flex-row space-x-1">
+            <div class="cursor-pointer">
+              {{ selectedYear.year }}
+            </div>
+            <div
+              v-if="selectedMonth.id != 0 && selectedYear.id == 0"
+              class="text-rangmod-red transition-all"
+            >
+              *กรุณาเลือกปี
+            </div>
           </div>
-          <div v-else class="transition-all">{{ this.selectedYear.year }}</div>
+
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="16"
             height="16"
             fill="currentColor"
-            class="bi bi-caret-down-fill"
+            class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
             viewBox="0 0 16 16"
             :class="
               isActivateYear ? 'transition-all rotate-180' : 'transition-all'
             "
           >
             <path
-              d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"
+              fill-rule="evenodd"
+              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
             />
           </svg>
         </div>
-        <transition name="bounce">
-          <div v-show="isActivateYear" class="flex flex-row-reverse">
+        <div
+          class="z-[100] w-full absolute flex flex-col"
+          :class="
+            isActivateYear
+              ? 'py-2 px-4 transition-all max-h-56 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
+              : 'max-h-[0vh]'
+          "
+        >
+          <div
+            v-for="(year, i) in years"
+            :key="i"
+            class="w-full flex justify-end"
+            :class="
+              isActivateYear
+                ? ' max-h-56 h-fit hover:font-bold cursor-pointer'
+                : 'max-h-[0vh]'
+            "
+          >
             <div
-              class="z-50 max-h-96 overflow-auto no-scrollbar py-2 px-4 mt-4 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
+              @click="
+                (selectedYear = year), (isActivateYear = false), getDashboard()
+              "
+              :class="
+                isActivateYear
+                  ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                  : 'opacity-0 max-h-[0vh]'
+              "
             >
-              <div v-for="(year, i) in years" :key="i">
-                <div
-                  class="py-2 hover:font-bold text-right cursor-pointer"
-                  @click="
-                    (this.selectedYear = year),
-                      (isActivateYear = true),
-                      getDashboard()
-                  "
-                >
-                  {{ year.year }}
-                </div>
-              </div>
+              {{ year.year }}
             </div>
           </div>
-        </transition>
+        </div>
       </div>
     </div>
 
     <div class="flex md:flex-row h-fit">
       <div
-        class="bg-white rounded-xl text-rangmod-black font-primary mx-2 my-5 px-5 w-full xmd:w-4/6 pt-4 border border-rangmod-light-gray transition-all"
+        class="bg-white rounded-xl text-rangmod-black font-primary mx-2 pb-10 mb-5 px-5 w-full xmd:w-4/6 pt-4 border border-rangmod-light-gray transition-all"
       >
         <div class="">
           {{ this.selectedYear.year }} | {{ this.selectedMonth.name }}
@@ -183,7 +167,9 @@
               <transition
                 name="bounce"
                 :class="category.count > 0 ? 'min-h-[32px]' : 'h-0'"
-                :style="`height:${category.count*100/calHighestCount.count}%`"
+                :style="category.count > 0 ? `height:${
+                  (category.count * 100) / calHighestCount.count
+                }%` : 'height:0%'"
               >
                 <div
                   class="se:w-6 xse:w-8 w-4 rounded-full h-full transition-all"
@@ -193,48 +179,40 @@
             </div>
           </div>
         </div>
-        <!-- <div class="flex flex-wrap mt-8 justify-end">
+        <div class="flex flex-wrap md:hidden mt-5">
           <div v-for="(category, i) in reportCategory" :key="i">
-            <div class="flex flex-row items-center mr-4">
+            <div class="flex flex-row items-center mx-2 my-1">
               <div class="h-2 w-2 rounded-full mr-1" :class="category.bg"></div>
               <div>{{ category.name }}</div>
             </div>
           </div>
-        </div> -->
+        </div>
       </div>
       <div
-        class="bg-white flex flex-col justify-between text-rangmod-black font-primary mx-2 my-5 px-5 w-full md:w-2/6 h-full transition-all"
+        class="bg-white hidden md:flex flex-col justify-between text-rangmod-black font-primary mr-2 my-5 w-full md:w-2/6 h-full transition-all"
       >
         <div>
           <div v-for="(category, i) in reportCategory" :key="i">
-            <div class="flex flex-row items-center mx-4 my-1">
-              <div class="h-2 w-2 rounded-full mr-1 " :class="category.bg"></div>
+            <div class="flex flex-row items-center mx-2 my-1">
+              <div class="h-2 w-2 rounded-full mr-1" :class="category.bg"></div>
               <div>{{ category.name }}</div>
             </div>
           </div>
         </div>
 
-        <div
-          class="bg-white rounded-xl text-rangmod-black content-end font-primary mx-2 mt-5 px-5 py-2 w-full h-full border border-rangmod-gray transition-all"
-        >
-          <div class="">ปัญหาทั้งหมด</div>
-          <div class="my-5">
-            <div class="text-5xl font-bold text-center">
-              {{ this.allReportCount }}
+        <div class="hidden xmd:flex w-full">
+          <div
+            class="bg-white rounded-xl text-rangmod-black content-end font-primary ml-2 mt-5 px-5 py-2 w-full h-full border border-rangmod-gray transition-all"
+          >
+            <div class="">ปัญหาทั้งหมด</div>
+            <div class="my-5">
+              <div class="text-5xl font-bold text-center">
+                {{ this.allReportCount }}
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- <div
-        class="bg-white rounded-xl hidden xmd:flex flex-col text-rangmod-black font-primary mx-2 my-5 px-5 w-full md:w-2/6 py-2 h-2/5 border border-rangmod-gray transition-all"
-      >
-        <div class="">ปัญหาทั้งหมด</div>
-        <div class="my-5">
-          <div class="text-5xl font-bold text-center">
-            {{ this.allReportCount }}
-          </div>
-        </div>
-      </div> -->
     </div>
     <div
       class="grid grid-cols-1 xse:grid-cols-2 xmd:grid-cols-4 sm:grid-cols-3 transition-all"
@@ -432,9 +410,6 @@ export default {
   methods: {
     async create() {
       await this.getDashboard();
-      this.importData();
-      console.log(this.reportCategory);
-      // console.log(this.calHighestCount.count);
     },
     async getDashboard() {
       if (this.selectedMonth.id != 0 && this.selectedYear.id == 0) {
@@ -461,11 +436,6 @@ export default {
         });
       }
     },
-    test() {
-      // console.log(this.selectedMonth);
-      // console.log(this.selectedMonth.name == "ทุกเดือน" ? 0 : this.selectedMonth.id);
-      // console.log(this.selectedYear == "ทุกปี" ? 0 : this.selectedYear);
-    },
     importData() {
       for (let i in this.dashboardReport) {
         for (let j in this.reportCategory) {
@@ -474,45 +444,10 @@ export default {
           }
         }
       }
+      console.log(this.reportCategory);
     },
   },
 };
 </script>
 
-<style>
-/* Hide scrollbar for Chrome, Safari and Opera */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-/* Hide scrollbar for IE, Edge and Firefox */
-.no-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* .bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-
-@keyframes bounce-in {
-  0% {
-    transform: scaleY(0);
-  }
-  50% {
-    transform: scaleY(0.5);
-  }
-  100% {
-    transform: scaleY(1);
-  }
-} */
-</style>
+<style></style>

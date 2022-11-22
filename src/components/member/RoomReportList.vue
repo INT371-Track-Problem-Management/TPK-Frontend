@@ -25,114 +25,294 @@
     </div>
 
     <hr class="my-4 border-rangmod-purple" />
-
-    <div class="flex flex-row justify-between items-center">
-      <div class="flex flex-row space-x-2 items-center mb-4">
-        <div
-          @click="(showModal = true), (modalBg = true)"
-          class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
-        >
-          <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
-        </div>
-      </div>
-
+    <!-- <div class="flex flex-row space-x-2 items-center mb-4">
       <div
-        @click="activeSortFilter = !activeSortFilter"
-        class="flex flex-row space-x-2 items-center cursor-pointer relative"
+        @click="(showModal = true), (modalBg = true)"
+        class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
       >
-        <div>เรียงจาก</div>
-        <div>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 9l-7 7-7-7"
-            />
-          </svg>
-        </div>
-
-        <div v-if="activeSortFilter" class="absolute top-10 right-0 z-10">
+        <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
+      </div>
+    </div> -->
+    <div
+      v-if="loadingData"
+      class="w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
+      >
+      </lottie-player>
+    </div>
+    <div v-else>
+      <div
+        class="flex flex-col ssm-2:flex-row justify-between items-end space-x-4 transition-all"
+      >
+        <div class="flex flex-row space-x-2 items-center mb-4">
           <div
-            class="w-48 mx-auto p-3 text-center bg-white shadow-lg rounded-xl"
+            @click="(showModal = true), (modalBg = true)"
+            class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
           >
+            <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
+          </div>
+        </div>
+        <div
+          class="flex flex-col md:flex-row justify-end items-end space-x-4 transition-all"
+        >
+          <div class="mb-4 relative">
             <div
-              v-for="(sort, i) in sortList"
-              :key="i"
-              @click="doSort(sort.key)"
-              class="w-full text-lg py-2 rounded-xl transition-all hover:bg-rangmod-light-pink"
+              @click="openStatusFilter = !openStatusFilter"
+              class="w-48 bg-white rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-end space-x-2 cursor-pointer items-center"
             >
-              {{ sort.name }}
+              <div
+                v-if="filterItem.status.name == 'ทั้งหมด'"
+                class="cursor-pointer"
+                :class="filterItem.status.color"
+              >
+                สถานะ{{ filterItem.status.name }}
+              </div>
+              <div
+                v-else
+                class="cursor-pointer"
+                :class="filterItem.status.color"
+              >
+                {{ filterItem.status.name }}
+              </div>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
+                viewBox="0 0 16 16"
+                :class="
+                  openStatusFilter
+                    ? 'transition-all rotate-180'
+                    : 'transition-all'
+                "
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </div>
+            <div
+              class="w-full absolute flex flex-col z-[100]"
+              :class="
+                openStatusFilter
+                  ? 'py-2 px-4 transition-all h-56 border-2 border-rangmod-light-gray rounded-lg bg-white divide-y divide-rangmod-light-gray shadow-xl overflow-y-auto no-scrollbar'
+                  : 'max-h-[0vh]'
+              "
+            >
+              <div
+                v-for="(status, i) in sortStatus"
+                :key="i"
+                class="w-full flex justify-end"
+                :class="
+                  openStatusFilter
+                    ? 'h-fit hover:font-bold cursor-pointer'
+                    : 'max-h-[0vh]'
+                "
+              >
+                <div
+                  @click="
+                    (filterItem.status = status),
+                      (openStatusFilter = false),
+                      statusFilter(status)
+                  "
+                  :class="
+                    openStatusFilter
+                      ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                      : 'opacity-0 max-h-[0vh]'
+                  "
+                >
+                  <div :class="status.color">
+                    {{ status.name }}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-4 relative">
+            <div
+              @click="openSortFilter = !openSortFilter"
+              class="w-56 bg-white rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-end space-x-2 cursor-pointer items-center"
+            >
+              <div class="cursor-pointer text-rangmod-purple">
+                เรียงตาม{{ filterItem.sort.name }}
+              </div>
+
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-down text-rangmod-purple cursor-pointer"
+                viewBox="0 0 16 16"
+                :class="
+                  openSortFilter
+                    ? 'transition-all rotate-180'
+                    : 'transition-all'
+                "
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </div>
+            <div
+              class="w-full absolute flex flex-col z-[100]"
+              :class="
+                openSortFilter
+                  ? 'py-2 px-4 transition-all h-fit border-2 border-rangmod-light-gray rounded-lg bg-white divide-y divide-rangmod-light-gray shadow-xl overflow-y-auto no-scrollbar'
+                  : 'max-h-[0vh]'
+              "
+            >
+              <div
+                v-for="(sort, i) in sortList"
+                :key="i"
+                class="w-full flex justify-end"
+                :class="
+                  openSortFilter
+                    ? 'max-h-min h-fit hover:font-bold cursor-pointer'
+                    : 'max-h-[0vh]'
+                "
+              >
+                <div
+                  @click="
+                    (filterItem.sort = sort),
+                      (openSortFilter = false),
+                      sortFilter(sort)
+                  "
+                  :class="
+                    openSortFilter
+                      ? 'transition-all w-full max-h-min h-fit py-2 text-right'
+                      : 'opacity-0 max-h-[0vh]'
+                  "
+                >
+                  <div class="text-rangmod-purple">
+                    {{ sort.name }}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <table class="w-full text-rangmod-black mb-10">
-      <tr class="bg-rangmod-light-pink">
-        <th class="py-4">ลำดับ</th>
-        <th class="py-4">รหัสรายงาน</th>
-        <th class="py-4">หัวข้อปัญหา</th>
-        <th class="py-4">ว/ด/ป แจ้งซ่อม</th>
-        <th class="py-4">ว/ด/ป นัดซ่อม</th>
-        <th class="py-4">สถานะ</th>
-        <th class="py-4"></th>
-      </tr>
+      <table class="w-full text-rangmod-black mb-10 hidden md:table">
+        <tr class="bg-rangmod-light-pink">
+          <th class="py-4">ลำดับ</th>
+          <th class="py-4">รหัสรายงาน</th>
+          <th class="py-4">หัวข้อปัญหา</th>
+          <th class="py-4">ว/ด/ป แจ้งซ่อม</th>
+          <th class="py-4">ว/ด/ป นัดซ่อม</th>
+          <th class="py-4">สถานะ</th>
+          <th class="py-4"></th>
+        </tr>
 
-      <tr
-        v-for="(report, i) in reportList"
-        :key="i"
-        class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
-      >
-        <td class="text-center py-4">{{ i + 1 }}</td>
-        <td class="text-center py-4">{{ report.reportId }}</td>
-        <td class="text-center py-4 truncate max-w-[120px]">
-          {{ report.title }}
-        </td>
-        <td class="text-center py-4">
-          {{ dateShowFormat(report.createdAt) }}
-        </td>
-        <td class="text-center py-4">
-          {{ splitDate(report.fixDate) }}
-        </td>
-        <td class="text-center py-4">
-          <div v-for="(status, j) in statusList" :key="j">
-            <div
-              v-if="this.checkThaiStatus(report.status) == status.name"
-              :class="status.color"
+        <tr
+          v-for="(report, i) in filteredReport"
+          :key="i"
+          class="border-b border-rangmod-gray/40 transition-all hover:bg-rangmod-light-pink/60"
+        >
+          <td class="text-center py-4">{{ i + 1 }}</td>
+          <td class="text-center py-4">{{ report.reportId }}</td>
+          <td class="text-center py-4 truncate max-w-[120px]">
+            {{ report.title }}
+          </td>
+          <td class="text-center py-4">
+            {{ dateShowFormat(report.createdAt) }}
+          </td>
+          <td class="text-center py-4">{{ splitDate(report.fixDate) }}</td>
+          <td class="text-center py-4">
+            <div v-for="(status, j) in statusList" :key="j">
+              <div
+                v-if="this.checkThaiStatus(report.status) == status.name"
+                :class="status.color"
+              >
+                {{ this.checkThaiStatus(report.status) }}
+              </div>
+            </div>
+          </td>
+          <td
+            class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
+          >
+            <RouterLink
+              :to="{
+                name: 'member-report-detail',
+                params: { id: report.reportId },
+              }"
+              >รายละเอียด</RouterLink
             >
-              {{ this.checkThaiStatus(report.status) }}
+          </td>
+        </tr>
+      </table>
+      <div class="flex flex-col md:hidden mb-10">
+        <div
+          v-for="(report, i) in filteredReport"
+          :key="i"
+          class="w-full rounded-xl shadow-md p-4 mb-4"
+        >
+          <div class="flex flex-row justify-between font-bold">
+            <div>{{ i + 1 }}</div>
+          </div>
+          <hr class="my-2 border-rangmod-gray" />
+          <div class="flex flex-row justify-between">
+            <div>รหัสรายงาน</div>
+            <div>{{ report.reportId }}</div>
+          </div>
+          <div class="flex flex-row justify-between">
+            <div>หัวข้อปัญหา</div>
+            <div class="truncate max-w-[120px]">{{ report.title }}</div>
+          </div>
+          <div class="flex flex-row justify-between">
+            <div>ว/ด/ป แจ้งซ่อม</div>
+            <div>{{ splitDate(report.createdAt) }}</div>
+          </div>
+          <div class="flex flex-row justify-between">
+            <div>ว/ด/ป นัดซ่อม</div>
+            <div>{{ splitDate(report.fixDate) }}</div>
+          </div>
+          <div class="flex flex-row justify-between">
+            <div>สถานะ</div>
+            <div>
+              <div v-for="(status, j) in statusList" :key="j">
+                <div
+                  v-if="this.checkThaiStatus(report.status) == status.name"
+                  :class="status.color"
+                >
+                  {{ this.checkThaiStatus(report.status) }}
+                </div>
+              </div>
             </div>
           </div>
-        </td>
-        <td
-          class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-        >
+
           <RouterLink
             :to="{
               name: 'member-report-detail',
               params: { id: report.reportId },
             }"
-            >รายละเอียด</RouterLink
           >
-        </td>
-      </tr>
-    </table>
+            <div
+              class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
+            >
+              รายละเอียด
+            </div>
+          </RouterLink>
+        </div>
+      </div>
+    </div>
+
     <div
       v-if="modalBg"
       class="bg-black fixed inset-0 opacity-60 visible z-[70]"
     ></div>
-    <!-- <div
-      v-if="loading || sentReport"
-      class="bg-black fixed inset-0 opacity-60 visible z-[90]"
-    ></div> -->
 
     <transition name="bounce">
       <div
@@ -178,9 +358,18 @@
               รายละเอียดแจ้งซ่อม
             </div>
 
-            <div>
-              <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
-              <div class="mb-5 relative">
+            <div class="mb-4">
+              <div class="flex flex-row">
+                <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
+                <div
+                  v-if="validate.categoriesReport"
+                  class="text-rangmod-red px-1"
+                >
+                  *กรุณาใส่ประเภทปัญหา
+                </div>
+              </div>
+
+              <div class="relative">
                 <div
                   @click="isActivateCategory = !isActivateCategory"
                   class="w-full bg-white border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
@@ -218,7 +407,7 @@
                   class="z-[100] w-full absolute flex flex-col"
                   :class="
                     isActivateCategory
-                      ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-gray rounded-lg bg-white divide-y divide-rangmod-light-gray'
+                      ? 'py-2 px-4 transition-all max-h-min h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray'
                       : 'max-h-[0vh]'
                   "
                 >
@@ -249,43 +438,38 @@
                 </div>
               </div>
             </div>
-            <div>
-              <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
+            <div class="mb-4">
+              <div class="flex flex-row">
+                <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
+                <div v-if="validate.title" class="text-rangmod-red px-1">
+                  *กรุณาใส่หัวข้อปัญหา
+                </div>
+              </div>
               <div class="mb-3">
                 <input
                   v-model="reportForSend.title"
                   type="text"
                   class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                  :class="
-                    this.validate.title
-                      ? 'placeholder-red-500 border-red-500 border-2'
-                      : ''
-                  "
-                  :placeholder="
-                    this.validate.title ? 'กรุณาใส่หัวข้อปัญหา' : ''
-                  "
                 />
               </div>
             </div>
-
-            <div class="text-rangmod-black ml-1">รายละเอียดปัญหา</div>
-            <div class="mb-3">
-              <textarea
-                v-model="reportForSend.reportDes"
-                class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
-                :class="
-                  this.validate.description
-                    ? 'placeholder-red-500 border-red-500 border-2'
-                    : ''
-                "
-                :placeholder="
-                  this.validate.description ? 'กรุณาใส่รายละเอียดปัญหา' : ''
-                "
-              ></textarea>
+            <div class="mb-4">
+              <div class="flex flex-row">
+                <div class="text-rangmod-black ml-1">รายละเอียดปัญหา</div>
+                <div v-if="validate.title" class="text-rangmod-red px-1">
+                  *กรุณาใส่รายละเอียดปัญหา
+                </div>
+              </div>
+              <div class="mb-3">
+                <textarea
+                  v-model="reportForSend.reportDes"
+                  class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
+                ></textarea>
+              </div>
             </div>
             <div class="flex flex-row space-x-3">
               <div
-                v-on:click="uploadImage()"
+                @click="uploadImage()"
                 class="relative flex justify-center w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-light-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-light-purple hover:text-rangmod-light-purple hover:shadow-none"
               >
                 อัพโหลดรูปภาพ
@@ -293,13 +477,18 @@
                   class="absolute w-full h-full items-center rounded-full cursor-pointer"
                 >
                   <input
+                    id="uploadImage"
                     type="file"
                     @change="handleFileUpload($event)"
                     class="cursor-pointer"
+                    hidden
                   />
                 </div>
               </div>
-              <div v-if="file != ''" class="text-[#007AFF] flex flex-col justify-center">
+              <div
+                v-if="file != ''"
+                class="text-[#007AFF] flex flex-col justify-center"
+              >
                 {{ file.name }}
               </div>
             </div>
@@ -315,79 +504,92 @@
                   วันและเวลา ({{ i + 1 }})
                 </div>
                 <div class="flex flex-col">
-                  <div class="flex flex-row space-x-2 justify-between">
+                  <div class="flex flex-col ssm:flex-row ssm:space-x-2 space-y-1 ssm:space-y-0 justify-between">
                     <div class="flex flex-col w-full">
-                      <div class="text-rangmod-black ml-1">ด/ว/ป</div>
+                      <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                       <input
                         v-model="engageForSend[i].date"
                         type="date"
                         class="w-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider"
                       />
                     </div>
-                    <div class="flex flex-col w-full">
-                      <div class="text-rangmod-black ml-1">
-                        เวลาเริ่มต้น - เวลาสิ้นสุด
+                    <div class="relative w-full">
+                      <div class="flex flex-col w-full">
+                        <div class="text-rangmod-black ml-1">
+                          เวลาเริ่มต้น - สิ้นสุด
+                        </div>
+                        <div
+                          @click="engage.isActive = !engage.isActive"
+                          class="w-full h-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-col text-rangmod-black transition-all"
+                        >
+                          <div
+                            class="flex items-center justify-between cursor-pointer"
+                          >
+                            <div>
+                              <div v-if="engageForSend[i].period != ''">
+                                {{ engageForSend[i].period }}
+                              </div>
+                              <div v-else class="text-rangmod-gray">&nbsp;</div>
+                            </div>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              class="bi bi-chevron-down text-rangmod-purple"
+                              viewBox="0 0 16 16"
+                              :class="
+                                engage.isActive
+                                  ? 'transition-all rotate-180'
+                                  : 'transition-all'
+                              "
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
+                              />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                       <div
-                        @click="engage.isActive = !engage.isActive"
-                        class="w-full h-full border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-col text-rangmod-black transition-all"
+                        class="z-[100] w-full absolute flex flex-col"
+                        :class="
+                          engage.isActive
+                            ? 'py-2 px-4 transition-all max-h-48 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
+                            : 'max-h-[0vh]'
+                        "
                       >
                         <div
-                          class="flex items-center justify-between cursor-pointer"
+                          v-for="(slot, j) in timeSlot"
+                          :key="j"
+                          class="w-full flex justify-end"
+                          :class="
+                            engage.isActive
+                              ? ' max-h-48 h-fit hover:font-bold cursor-pointer'
+                              : 'max-h-[0vh]'
+                          "
                         >
-                          <div>
-                            <div v-if="engageForSend[i].period != ''">
-                              {{ engageForSend[i].period }}
-                            </div>
-                            <div v-else class="text-rangmod-gray">&nbsp;</div>
-                          </div>
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
-                            fill="currentColor"
-                            class="bi bi-chevron-down text-rangmod-purple"
-                            viewBox="0 0 16 16"
+                          <div
+                            @click="
+                              (engage.isActive = false),
+                                (engageForSend[i].period = slot.period),
+                                (engageForSend[i].time = slot.time),
+                                (reportForSend.dates[i].date = manageDatetime(
+                                  engageForSend[i].date,
+                                  engageForSend[i].time
+                                )),
+                                test()
+                            "
                             :class="
                               engage.isActive
-                                ? 'transition-all rotate-180'
-                                : 'transition-all'
+                                ? 'transition-all w-full max-h-48 h-fit py-2 text-right'
+                                : 'opacity-0 max-h-[0vh]'
                             "
                           >
-                            <path
-                              fill-rule="evenodd"
-                              d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"
-                            />
-                          </svg>
-                        </div>
-                        <transition name="bounce">
-                          <div
-                            v-show="engage.isActive"
-                            class="flex flex-row-reverse w-full relative"
-                          >
-                            <div
-                              class="w-full z-50 max-h-48 overflow-auto no-scrollbar py-2 px-4 mt-2 origin-center border-2 border-rangmod-light-gray rounded-3xl absolute bg-white divide-y divide-rangmod-light-gray"
-                            >
-                              <div v-for="(slot, j) in timeSlot" :key="j">
-                                <div
-                                  class="py-2 hover:font-bold text-right cursor-pointer"
-                                  @click="
-                                    (engage.isActive = true),
-                                      (engageForSend[i].period = slot.period),
-                                      (engageForSend[i].time = slot.time),
-                                      (reportForSend.dates[i].date =
-                                        manageDatetime(
-                                          engageForSend[i].date,
-                                          engageForSend[i].time
-                                        ))
-                                  "
-                                >
-                                  {{ slot.period }}
-                                </div>
-                              </div>
-                            </div>
+                            {{ slot.period }}
                           </div>
-                        </transition>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -461,9 +663,10 @@ export default {
       isActivateCategory: false,
       modalBg: false,
       showModal: false,
+      loadingData: false,
       loading: false,
       sentReport: false,
-      file: '',
+      file: "",
       categoryLists: [
         {
           id: 1,
@@ -501,116 +704,143 @@ export default {
           engName: "other",
         },
       ],
-      customers: [],
-      engageDates: [
-        {
-          date: "2022-05-25",
-          time: "08:02:27",
-          dateTime: "",
-          // isActive: false,
-        },
-        {
-          date: "2022-07-26",
-          time: "09:04:27",
-          dateTime: "",
-          // isActive: true,
-        },
-        {
-          date: "2022-09-27",
-          time: "10:06:27",
-          dateTime: "",
-          // isActive: false,
-        },
-        {
-          date: "2022-11-28",
-          time: "11:08:27",
-          dateTime: "",
-          // isActive: false,
-        },
-      ],
 
-      activeSortFilter: false,
+      openSortFilter: false,
+      openStatusFilter: false,
+      filterItem: {
+        sort: { eng: "reportId", name: "รหัสรายงาน" },
+        status: {
+          id: "A1",
+          eng: "all",
+          name: "ทั้งหมด",
+          color: "text-rangmod-black",
+        },
+      },
       sortList: [
-        { key: "id", name: "รหัสรายงาน" },
-        { key: "room", name: "ห้อง" },
-        { key: "request_date", name: "ว/ด/ป แจ้งซ่อม" },
+        { eng: "reportId", name: "รหัสรายงาน" },
+        { eng: "date_d", name: "วันแจ้งซ่อมใหม่" },
+        { eng: "date_a", name: "วันแจ้งซ่อมเก่า" },
+        { eng: "fix_d", name: "วันนัดซ่อมใหม่" },
+        { eng: "fix_a", name: "วันนัดซ่อมเก่า" },
       ],
-      statusList: [
+      sortStatus: [
         {
-          id: "R1",
-          eng: "reject",
-          name: "ขอเปลี่ยนวันนัด",
-          color: "text-rangmod-blue",
-          bgcolor: "bg-rangmod-blue/20",
+          id: "A1",
+          eng: "all",
+          name: "ทั้งหมด",
+          color: "text-rangmod-black",
         },
         {
           id: "S1",
           eng: "waiting",
           name: "รอรับเรื่อง",
           color: "text-rangmod-blue",
-          bgcolor: "bg-rangmod-blue/20",
         },
         {
-          id: "S2",
-          eng: "accept",
-          name: "รับเรื่อง",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
-        },
-        {
-          id: "S3",
-          eng: "engage",
-          name: "นัดวันเข้าซ่อม",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
-        },
-        {
-          id: "S4",
-          eng: "prepare",
-          name: "รอดำเนินการ",
-          color: "text-rangmod-yellow",
-          bgcolor: "bg-rangmod-yellow/20",
+          id: "R1",
+          eng: "reject",
+          name: "ขอเลื่อนนัด",
+          color: "text-rangmod-ppbtn-purple",
         },
         {
           id: "S5",
           eng: "postpone",
           name: "เลื่อนนัด",
           color: "text-rangmod-purple",
-          bgcolor: "bg-rangmod-purple/20",
+        },
+        {
+          id: "S4",
+          eng: "prepare",
+          name: "รอดำเนินการ",
+          color: "text-rangmod-yellow",
         },
         {
           id: "S6",
           eng: "cancel",
           name: "ยกเลิกนัด",
           color: "text-rangmod-red",
-          bgcolor: "bg-rangmod-red/20",
+        },
+        {
+          id: "S9",
+          eng: "pending",
+          name: "รอยืนยันการยกเลิก",
+          color: "text-rangmod-dark-pink",
         },
         {
           id: "S7",
           eng: "success",
           name: "เสร็จสิ้น",
           color: "text-rangmod-green",
-          bgcolor: "bg-rangmod-green/20",
+        },
+      ],
+      statusList: [
+        {
+          id: "R1",
+          eng: "reject",
+          name: "ขอเลื่อนนัด",
+          color: "text-rangmod-ppbtn-purple",
+        },
+        {
+          id: "S1",
+          eng: "waiting",
+          name: "รอรับเรื่อง",
+          color: "text-rangmod-blue",
+        },
+        {
+          id: "S2",
+          eng: "accept",
+          name: "รับเรื่อง",
+          color: "text-rangmod-yellow",
+        },
+        {
+          id: "S3",
+          eng: "engage",
+          name: "นัดวันเข้าซ่อม",
+          color: "text-rangmod-yellow",
+        },
+        {
+          id: "S4",
+          eng: "prepare",
+          name: "รอดำเนินการ",
+          color: "text-rangmod-yellow",
+        },
+        {
+          id: "S5",
+          eng: "postpone",
+          name: "เลื่อนนัด",
+          color: "text-rangmod-purple",
+        },
+        {
+          id: "S6",
+          eng: "cancel",
+          name: "ยกเลิกนัด",
+          color: "text-rangmod-red",
+        },
+        {
+          id: "S7",
+          eng: "success",
+          name: "เสร็จสิ้น",
+          color: "text-rangmod-green",
         },
         {
           id: "S8",
           eng: "defer",
           name: "รอยืนยันเลื่อนนัด",
           color: "text-rangmod-purple",
-          bgcolor: "bg-rangmod-purple/20",
         },
         {
           id: "S9",
           eng: "pending",
           name: "รอยืนยันการยกเลิก",
-          color: "text-rangmod-red",
-          bgcolor: "bg-rangmod-red/20",
+          color: "text-rangmod-dark-pink",
         },
       ],
       reportList: [],
+      filteredReport: [],
       validate: {
         title: false,
         description: false,
+        categoriesReport: false,
       },
       reportEngageDate: [
         {
@@ -741,6 +971,9 @@ export default {
     this.create();
   },
   methods: {
+    test() {
+      console.log(this.engageForSend);
+    },
     validation() {
       this.title == ""
         ? (this.validate.title = true)
@@ -751,7 +984,12 @@ export default {
       return this.validate.title && this.validate.description;
     },
     async create() {
+      this.loadingData = true;
       this.reportList = await this.getReport();
+      this.filteredReport = this.reportList;
+      if (this.reportList) {
+        this.loadingData = false;
+      }
     },
     doFilter(id) {
       console.log(`Filtered by ${id} !`);
@@ -780,33 +1018,13 @@ export default {
       formData.append("data", formJson);
       formData.append("image", this.file);
 
-      console.log(formData.get("data"));
-      console.log(formData.get("image"));
-      console.log(formData);
-
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/report`,
-        // `${process.env.VUE_APP_API_URL}/test_upload_file`,
         {
           method: "POST",
           headers: {
-            // "Content-Type":
-            //   "multipart/form-data; boundary=----WebKitFormBoundary",
-            // Accept:
-            //   "application/json, application/xml, text/plain, text/html, *.*",
             Authorization: `Bearer ${this.token}`,
           },
-          // body: JSON.stringify({
-          //   title: rfs.title,
-          //   categoriesReport: rfs.categoriesReport.engName,
-          //   reportDes: rfs.reportDes,
-          //   status: rfs.status,
-          //   roomId: rfs.roomId,
-          //   buildingId: this.buildingId,
-          //   step: rfs.step,
-          //   dates: rfs.dates,
-          //   updateBy: rfs.updateBy,
-          // }),
           body: formData,
         }
       );
@@ -824,11 +1042,12 @@ export default {
             this.clearData();
           }, 2500);
           this.reportList = await this.getReport();
+          this.filteredReport = this.reportList;
         }
       });
     },
     async uploadImage() {
-      console.log("upload image");
+      document.getElementById("uploadImage").click();
     },
     async getReport() {
       const res = await fetch(
@@ -842,21 +1061,16 @@ export default {
         }
       );
       const data = res.json();
-      console.log();
-      return data;
+      return data.then((res) => {
+        if (res == null) {
+          this.loadingData = false;
+          return res;
+        }
+        return res;
+      });
     },
     handleFileUpload(e) {
       this.file = e.target.files[0];
-      // if (this.file) {
-      // var reader = new FileReader();
-      //   reader.onload = (e) => {
-      //     this.preview = e.target.result;
-      //   }
-      // reader.readAsDataURL(e.target.files[0]);
-      // console.log(reader);
-      // }
-      // const url = URL.createObjectURL(e.target.files[0]);
-      // console.log(url);
       console.log(this.file);
     },
     clearData() {
@@ -900,7 +1114,7 @@ export default {
     },
     splitDate(datetime) {
       if (datetime == "") {
-        return "";
+        return "-";
       }
       const res = datetime.split("T");
       const dateRes = res[0].split("-");
@@ -930,15 +1144,74 @@ export default {
     manageDatetime(date, time) {
       return date + " " + time;
     },
-    // fillReportForSend(datetime) {
-
-    // }
+    statusFilter(status) {
+      this.filteredReport = this.reportList;
+      if (status.id == "A1") {
+        this.filteredReport = this.filteredReport.filter((report) => {
+          return report.status.includes("");
+        });
+      } else {
+        this.filteredReport = this.filteredReport.filter((report) => {
+          return report.status.includes(this.filterItem.status.id);
+        });
+      }
+    },
+    sortFilter(sort) {
+      this.resetSort();
+      if (sort.eng == "reportId") {
+        this.filteredReport.sort(function (a, b) {
+          return a.reportId - b.reportId;
+        });
+      }
+      if (sort.eng == "date_d") {
+        this.filteredReport.sort(function (a, b) {
+          const da = new Date(a.createdAt);
+          const db = new Date(b.createdAt);
+          return db - da; // -1
+        });
+      }
+      if (sort.eng == "date_a") {
+        this.filteredReport.sort(function (a, b) {
+          console.log(a);
+          const da = new Date(a.createdAt);
+          const db = new Date(b.createdAt);
+          return da - db; // 1
+        });
+      }
+      if (sort.eng == "fix_d") {
+        this.filteredReport.sort(function (a, b) {
+          const fa = new Date(a.fixDate);
+          const fb = new Date(b.fixDate);
+          if (isNaN(fa)) {
+            return 1;
+          }
+          if (isNaN(fb)) {
+            return -1;
+          }
+          return fb - fa; // -1
+        });
+      }
+      if (sort.eng == "fix_a") {
+        this.filteredReport.sort(function (a, b) {
+          const fa = new Date(a.fixDate);
+          const fb = new Date(b.fixDate);
+          if (isNaN(fa)) {
+            return 1;
+          }
+          if (isNaN(fb)) {
+            return -1;
+          }
+          return fa - fb; // 1
+        });
+      }
+    },
+    resetSort() {
+      this.filteredReport.sort(function (a, b) {
+        return a.reportId - b.reportId;
+      });
+    },
   },
 };
 </script>
 
-<style scoped>
-input[type="file"] {
-  opacity: 0;
-}
-</style>
+<style scoped></style>
