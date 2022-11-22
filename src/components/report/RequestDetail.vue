@@ -402,10 +402,10 @@
     </div>
     <hr class="my-12 border-rangmod-purple" />
     <!-- <RepairForm :report="reportById"/> -->
-    <div class="mx-0 ssm-3:mx-16 z-[60]">
-      <div class="flex md:flex-row flex-col-reverse lg:justify-between mb-6">
-        <div class="w-full flex md:justify-start justify-center">
-          <div class="flex flex-col justify-start lg:w-3/5 ssm-3:w-4/5 w-full">
+    <div class="mx-16">
+      <div class="flex lg:flex-row flex-col-reverse lg:justify-between mb-6">
+        <div class="w-full flex lg:justify-start justify-center">
+          <div class="flex flex-col justify-start md:w-4/5 w-full">
             <div class="pr-0">
               <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
               <div class="mb-5 relative">
@@ -491,7 +491,7 @@
               <div class="text-rangmod-black ml-1">หัวข้อปัญหา</div>
               <div class="mb-5">
                 <div
-                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider truncate max-w-max"
+                  class="min-w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider truncate max-w-max"
                 >
                   {{ reportDetail.title }}
                 </div>
@@ -539,7 +539,7 @@
                     วันและเวลา ({{ i }})
                   </div>
                   <div class="flex flex-col">
-                    <div class="flex flex-row space-x-2 justify-between">
+                    <div class="flex flex-col ssm:flex-row ssm:space-x-2 space-y-2 ssm:space-y-0 ssm:justify-between">
                       <div class="flex flex-col w-full">
                         <div class="text-rangmod-black ml-1">ว/ด/ป</div>
                         <div
@@ -619,9 +619,9 @@
           </div>
         </div>
 
-        <div class="w-full flex md:justify-end justify-center">
+        <div class="w-full flex lg:justify-end justify-center">
           <div
-            class="flex flex-col space-y-8 md:h-fit h-full lg:w-4/5 md:w-5/6 ssm-3:w-4/5 w-full mb-6"
+            class="flex flex-col space-y-8 md:h-fit h-full md:w-4/5 w-full mb-6"
           >
             <div
               class="border border-rangmod-purple rounded-3xl h-full xse-2:px-10 px-5 w-full"
