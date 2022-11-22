@@ -410,6 +410,15 @@
               <div class="text-rangmod-black ml-1">ประเภทปัญหา</div>
               <div class="mb-5 relative">
                 <div
+                  v-if="isCancel"
+                  class="w-full bg-rangmod-light-gray border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
+                >
+                  <div class="cursor-pointer">
+                    {{ filterCategory(reportDetail.categoriesReport) }}
+                  </div>
+                </div>
+                <div
+                  v-else
                   @click="openReportCategory = !openReportCategory"
                   class="w-full bg-white border border-rangmod-gray rounded-lg outline-none px-2 leading-8 tracking-wider flex flex-row justify-between cursor-pointer items-center"
                 >
@@ -600,7 +609,7 @@
                             {{ splitTime(date.date) }}
                           </div>
                           <div
-                            v-if="reportDetail.status != 'S7'"
+                            v-if="reportDetail.status != 'S7' && !isCancel"
                             class="flex flex-col justify-center h-full absolute -right-10"
                           >
                             <div
@@ -779,7 +788,7 @@
                       </div>
                     </div>
                   </div>
-                  <div class="w-fit ml-2" v-if="!isEdit">
+                  <div class="w-fit ml-2" v-if="!isEdit && !isCancel">
                     <div class="text-rangmod-black ml-1">&nbsp;</div>
                     <div class="">
                       <div
@@ -806,38 +815,6 @@
                       </div>
                     </div>
                   </div>
-                  <!-- <div
-                    class="w-full absolute flex flex-col mt-16"
-                    :class="
-                      openMaintainer
-                        ? 'py-2 px-4 transition-all max-h-60 h-fit border-2 border-rangmod-light-gray shadow-xl rounded-lg bg-white divide-y divide-rangmod-light-gray overflow-y-auto no-scrollbar'
-                        : 'max-h-[0vh]'
-                    "
-                  >
-                    <div
-                      v-for="(mtn, i) in maintainerLists"
-                      :key="i"
-                      class="w-full flex justify-end"
-                      :class="
-                        openMaintainer
-                          ? ' max-h-60 h-fit hover:font-bold cursor-pointer'
-                          : 'max-h-[0vh]'
-                      "
-                    >
-                      <div
-                        @click="
-                          (selectedMaintainer = mtn), (openMaintainer = false)
-                        "
-                        :class="
-                          openMaintainer
-                            ? 'transition-all w-full max-h-60 h-fit py-2 text-right'
-                            : 'opacity-0 max-h-[0vh]'
-                        "
-                      >
-                        {{ mtn.fname }} {{ mtn.lname }}
-                      </div>
-                    </div>
-                  </div> -->
                 </div>
                 <div class="text-rangmod-black ml-1">เบอร์ติดต่อช่าง</div>
                 <div class="mb-5">
@@ -1177,7 +1154,9 @@
                         </div>
                       </div>
 
-                      <div class="flex flex-col ssm:flex-row ssm:space-x-2 ssm:space-y-0 space-y-2 justify-between">
+                      <div
+                        class="flex flex-col ssm:flex-row ssm:space-x-2 ssm:space-y-0 space-y-2 justify-between"
+                      >
                         <div class="flex flex-col w-full">
                           <input
                             v-model="engage.date"
@@ -1219,8 +1198,11 @@
             </div>
             <div class="flex flex-row space-x-4 justify-end">
               <div
-                v-on:click=" checkReject(),
-                  (hasReject = true), (modalbg = false), (showModal = false)
+                v-on:click="
+                  checkReject(),
+                    (hasReject = true),
+                    (modalbg = false),
+                    (showModal = false)
                 "
                 class="w-32 my-2 py-2 text-base rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm cursor-pointer transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
@@ -1630,6 +1612,44 @@
         </div>
       </div>
     </transition>
+    <transition name="bounce">
+      <div
+        v-show="cancelModal"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
+      >
+        <div
+          v-if="loading || sentCancel"
+          class="bg-black fixed inset-0 opacity-60 visible z-[90]"
+        ></div>
+        <div
+          class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <!-- Closed -->
+          <div class="flex justify-end">
+            <div
+              @click="(cancelModal = !cancelModal), (modalbg = false)"
+              class="cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -1643,6 +1663,8 @@ export default {
       loading: false,
       sentEngage: false,
       sentPostpone: false,
+      sentCancel: false,
+      cancelModal: false,
       showModal: false,
       saveModal: false,
       modalbg: false,
