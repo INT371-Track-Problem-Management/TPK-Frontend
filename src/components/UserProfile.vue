@@ -515,20 +515,38 @@
         </div>
       </div>
     </transition>
-    <transition name="bounce">
-      <div
-        v-if="editedProfile"
-        class="fixed w-full h-fit z-[100] inset-0 pb-20 pt-10 my-auto"
+    <div
+      v-if="loading"
+      class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <lottie-player
+        autoplay
+        loop
+        mode="normal"
+        src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+        class="w-40 h-40"
       >
-        <div
-          class="w-1/6 h-full mx-auto my-10 bg-white border-4 border-rangmod-purple px-3 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+      </lottie-player>
+    </div>
+    <div
+      v-if="editedProfile"
+      class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+    >
+      <div class="text-rangmod-green items-center bg-white rounded-full">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="100"
+          height="100"
+          fill="currentColor"
+          class="bi bi-check-circle-fill"
+          viewBox="0 0 16 16"
         >
-          <div class="text-2xl text-rangmod-purple my-5 text-center">
-            แก้ไขโปรไฟล์สำเร็จ
-          </div>
-        </div>
+          <path
+            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+          />
+        </svg>
       </div>
-    </transition>
+    </div>
   </div>
 </template>
 
@@ -694,7 +712,8 @@ export default {
       }
     },
     async editProfile() {
-      console.log(this.beforeEdit.dateOfBirth.split("T")[0]);
+      this.loading = true;
+      this.modalbg = true;
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/${this.filteredRole}/editProfile/?email=${this.email}`,
         {
@@ -711,7 +730,7 @@ export default {
               this.age < 0
                 ? this.beforeEdit.dateOfBirth.split("T")[0]
                 : this.userProfile.dateOfBirth.split("T")[0],
-            age: this.age < 0 ? this.beforeEdit.age : this.age,
+            age: this.age,
             phone: this.userProfile.phone,
             address: this.userProfile.address,
             updateBy: parseInt(this.id),
@@ -721,16 +740,26 @@ export default {
       const data = res.json();
       return data.then((res) => {
         if (res == "success") {
-          console.log(res);
+          this.loading = false;
+          this.editedProfile = true;
+          setTimeout(() => {
+            this.modalbg = false;
+            this.editedProfile = false;
+          }, 2000);
+          setTimeout(async () => {
+            await this.getUserProfile();
+            console.log(this.userProfile);
+            this.beforeEdit = structuredClone(this.userProfile);
+            this.userProfile.date = this.splitDate(
+              this.userProfile.dateOfBirth
+            );
+            this.beforeEdit.date = this.splitDate(this.beforeEdit.dateOfBirth);
+            console.log(this.beforeEdit);
+            await this.getProfileMedia();
+            this.isEditForm = false;
+          }, 2500);
         }
       });
-      // this.editedProfile = true;
-      // setTimeout(() => {
-      //   this.editedProfile = false;
-      // }, 1500);
-      // setTimeout(() => {
-      //   this.isEditForm = false;
-      // }, 2500);
     },
     checkChangePwd() {
       this.changePwdModal.ivlOldPassword =

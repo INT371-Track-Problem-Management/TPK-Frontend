@@ -106,12 +106,112 @@
         <div
           class="my-4 py-2 text-center text-rangmod-purple/70 transition-all"
         >
-          <RouterLink to="/forget" class="hover:font-bold">
+          <div
+            @click="(forgetModal = !forgetModal), (modalbg = !modalbg)"
+            class="hover:font-bold cursor-pointer"
+          >
             ลืมรหัสผ่าน ?
-          </RouterLink>
+          </div>
         </div>
       </div>
     </div>
+    <div
+      v-if="modalbg"
+      class="bg-black fixed inset-0 opacity-60 visible z-[80]"
+    ></div>
+    <transition name="bounce">
+      <div
+        v-show="forgetModal"
+        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
+      >
+        <div
+          v-if="loadingForget || sentEmail"
+          class="bg-black fixed inset-0 opacity-60 visible z-[95]"
+        ></div>
+        <div
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="flex justify-end">
+            <div
+              @click="
+                (forgetModal = false), (forgetEmail = {}), (modalbg = false)
+              "
+              class="cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex flex-row justify-between">
+            <div class="text-rangmod-purple text-2xl">กรุณาใส่อีเมล</div>
+          </div>
+          <hr class="my-4" />
+
+          <div class="mb-4 w-full">
+            <div class="text-rangmod-black px-1 ml-1">อีเมล</div>
+            <input
+              v-model="forgetEmail"
+              type="text"
+              class="w-full px-3 bg-white border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
+            />
+          </div>
+
+          <div class="flex justify-center">
+            <div
+              @click="sentForget(forgetEmail)"
+              class="cursor-pointer w-fit py-2 px-10 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+            >
+              ยืนยัน
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="loadingForget"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+        >
+          <lottie-player
+            autoplay
+            loop
+            mode="normal"
+            src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+            class="w-40 h-40"
+          >
+          </lottie-player>
+        </div>
+        <div
+          v-if="sentEmail"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+        >
+          <div class="text-rangmod-green items-center bg-white rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              fill="currentColor"
+              class="bi bi-check-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -133,8 +233,12 @@ export default {
         email: false,
         password: false,
       },
+      forgetEmail: "",
+      modalbg: false,
       fail: false,
       loading: false,
+      loadingForget: false,
+      forgetModal: false,
     };
   },
   mounted() {
@@ -171,8 +275,7 @@ export default {
             setTimeout(() => {
               this.fail = false;
             }, 2000);
-          } 
-          else {
+          } else {
             this.token = res.token;
             this.userLogin.id = this.parseJwt(this.token).id;
             this.userLogin.email = this.parseJwt(this.token).email;
@@ -221,6 +324,31 @@ export default {
     },
     arrayBufferToBase64(buffer) {
       return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    },
+    async sentForget() {
+      this.modalbg = false;
+      this.loadingForget = true;
+
+      const res = await fetch(`${process.env.VUE_APP_API_URL}/forgotPassword`, {
+        method: "POST",
+        headers: { "content-Type": "application/json" },
+        body: JSON.stringify({
+          email: this.forgetEmail,
+        }),
+      });
+      const data = res.json();
+      return data.then((res) => {
+        if (res == "success") {
+          this.loadingForget = false;
+          this.sentEmail = true;
+          setTimeout(() => {
+            this.sentEmail = false;
+          }, 2000);
+          setTimeout(() => {
+            this.forgetModal = false;
+          }, 2500);
+        }
+      });
     },
     goToPage(userRole) {
       if (userRole == "E" || userRole == "A") {

@@ -7,7 +7,7 @@
 
     <div
       class="w-full bg-white"
-      :class="buildingLists.length > 0 ? '' : 'py-48'"
+      :class="buildingLists.length > 0 ? '' : 'py-12'"
     >
       <div v-show="buildingLists.length > 0" class="flex justify-start">
         <div

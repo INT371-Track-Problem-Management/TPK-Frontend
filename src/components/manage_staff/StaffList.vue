@@ -9,7 +9,7 @@
     <div
       v-if="this.role == 'A'"
       class="w-44 my-5 cursor-pointer"
-      @click="(showAddStaff1 = !showAddStaff1), (modalBg = !modalBg)"
+      @click="(showAddStaff1 = !showAddStaff1), (modalbg = !modalbg)"
     >
       <div
         class="items-center bg-rangmod-light-yellow text-dark-yellow rounded-xl px-5 py-2 transition-all hover:shadow-md"
@@ -43,7 +43,11 @@
         <td
           v-if="this.role == 'A'"
           class="text-center py-4 text-rangmod-red cursor-pointer transition-all hover:font-bold"
-          @click="deleteStaff(staff.employeeId), (modalBg = !modalBg)"
+          @click="
+            (showDeleteModal = !showDeleteModal),
+              showDelete(staff),
+              (modalbg = !modalbg)
+          "
         >
           <div>ลบ</div>
         </td>
@@ -51,7 +55,7 @@
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
           @click="
             (showStaffDetail = !showStaffDetail),
-              (modalBg = !modalBg),
+              (modalbg = !modalbg),
               showDetail(staff)
           "
         >
@@ -91,7 +95,11 @@
           <div
             v-if="this.role == 'A'"
             class="text-center pt-4 text-rangmod-red cursor-pointer transition-all hover:font-bold"
-            @click="deleteStaff(staff.employeeId), (modalBg = !modalBg)"
+            @click="
+              (showDeleteModal = !showDeleteModal),
+                showDelete(staff),
+                (modalbg = !modalbg)
+            "
           >
             ลบ
           </div>
@@ -101,7 +109,7 @@
           class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
           @click="
             (showStaffDetail = !showStaffDetail),
-              (modalBg = !modalBg),
+              (modalbg = !modalbg),
               showDetail(staff)
           "
         >
@@ -120,7 +128,7 @@
     ></div>
     <!-- Add --------------------------------------------------------------------------------------- -->
     <div
-      v-if="modalBg"
+      v-if="modalbg"
       class="bg-black fixed inset-0 opacity-60 visible z-[80]"
     ></div>
 
@@ -134,7 +142,7 @@
         >
           <div class="flex justify-end">
             <div
-              @click="(showAddStaff1 = false), (modalBg = false), clearData()"
+              @click="(showAddStaff1 = false), (modalbg = false), clearData()"
               class="cursor-pointer"
             >
               <svg
@@ -266,7 +274,7 @@
         >
           <div class="flex justify-end">
             <div
-              @click="(showAddStaff2 = false), (modalBg = false), clearData()"
+              @click="(showAddStaff2 = false), (modalbg = false), clearData()"
               class="cursor-pointer"
             >
               <svg
@@ -310,7 +318,9 @@
             />
           </div>
 
-          <div class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0">
+          <div
+            class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0"
+          >
             <div class="w-full">
               <div class="text-rangmod-black ml-1">วันเกิด</div>
               <input
@@ -332,7 +342,9 @@
             </div>
           </div>
 
-          <div class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0">
+          <div
+            class="mb-4 flex flex-col xse:flex-row xse:space-x-2 space-y-4 xse:space-y-0"
+          >
             <div class="text-rangmod-black w-full">
               <div class="ml-1">เพศ</div>
               <div class="relative">
@@ -479,7 +491,7 @@
         >
           <div class="flex justify-end">
             <div
-              @click="(showStaffDetail = false), (modalBg = false), clearData()"
+              @click="(showStaffDetail = false), (modalbg = false), clearData()"
               class="cursor-pointer"
             >
               <svg
@@ -634,13 +646,134 @@
             <div class="w-1/4">
               <div
                 @click="
-                  (showStaffDetail = !showStaffDetail), (modalBg = !modalBg)
+                  (showStaffDetail = !showStaffDetail), (modalbg = !modalbg)
                 "
                 class="cursor-pointer w-full py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
               >
                 ยืนยัน
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+
+    <transition name="bounce">
+      <div
+        v-show="showDeleteModal"
+        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
+      >
+        <div
+          v-if="loading || deleted"
+          class="bg-black fixed inset-0 opacity-60 visible z-[95]"
+        ></div>
+        <div
+          class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
+        >
+          <div class="flex justify-end">
+            <div
+              @click="
+                (showDeleteModal = false), (deleteModal = {}), (modalbg = false)
+              "
+              class="cursor-pointer"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div class="flex flex-row justify-between">
+            <div class="text-rangmod-purple text-2xl">
+              ต้องการลบผู้ดูแลใช่หรือไม่
+            </div>
+          </div>
+          <hr class="my-4" />
+
+          <div class="flex flex-row space-x-2">
+            <div class="mb-4 w-full">
+              <div class="text-rangmod-black px-1 ml-1">ชื่อ</div>
+              <input
+                v-model="deleteModal.fname"
+                type="text"
+                class="w-full px-3 bg-rangmod-light-gray border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
+                readonly
+              />
+            </div>
+
+            <div class="mb-4 w-full">
+              <div class="text-rangmod-black px-1 ml-1">นามสกุล</div>
+              <input
+                v-model="deleteModal.lname"
+                type="text"
+                class="w-full px-3 bg-rangmod-light-gray border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
+                readonly
+              />
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <div class="flex space-x-4 w-2/3">
+              <div
+                @click="
+                  (showDeleteModal = false),
+                    (deleteModal = {}),
+                    (modalbg = false)
+                "
+                class="cursor-pointer w-full py-2 rounded-full text-center text-white border-2 bg-rangmod-purple shadow-sm transition-all hover:bg-transparent hover:border-rangmod-purple hover:text-rangmod-purple hover:shadow-none"
+              >
+                ย้อนกลับ
+              </div>
+              <div
+                @click="deleteStaff(deleteModal.employeeId)"
+                class="cursor-pointer w-full py-2 rounded-full text-center text-white border-2 bg-rangmod-light-red shadow-sm transition-all hover:bg-transparent hover:border-rangmod-light-red hover:text-rangmod-light-red hover:shadow-none"
+              >
+                ลบ
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          v-if="loading"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+        >
+          <lottie-player
+            autoplay
+            loop
+            mode="normal"
+            src="https://lottie.host/005cb1c2-8212-403c-a9cb-37255a3a6552/pwMNUwBeCY.json"
+            class="w-40 h-40"
+          >
+          </lottie-player>
+        </div>
+        <div
+          v-if="deleted"
+          class="fixed w-full h-full inset-0 flex items-center justify-center z-[110]"
+        >
+          <div class="text-rangmod-green items-center bg-white rounded-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="100"
+              height="100"
+              fill="currentColor"
+              class="bi bi-check-circle-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+              />
+            </svg>
           </div>
         </div>
       </div>
@@ -669,10 +802,12 @@ export default {
       showStaffDetail: false,
       showAddStaff1: false,
       showAddStaff2: false,
-      modalBg: false,
+      showDeleteModal: false,
+      modalbg: false,
       loading: true,
       openGender: false,
       registeredStaff: false,
+      deleted: false,
       staffDetailModal: {},
       addModal1: {
         email: "",
@@ -688,6 +823,7 @@ export default {
         phone: "",
         address: "",
       },
+      deleteModal: {},
       sexes: [
         {
           id: 1,
@@ -761,7 +897,7 @@ export default {
     },
     async registerStaff() {
       this.loading = true;
-      this.modalBg = false;
+      this.modalbg = false;
       const res = await fetch(`${process.env.VUE_APP_API_URL}/registerOwner`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -804,17 +940,38 @@ export default {
         staff.dateOfBirth
       );
       this.staffDetailModal.sex = staff.sex == "M" ? "ชาย" : "หญิง";
-      // staffDetailModal: {
-      //   employeeId: 1,
-      //   fname: "ธนวินท์",
-      //   lname: "วัตราเศรษฐ์",
-      //   dateOfBirth: "21/08/2000",
-      //   age: 22,
-      //   sex: "ชาย",
-      //   phone: "0804341156",
-      //   address: "บ้าน",
-      //   email: "thanawin.wnz@gmail.com",
-      // }
+    },
+    showDelete(staff) {
+      this.deleteModal = staff;
+    },
+    async deleteStaff(employeeId) {
+      this.loading = true
+      this.modalbg = false
+      const res = await fetch(
+        `${process.env.VUE_APP_API_URL}/employee/deleteEmployee/${employeeId}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.token}`,
+          },
+        }
+      );
+      const data = res.json();
+      return data.then((res) => {
+        if(res.message == 'success') {
+          this.loading = false;
+          this.deleted = true;
+          setTimeout(() => {
+            this.deleted = false;
+          }, 1500);
+          setTimeout(async() => {
+            this.showDeleteModal = false;
+            this.staffList = await this.getStaffs();
+            this.filteredStaff = this.staffList;
+          }, 2500);
+        }
+      });
     },
     clearData() {
       this.addModal1.email = "";
