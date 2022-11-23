@@ -105,7 +105,7 @@
     <transition name="bounce">
       <div
         v-show="showDetailModal"
-        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
@@ -221,24 +221,6 @@
                 v-model="detailModal.address"
                 class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
               ></textarea>
-            </div>
-          </div>
-
-          <div class="mb-4 flex flex-row space-x-2">
-            <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">สถานะ</div>
-
-              <div class="border-rangmod-gray rounded-xl">
-                <input
-                  type="text"
-                  readonly
-                  v-model="detailModal.status"
-                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-                />
-              </div>
-            </div>
-            <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">&nbsp;</div>
             </div>
           </div>
 
