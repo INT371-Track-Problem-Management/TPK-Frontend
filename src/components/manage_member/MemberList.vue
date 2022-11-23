@@ -105,7 +105,7 @@
     <transition name="bounce">
       <div
         v-show="showDetailModal"
-        class="fixed w-full h-fit z-[90] inset-0 pb-20 pt-10 px-6"
+        class="fixed w-full h-screen z-[90] inset-0 pb-20 pt-10 px-6"
       >
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
@@ -224,24 +224,6 @@
             </div>
           </div>
 
-          <div class="mb-4 flex flex-row space-x-2">
-            <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">สถานะ</div>
-
-              <div class="border-rangmod-gray rounded-xl">
-                <input
-                  type="text"
-                  readonly
-                  v-model="detailModal.status"
-                  class="bg-rangmod-light-gray px-3 w-full border-black text-rangmod-black rounded-xl outline-none leading-10 tracking-wider"
-                />
-              </div>
-            </div>
-            <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">&nbsp;</div>
-            </div>
-          </div>
-
           <div class="flex flex-row space-x-4 justify-end">
             <div
               v-on:click="
@@ -333,7 +315,9 @@
             <div
               class="border border-rangmod-gray rounded-xl bg-rangmod-light-gray px-3 w-full text-rangmod-black outline-none leading-10 tracking-wider"
             >
-              <div v-if="!searchCustomer.fname">&nbsp;</div>
+              <div v-if="searchCustomer.fname == '' || !searchCustomer.fname">
+                &nbsp;
+              </div>
               {{ searchCustomer.fname }}
             </div>
           </div>
@@ -343,7 +327,9 @@
             <div
               class="border border-rangmod-gray rounded-xl bg-rangmod-light-gray px-3 w-full text-rangmod-black outline-none leading-10 tracking-wider"
             >
-              <div v-if="!searchCustomer.lname">&nbsp;</div>
+              <div v-if="searchCustomer.lname == '' || !searchCustomer.lname">
+                &nbsp;
+              </div>
               {{ searchCustomer.lname }}
             </div>
           </div>
@@ -467,7 +453,6 @@
         </div>
       </div>
     </transition>
-
   </div>
 </template>
 
@@ -535,7 +520,15 @@ export default {
       );
       const data = res.json();
       return data.then((res) => {
-        return res.customers;
+        console.log(res);
+        if (res.customers.length > 0) {
+          this.loading = false;
+          return res.customers;
+        } else {
+          this.loading = false;
+          this.noData = true;
+          return null;
+        }
       });
     },
     async getCustomerById(customerId) {
@@ -549,12 +542,9 @@ export default {
         );
         const data = res.json();
         return data.then((res) => {
-          if (res.customer.length > 0) {
-            this.loading = false;
+          if (res.customer) {
             return res.customer;
           } else {
-            this.loading = false;
-            this.noData = true;
             return null;
           }
         });
@@ -565,21 +555,31 @@ export default {
     async getDetail(customerId) {
       this.modalbg = true;
       const detail = await this.getCustomerById(customerId);
-      this.detailModal = detail;
-      this.detailModal.dateOfBirth = this.splitDate(detail.dateOfBirth);
-      this.detailModal.sex = detail.sex == "M" ? "ชาย" : "หญิง";
-      this.detailModal.status = detail.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
-      this.showDetailModal = true;
+      if (detail == null) {
+        this.detailModal = detail;
+      } else {
+        this.detailModal = detail;
+        this.detailModal.dateOfBirth = this.splitDate(detail.dateOfBirth);
+        this.detailModal.sex = detail.sex == "M" ? "ชาย" : "หญิง";
+        this.detailModal.status =
+          detail.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
+        this.showDetailModal = true;
+      }
     },
     async search() {
-      console.log(!this.searchCustomer.age);
       this.searchCustomer = await this.getCustomerById(this.searchId);
-      this.searchCustomer.sex = this.searchCustomer.sex == "M" ? "ชาย" : "หญิง";
-      this.searchCustomer.status =
-        this.searchCustomer.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
-      this.searchCustomer.dateOfBirth = this.splitDate(
-        this.searchCustomer.dateOfBirth
-      );
+      console.log(this.searchCustomer);
+      if (this.searchCustomer.customerId == 0) {
+        this.searchCustomer = null;
+      } else {
+        this.searchCustomer.sex =
+          this.searchCustomer.sex == "M" ? "ชาย" : "หญิง";
+        this.searchCustomer.status =
+          this.searchCustomer.status == "I" ? "รอเข้าพัก" : "พักอาศัย";
+        this.searchCustomer.dateOfBirth = this.splitDate(
+          this.searchCustomer.dateOfBirth
+        );
+      }
     },
     add() {
       this.showAdd = true;
