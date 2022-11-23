@@ -810,8 +810,8 @@ export default {
       showDeleteModal: false,
       modalbg: false,
       noData: false,
-      loadingData: true,
-      loading: true,
+      loadingData: false,
+      loading: false,
       openGender: false,
       registeredStaff: false,
       deleted: false,
@@ -879,8 +879,8 @@ export default {
           this.loadingData = false;
           return data.employees;
         } else {
-          this.loadingData = false
-          this.noData = true
+          this.loadingData = false;
+          this.noData = true;
         }
       });
     },
@@ -936,7 +936,9 @@ export default {
           setTimeout(() => {
             this.registeredStaff = false;
           }, 1500);
-          setTimeout(() => {
+          setTimeout(async () => {
+            this.staffList = await this.getStaffs();
+            this.filteredStaff = this.staffList;
             this.showAddStaff2 = false;
           }, 2500);
           this.staffList = await this.getStaffs();
@@ -955,8 +957,8 @@ export default {
       this.deleteModal = staff;
     },
     async deleteStaff(employeeId) {
-      this.loading = true
-      this.modalbg = false
+      this.loading = true;
+      this.modalbg = false;
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/employee/deleteEmployee/${employeeId}`,
         {
@@ -969,13 +971,13 @@ export default {
       );
       const data = res.json();
       return data.then((res) => {
-        if(res.message == 'success') {
+        if (res.message == "success") {
           this.loading = false;
           this.deleted = true;
           setTimeout(() => {
             this.deleted = false;
           }, 1500);
-          setTimeout(async() => {
+          setTimeout(async () => {
             this.showDeleteModal = false;
             this.staffList = await this.getStaffs();
             this.filteredStaff = this.staffList;
