@@ -8,7 +8,7 @@
 
 <script>
 
-import RoomList from "@/components/apartments-config/RoomList.vue"
+import RoomList from "@/components/apartments/RoomList.vue"
 
 export default {
 

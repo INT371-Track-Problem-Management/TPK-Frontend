@@ -3,33 +3,25 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomePage from "../views/HomePage.vue";
 import LoginPage from "../views/LoginPage.vue";
 import RegisterPage from "../views/register/RegisterPage.vue";
-// import RegisterSelectPage from "../views/register/RegisterSelectPage.vue";
 import RegisterFormPage from "../views/register/RegisterFormPage.vue";
 import RepairStatusPage from "../views/RepairStatusPage.vue";
 
-// import ApartmentsPage from "../views/apartments/ApartmentsPage.vue";
-// import ApartmentsAddPage from "../views/apartments/addPage.vue";
-// import ApartmentsSetRoomPage from "../views/apartments/setRoomPage.vue";
-
 import DashBoardPage from "../views/DashBoardPage.vue";
-import DashboardMemberPage from "../views/dashboard/ManageMember.vue";
-import DashboardMaintainerPage from "../views/dashboard/MaintainerList.vue";
-import DashboardRoomStatusPage from "../views/dashboard/RoomStatus.vue";
-import DashboardRoomListPage from "../views/apartments-config/RoomList.vue";
+import DashboardMemberPage from "../views/dashboard/ManageMemberPage.vue";
+import DashboardMaintainerPage from "../views/dashboard/MaintainerListPage.vue";
 
-import DashboardReportPage from "../views/dashboard/ReportList.vue";
-import DashboardReportDetailPage from "../views/dashboard/ReportDetail.vue";
-import DashboardConfigApertmentsPage from "../views/apartments-config/ApartmentsPage.vue";
-import DashboardConfigApertmentsAddPage from "../views/apartments-config/addPage.vue";
-import DashboardConfigApertmentsSetRoomPage from "../views/apartments-config/setRoomPage.vue";
+import DashboardReportPage from "../views/dashboard/ReportListPage.vue";
+import DashboardReportDetailPage from "../views/dashboard/ReportDetailPage.vue";
+import DashboardConfigApertmentsPage from "../views/apartments/ApartmentsPage.vue";
+import DashboardRoomListPage from "../views/apartments/RoomListPage.vue";
 
-import MemberMyRoom from "../views/members/MemberMyRoom.vue";
-import MemberMyRoomReport from "../views/members/MemberMyRoomReport.vue";
-import MemberReport from "../views/members/MemberReport.vue";
-import MemberReportDetail from "../views/members/MemberReportDetail.vue";
+import MemberMyRoom from "../views/members/MemberMyRoomPage.vue";
+import MemberMyRoomReport from "../views/members/MemberMyRoomReportPage.vue";
+import MemberReport from "../views/members/MemberReportPage.vue";
+import MemberReportDetail from "../views/members/MemberReportDetailPage.vue";
 
 import UserProfilePage from "../views/UserProfilePage.vue";
-import StaffPage from "../views/dashboard/StaffPage.vue";
+import StaffPage from "../views/dashboard/StaffListPage.vue";
 
 import UnAuthPage from "../views/UnAuthPage.vue";
 
@@ -70,25 +62,6 @@ const routes = [
     name: "repair-status",
     component: RepairStatusPage,
   },
-
-  // {
-  //   path: "/apartments",
-  //   name: "apartments",
-  //   component: ApartmentsPage,
-  // },
-  // {
-  //   path: "/apartments/add",
-  //   name: "apartments-add",
-  //   component: ApartmentsAddPage,
-  //   meta: { layout: "AppLayoutApartment" },
-  // },
-  // {
-  //   path: "/apartments/set_room",
-  //   name: "apartments-set-room",
-  //   component: ApartmentsSetRoomPage,
-  //   meta: { layout: "AppLayoutApartment" },
-  // },
-
   {
     path: "/dashboard/content",
     name: "dashboard-content",
@@ -123,28 +96,6 @@ const routes = [
     },
   },
   {
-    path: "/dashboard/room/status",
-    name: "dashboard-room-status",
-    component: DashboardRoomStatusPage,
-    meta: {
-      requiresAuth: true,
-      adminAuth: true,
-      userAuth: false,
-      layout: "AppLayoutAdmin",
-    },
-  },
-  {
-    path: "/dashboard/room/config",
-    name: "dashboard-room-config",
-    component: DashboardRoomListPage,
-    meta: {
-      requiresAuth: true,
-      adminAuth: true,
-      userAuth: false,
-      layout: "AppLayoutAdmin",
-    },
-  },
-  {
     path: "/dashboard/report",
     name: "dashboard-report",
     component: DashboardReportPage,
@@ -168,31 +119,9 @@ const routes = [
     },
   },
   {
-    path: "/dashboard/config/apartment",
-    name: "dashboard-config-apartment",
+    path: "/dashboard/apartment",
+    name: "dashboard-apartment",
     component: DashboardConfigApertmentsPage,
-    meta: {
-      requiresAuth: true,
-      adminAuth: true,
-      userAuth: false,
-      layout: "AppLayoutAdmin",
-    },
-  },
-  {
-    path: "/dashboard/config/apartment/add",
-    name: "dashboard-config-apartment-add",
-    component: DashboardConfigApertmentsAddPage,
-    meta: {
-      requiresAuth: true,
-      adminAuth: true,
-      userAuth: false,
-      layout: "AppLayoutAdmin",
-    },
-  },
-  {
-    path: "/dashboard/config/apartment/set_room",
-    name: "dashboard-config-apartment-set_room",
-    component: DashboardConfigApertmentsSetRoomPage,
     meta: {
       requiresAuth: true,
       adminAuth: true,
@@ -294,13 +223,10 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
   scrollBehavior() {
-    // if (to.hash) {
       return {
-        // el: to.hash,
         behavior: 'smooth',
         to: 0
       }
-    // }
   }
 });
 

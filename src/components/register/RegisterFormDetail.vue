@@ -240,7 +240,6 @@
 
 <script>
 export default {
-  // props: ["type"],
   data() {
     return {
       role: this.$route.params.role,
@@ -284,14 +283,8 @@ export default {
     age() {
       return this.calculateAge(this.dob);
     },
-    // invalidAge() {
-    //   return this.age < 0;
-    // },
   },
   mounted() {
-    // console.log(this.email)
-    // console.log(this.password)
-    // console.log(this.role)
   },
   methods: {
     validation() {
@@ -343,9 +336,7 @@ export default {
         );
         const data = res.json();
         return data.then((res) => {
-          console.log(res);
           if (res !== Number) {
-            console.log('success');
             this.loading = false;
             this.registeredCustomer = true;
             setTimeout(() => {

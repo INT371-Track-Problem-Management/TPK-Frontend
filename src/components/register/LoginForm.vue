@@ -268,7 +268,6 @@ export default {
         });
         const data = res.json();
         return data.then(async (res) => {
-          console.log(res);
           this.loading = false;
           if (res == "Unatutherize") {
             this.fail = true;
@@ -287,12 +286,9 @@ export default {
             localStorage.setItem("token", this.token);
             localStorage.setItem("username", res.name);
             const image = this.getProfileMedia(this.userLogin.email);
-            console.log(image);
             localStorage.setItem("profileMedia", image);
             if (this.userLogin.status == true) {
               this.goToPage(this.userLogin.role);
-            } else {
-              console.log("failed login");
             }
           }
         });

@@ -293,7 +293,6 @@ export default {
   data() {
     return {
       token: "",
-      // report -------------------
       title: "",
       category: "",
       description: "",
@@ -302,11 +301,6 @@ export default {
       loadingData: false,
       isActivateCategory: false,
       categoryLists: [
-        // {
-        //   id: 0,
-        //   name: "เลือกประเภทปัญหา",
-        //   engName: "",
-        // },
         {
           id: 1,
           name: "ไฟฟ้า",
@@ -344,10 +338,6 @@ export default {
         },
       ],
       engage: {
-        // formatedDate1: this.engageDates[0].date + " " + this.engageDates[0].time,
-        // formatedDate2: this.engageDates[1].date + " " + this.engageDates[1].time,
-        // formatedDate3: this.engageDates[2].date + " " + this.engageDates[2].time,
-        // formatedDate4: this.engageDates[3].date + " " + this.engageDates[3].time,
         reportId: 0,
       },
       customers: [],
@@ -356,25 +346,24 @@ export default {
           date: "2022-05-25",
           time: "08:02:27",
           dateTime: "",
-          // isActive: false,
+          
         },
         {
           date: "2022-07-26",
           time: "09:04:27",
           dateTime: "",
-          // isActive: true,
         },
         {
           date: "2022-09-27",
           time: "10:06:27",
           dateTime: "",
-          // isActive: false,
+          
         },
         {
           date: "2022-11-28",
           time: "11:08:27",
           dateTime: "",
-          // isActive: false,
+          
         },
       ],
 
@@ -541,15 +530,6 @@ export default {
         this.loadingData = false;
       }
     },
-    doFilter(id) {
-      console.log(`Filtered by ${id} !`);
-    },
-    doSort(id) {
-      console.log(`Sorted by ${id} !`);
-    },
-    showDetail(reportId) {
-      console.log(reportId);
-    },
     async getReport() {
       const res = await fetch(
         `${process.env.VUE_APP_API_URL}/customer/reports?customerId=${this.customerId}`,
@@ -562,7 +542,6 @@ export default {
         }
       );
       const data = res.json();
-      console.log(data);
       return data.then((res) => {
         if(res == null) {
           this.loadingData = false; 
@@ -583,7 +562,6 @@ export default {
       return formatedDate;
     },
     checkThaiStatus(status) {
-      console.log(status);
       for (let i in this.statusList) {
         if (status == this.statusList[i].id) {
           return this.statusList[i].name;
@@ -621,7 +599,6 @@ export default {
     },
     searchReportList(searchItem) {
       this.filteredReport = this.reportList;
-      console.log(searchItem);
       this.filteredReport = this.filteredReport.filter((report) => {
         return report.reportId
           .toString()
@@ -662,15 +639,14 @@ export default {
         this.filteredReport.sort(function (a, b) {
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return db - da; // -1
+          return db - da; 
         });
       }
       if (sort.eng == "date_a") {
         this.filteredReport.sort(function (a, b) {
-          console.log(a);
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return da - db; // 1
+          return da - db; 
         });
       }
       if (sort.eng == "fix_d") {
@@ -683,7 +659,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fb - fa; // -1
+          return fb - fa; 
         });
       }
       if (sort.eng == "fix_a") {
@@ -696,7 +672,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fa - fb; // 1
+          return fa - fb; 
         });
       }
     },

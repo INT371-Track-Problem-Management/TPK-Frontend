@@ -414,7 +414,6 @@
       >
       </lottie-player>
     </div>
-    <!-- <ReportForm :report="reportDetail"/> -->
     <div v-else class="ssm:mx-16 mx-0">
       <div class="flex lg:flex-row flex-col-reverse lg:justify-between mb-6">
         <div class="w-full flex lg:justify-start justify-center">
@@ -470,7 +469,6 @@
               </div>
             </div>
 
-            <!-- <div v-if="true"> -->
             <div v-if="reportDetail.status != 'R1'" class="flex flex-col">
               <div v-for="(date, i) in reportEngage.fixDate" :key="i">
                 <div class="mb-4">
@@ -668,8 +666,7 @@
                                 @click="
                                   (date.isOpenSlot = false),
                                     (emptyEngage[i].period = slot.slot),
-                                    (emptyEngage[i].time = slot.time),
-                                    test()
+                                    (emptyEngage[i].time = slot.time)
                                 "
                                 :class="
                                   date.isOpenSlot
@@ -691,7 +688,6 @@
           </div>
         </div>
 
-        <!-- </div> -->
         <div class="w-full flex lg:justify-end justify-center">
           <div
             class="flex flex-col space-y-8 md:h-fit h-full md:w-4/5 w-full mb-6"
@@ -870,7 +866,6 @@
           <div
             class="w-[440px] h-[440px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
             <div class="flex justify-end">
               <div
                 @click="(showImage = !showImage), (modalbg = false)"
@@ -913,7 +908,6 @@
           <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
             <div class="flex justify-end">
               <div
                 @click="(showPostpone = false), (modalbg = false)"
@@ -1044,7 +1038,7 @@
           <div
             class="w-11/12 lg:w-1/3 h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
+            
             <div class="flex justify-end">
               <div
                 @click="(showFinish = false), (modalbg = false)"
@@ -1112,7 +1106,7 @@
           <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
+            
             <div class="flex justify-end">
               <div
                 @click="(showCancel = false), (modalbg = false)"
@@ -1213,7 +1207,7 @@
           <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
+            
             <div class="flex justify-end">
               <div
                 @click="(showReviewModal = false), (modalbg = false)"
@@ -1330,7 +1324,7 @@
           <div
             class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
+            
             <div class="flex justify-end">
               <div
                 @click="(showReview = false), (modalbg = false)"
@@ -1409,7 +1403,6 @@ export default {
       showCancelModal: false,
       sentCancel: false,
       sentPostpone: false,
-      // isCancel: false,
       sentReview: false,
       openReportStatus: false,
       tempStatus: "waiting",
@@ -1803,7 +1796,6 @@ export default {
   },
   mounted() {
     this.create();
-    console.log(this.isToday);
   },
   methods: {
     checkfixDate() {
@@ -1813,38 +1805,25 @@ export default {
       const date2 = new Date(this.newEngageForSend[1].date);
       const date3 = new Date(this.newEngageForSend[2].date);
       const date4 = new Date(this.newEngageForSend[3].date);
-      console.log(date1);
-      console.log(date1.getDate());
-      console.log(now);
-      console.log(date1.getDate() - now);
       if (date1.getDate() - now >= 1) {
         if (date2 - date1 >= 3600000) {
           if (date3 - date2 >= 3600000) {
             if (date4 - date3 >= 3600000) {
-              console.log(true);
-              console.log(this.validateDate);
               return true;
             } else {
               this.validateDate[3].date = true;
-              console.log(false);
-              console.log(this.validateDate);
               return false;
             }
           } else {
             this.validateDate[2].date = true;
-            console.log(false);
-            console.log(this.validateDate);
             return false;
           }
         } else {
           this.validateDate[1].date = true;
-          console.log(false);
-          console.log(this.validateDate);
           return false;
         }
       } else {
         this.validateDate[0].date = true;
-        console.log(false);
         return false;
       }
     },
@@ -1856,13 +1835,6 @@ export default {
         }
       }
     },
-    test() {
-      const date = new Date(Date.now());
-      console.log(date);
-      console.log(date.getDate());
-      console.log(date.getMonth());
-      console.log(date.getFullYear());
-    },
     sortNewEngage(newDate) {
       for (let i in newDate) {
         const temp = {
@@ -1872,19 +1844,15 @@ export default {
         };
         this.newEngageForSelect.push(temp);
       }
-      // console.log(this.newEngageForSelect);
     },
     async create() {
       this.loadingData = true;
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
-      // console.log(this.reportDetail);
-      // console.log(this.reportEngage);
       this.assignedMaintainer = await this.getAssignedMaintainer(
         this.reportEngage.maintainerId
       );
       await this.getAllReportStatus(this.$route.params.id);
-      console.log(this.allStatus);
       this.postponeDetail.description = this.activateStatus[0].detail;
       for (let i in this.reportEngage.fixDate) {
         this.postponeDetail.newEngageDate.push({
@@ -1902,7 +1870,6 @@ export default {
       }
       this.sortNewEngage(this.postponeDetail.newEngageDate);
       this.filterSelectedDate();
-      console.log(this.isToday);
     },
     async getReportById(reportId) {
       const res = await fetch(
@@ -1945,11 +1912,6 @@ export default {
       );
       const data = res.json();
       return data;
-      // return data.then((data) => {
-      //   if (data.maintainerId != 0) {
-      //     this.assignedMaintainer = data;
-      //   }
-      // });
     },
     engageShowFormat(engage) {
       const res = engage.split("T");
@@ -2057,7 +2019,6 @@ export default {
       );
       const data = res.json();
       return data.then((res) => {
-        console.log(res);
         this.review = res;
       });
     },
@@ -2237,11 +2198,9 @@ export default {
             date: sd + " " + emptyEngage[i].time,
             period: "",
           };
-          console.log(temp);
           this.newEngageForSend.push(temp);
         }
       }
-      console.log(this.newEngageForSend);
       if (this.checkfixDate()) {
         this.showPostpone = true;
         this.modalbg = true;
@@ -2270,12 +2229,10 @@ export default {
       this.image = `${process.env.VUE_APP_API_URL}/download_report_image/${image}`;
     },
     splitDateOg(datetime) {
-      // this.setUpperFloor(datetime.split("T")[0]);
       return datetime.split("T")[0];
     },
     setUpperFloor(datetime) {
       const res = datetime.split("-");
-      // console.log(`${res[0]}-${res[1]}-${this.pad(parseInt(res[2])+1)}`);
       return `${res[0]}-${res[1]}-${this.pad(parseInt(res[2]) + 1)}`;
     },
   },

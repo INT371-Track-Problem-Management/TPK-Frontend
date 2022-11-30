@@ -292,7 +292,6 @@
         </div>
       </div>
       <hr class="my-12 border-rangmod-purple" />
-      <!-- <ReportForm :report="reportDetail"/> -->
       <div class="mx-0 ssm-3:mx-16">
         <div class="flex flex-col-reverse lg:flex-row mb-6">
           <div class="w-full flex justify-center lg:justify-start">
@@ -396,7 +395,6 @@
             </div>
           </div>
 
-          <!-- </div> -->
           <div class="w-full flex justify-center lg:justify-end mb-5">
             <div class="flex flex-col space-y-8 h-fit sm:w-4/5 w-full">
               <div
@@ -485,7 +483,6 @@
           <div
             class="min-w-[320px] max-w-[440px] min-h-[320px] max-h-[440px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
           >
-            <!-- Closed -->
             <div class="flex justify-end">
               <div
                 @click="(showImage = !showImage), (modalbg = false)"
@@ -810,9 +807,6 @@ export default {
     statusIsAccept() {
       return true;
     },
-    // checkToday() {
-
-    // }
   },
   mounted() {},
   methods: {
@@ -823,7 +817,6 @@ export default {
           break;
         }
       }
-      console.log(this.fixDate);
     },
     resetData() {
       this.reportDetail = {};

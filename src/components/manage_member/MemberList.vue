@@ -110,7 +110,6 @@
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
           <div class="flex justify-end">
             <div
               @click="(showDetailModal = false), (modalbg = false)"
@@ -237,7 +236,6 @@
         </div>
       </div>
     </transition>
-    <!-- Add --------------------------------------------------------------------------------------- -->
 
     <transition name="bounce">
       <div
@@ -251,7 +249,6 @@
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
           <div class="flex justify-end">
             <div
               @click="(showAdd = false), (modalbg = false), clearData()"
@@ -335,15 +332,6 @@
           </div>
 
           <div class="mb-4 flex flex-row space-x-2">
-            <!-- <div class="text-rangmod-black w-full">
-              <div class="text-rangmod-black ml-1">วันเกิด</div>
-              <div
-                class="border border-rangmod-gray rounded-xl bg-rangmod-light-gray px-3 w-full text-rangmod-black outline-none leading-10 tracking-wider"
-              >
-                <div v-if="!searchCustomer.dateOfBirth">&nbsp;</div>
-                {{ searchCustomer.dateOfBirth }}
-              </div>
-            </div> -->
 
             <div class="text-rangmod-black w-full">
               <div class="text-rangmod-black ml-1">อายุ</div>
@@ -508,7 +496,6 @@ export default {
       if (this.filteredMember.length > 0) {
         this.loadingData = false;
       }
-      console.log(this.memberList);
     },
     async getCustomers() {
       const res = await fetch(
@@ -520,7 +507,6 @@ export default {
       );
       const data = res.json();
       return data.then((res) => {
-        console.log(res);
         if (res.customers.length > 0) {
           this.loading = false;
           return res.customers;
@@ -568,7 +554,6 @@ export default {
     },
     async search() {
       this.searchCustomer = await this.getCustomerById(this.searchId);
-      console.log(this.searchCustomer);
       if (this.searchCustomer.customerId == 0) {
         this.searchCustomer = null;
       } else {
@@ -652,7 +637,6 @@ export default {
       );
       const data = res.json();
       return data.then((data) => {
-        console.log(data);
         if (data.roomId != 0 && data.status == "I") {
           return data;
         } else {
@@ -689,7 +673,6 @@ export default {
     },
     searchCustomerList(searchItem) {
       this.filteredMember = this.memberList;
-      console.log(searchItem);
       this.filteredMember = this.filteredMember.filter((member) => {
         return member.customerId
           .toString()

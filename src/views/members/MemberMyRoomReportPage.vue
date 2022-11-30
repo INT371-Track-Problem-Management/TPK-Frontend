@@ -1,7 +1,6 @@
 <template>
   
   <div>
-    <!-- <SearchPanel /> -->
     <RoomReportList />
   </div>
 
@@ -9,7 +8,6 @@
 
 <script>
 
-// import SearchPanel from "@/components/report/SearchPanel.vue"
 import RoomReportList from "@/components/member/RoomReportList.vue"
 
 export default {

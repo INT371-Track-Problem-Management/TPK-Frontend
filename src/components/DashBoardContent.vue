@@ -413,7 +413,7 @@ export default {
     },
     async getDashboard() {
       if (this.selectedMonth.id != 0 && this.selectedYear.id == 0) {
-        console.log("กรุณาเลือกปี");
+        return 'เลือกปี'
       } else {
         const res = await fetch(
           `${process.env.VUE_APP_API_URL}/employee/dashboard`,
@@ -444,7 +444,6 @@ export default {
           }
         }
       }
-      console.log(this.reportCategory);
     },
   },
 };

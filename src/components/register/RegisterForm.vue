@@ -110,14 +110,12 @@
       </div>
 
       <div class="my-10">
-        <!-- <RouterLink :to="{ path:'/register/select', params:{ email: this.email, password}}"> -->
         <div
           @click="register()"
           class="w-full my-4 py-2 rounded-full text-center text-white border-2 border-rangmod-purple bg-rangmod-purple shadow-md cursor-pointer transition-all hover:border-rangmod-light-purple-2 hover:bg-rangmod-light-purple-2"
         >
           สมัครสมาชิก
         </div>
-        <!-- </RouterLink> -->
 
         <RouterLink to="/login">
           <div

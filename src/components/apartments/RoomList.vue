@@ -225,7 +225,6 @@ export default {
     async create() {
       await this.getAllRoomByBuilding(this.$route.params.buildingId);
       await this.getRoomWithCustomerByBuildingId(this.$route.params.buildingId);
-      console.log(this.floorList);
     },
     async getAllRoomByBuilding(buildingId) {
       const res = await fetch(
@@ -240,7 +239,6 @@ export default {
         }
       );
       if (res.status == 500) {
-        console.log(buildingId + " no room");
         return "noRoom";
       } else {
         const data = res.json();
@@ -271,12 +269,9 @@ export default {
             this.roomWithCustomerList.push(data[i]);
           }
         }
-        // this.roomWithCustomerList = data;
-        console.log(this.roomWithCustomerList);
       });
     },
     showDetail(room) {
-      console.log(this.roomWithCustomerList);
       if (this.roomWithCustomerList.length == 0) {
         this.customerModal = { id: 0 };
       } else {
@@ -290,7 +285,6 @@ export default {
         }
       }
       this.customerModal.roomNum = room.roomNum;
-      console.log(this.customerModal);
       this.showModal = true;
     },
     async removeCustomer(room) {
