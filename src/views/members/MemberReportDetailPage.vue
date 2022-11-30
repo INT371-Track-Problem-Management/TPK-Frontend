@@ -1,7 +1,6 @@
 <template>
   
   <div>
-    <!-- <SearchPanel /> -->
     <ReportDetail :code="$route.params.code" />
     
   </div>
@@ -10,7 +9,6 @@
 
 <script>
 
-// import SearchPanel from "@/components/report/SearchPanel.vue"
 import ReportDetail from "@/components/member/ReportDetail.vue"
 
 export default {

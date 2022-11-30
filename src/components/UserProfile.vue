@@ -312,7 +312,6 @@
         <div
           class="max-w-md min-w-[320px] h-full mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
           <div class="flex justify-end">
             <div
               @click="
@@ -615,13 +614,10 @@ export default {
   methods: {
     async create() {
       await this.getUserProfile();
-      console.log(this.userProfile);
       this.beforeEdit = structuredClone(this.userProfile);
       this.userProfile.date = this.splitDate(this.userProfile.dateOfBirth);
       this.beforeEdit.date = this.splitDate(this.beforeEdit.dateOfBirth);
-      console.log(this.beforeEdit);
       await this.getProfileMedia();
-      console.log(this.preview);
     },
     async getProfileMedia() {
       const res = await fetch(
@@ -633,7 +629,6 @@ export default {
           },
         }
       );
-      console.log(res);
       if (res.status == 404) {
         this.profileMedia = "";
       } else {
@@ -642,7 +637,6 @@ export default {
         const dataUrl = `data:image/*;base64,${base64}`;
         this.profileMedia = dataUrl;
         localStorage.setItem("profileMedia", dataUrl);
-        console.log(localStorage.getItem("profileMedia"));
       }
     },
     arrayBufferToBase64(buffer) {
@@ -696,7 +690,6 @@ export default {
         );
         const data = res.json();
         return data.then((data) => {
-          console.log(data);
           if (data == "success") {
             this.loading = false;
             this.changedPassword = true;
@@ -748,13 +741,11 @@ export default {
           }, 2000);
           setTimeout(async () => {
             await this.getUserProfile();
-            console.log(this.userProfile);
             this.beforeEdit = structuredClone(this.userProfile);
             this.userProfile.date = this.splitDate(
               this.userProfile.dateOfBirth
             );
             this.beforeEdit.date = this.splitDate(this.beforeEdit.dateOfBirth);
-            console.log(this.beforeEdit);
             await this.getProfileMedia();
             this.isEditForm = false;
           }, 2500);
@@ -778,7 +769,6 @@ export default {
           this.changePwdModal.ivlNewPassword = false;
           this.changePwdModal.ivlConfirmPassword = false;
         }, 3000);
-        console.log("false1");
         return false;
       } else if (
         this.changePwdModal.newPassword != this.changePwdModal.confirmPassword
@@ -787,10 +777,8 @@ export default {
         setTimeout(() => {
           this.changePwdModal.ivlSamePassword = false;
         }, 3000);
-        console.log("false2");
         return false;
       } else {
-        console.log("true");
         return true;
       }
     },
@@ -803,17 +791,13 @@ export default {
     },
     handleFileUpload(e) {
       this.file = e.target.files[0];
-      console.log(this.file);
       if (this.file) {
         var reader = new FileReader();
         reader.onload = (e) => {
           this.preview = e.target.result;
         };
         reader.readAsDataURL(e.target.files[0]);
-        console.log(reader);
       }
-      const url = URL.createObjectURL(e.target.files[0]);
-      console.log(url);
     },
     async uploadImage(file) {
       let formData = new FormData();

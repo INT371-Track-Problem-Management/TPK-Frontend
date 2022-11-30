@@ -425,12 +425,7 @@ export default {
     };
   },
   computed: {
-    // loading() {
-    //   if(this.memberList.length == 0 || this.filteredMember.length == 0) {
-    //     return true
-    //   }
-    //   return false
-    // }
+
   },
   mounted() {
     this.create();
@@ -442,7 +437,6 @@ export default {
       this.createdBy = parseInt(localStorage.getItem("id"));
       this.requestList = await this.getAllRequest();
       this.filteredRequest = this.requestList;
-      // console.log(this.filteredRequest);
       this.resetSort();
     },
     checkThaiStatus(status) {
@@ -473,7 +467,6 @@ export default {
           this.noData = true;
           return null;
         }
-        // return res
       });
     },
     dateShowFormat(inputDate) {
@@ -500,7 +493,6 @@ export default {
     },
     searchReportList(searchItem) {
       this.filteredRequest = this.requestList;
-      console.log(searchItem);
       this.filteredRequest = this.filteredRequest.filter((request) => {
         return request.reportId
           .toString()
@@ -541,15 +533,14 @@ export default {
         this.filteredRequest.sort(function (a, b) {
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return db - da; // -1
+          return db - da; 
         });
       }
       if (sort.eng == "date_a") {
         this.filteredRequest.sort(function (a, b) {
-          console.log(a);
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return da - db; // 1
+          return da - db; 
         });
       }
       if (sort.eng == "fix_d") {
@@ -562,7 +553,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fb - fa; // -1
+          return fb - fa; 
         });
       }
       if (sort.eng == "fix_a") {
@@ -575,7 +566,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fa - fb; // 1
+          return fa - fb; 
         });
       }
     },

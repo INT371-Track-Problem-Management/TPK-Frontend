@@ -89,7 +89,6 @@ export default {
 
       this.menuList.forEach((menu) => {
         if (menu.isActive) { menu.isActive = false }
-        // if (menu.activeDropdown) { menu.activeDropdown = false }
         menu.menuItems.forEach((item) => {
           if (item.isActive) { item.isActive = false }
         })
@@ -103,7 +102,6 @@ export default {
         })
       } else {
         this.menuList.forEach((menu, i) => {
-          // if(i == index) { menu.activeDropdown = true }
           menu.menuItems.forEach((item, j) => {
             if(i == index && j == listIndex){
               item.isActive = true

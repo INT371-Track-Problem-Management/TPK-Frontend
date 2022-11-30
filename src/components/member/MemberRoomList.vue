@@ -78,12 +78,6 @@ export default {
     };
   },
   computed: {
-    // loading() {
-    //   if (this.roomLists.length == 0) {
-    //     return true;
-    //   }
-    //   return false;
-    // },
   },
   mounted() {
     this.create();
@@ -91,7 +85,6 @@ export default {
   methods: {
     async create() {
       this.roomLists = await this.getAllRoomByCustomerId();
-      console.log(this.roomLists);
     },
     async getAllRoomByCustomerId() {
       try {
@@ -112,7 +105,6 @@ export default {
           if (data == null) {
             this.loading = false
             this.noInRoom = true;
-            console.log("not in any room");
           } else {
             this.loading = false
             return data;

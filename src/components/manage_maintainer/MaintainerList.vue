@@ -39,7 +39,6 @@
         <th class="py-4">ชื่อ-นามสกุล</th>
         <th class="py-4">จำนวนครั้งที่ซ่อม</th>
         <th class="py-4">คะแนนเฉลี่ยที่ได้</th>
-        <!-- <th class="py-4">&nbsp;</th> -->
       </tr>
       <tr
         v-for="(maintainer, i) in filteredMaintainer"
@@ -74,16 +73,6 @@
             ></path>
           </svg>
         </td>
-        <!-- <td
-          class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="
-            (showStaffDetail = !showStaffDetail),
-              (modalbg = !modalbg),
-              showDetail(staff)
-          "
-        >
-          <div>รายละเอียด</div>
-        </td> -->
       </tr>
     </table>
 
@@ -134,12 +123,6 @@
           </div>
         </div>
 
-        <!-- <div
-          class="text-center py-4 text-rangmod-purple cursor-pointer transition-all hover:font-bold"
-          @click="getDetail(maintainer.customerId)"
-        >
-          <div>รายละเอียด</div>
-        </div> -->
       </div>
     </div>
     <div
@@ -296,100 +279,7 @@ export default {
       modalbg: false,
       showAddMaintainer: false,
       addedMaintainer: false,
-      maintainerList: [
-        {
-          maintainerId: 1,
-          fname: "test",
-          lname: "test",
-          phone: "0804341156",
-          // count: 2,
-          // avg: 3,
-          overview: [
-            {
-              score: 1,
-              des: "get out!!!",
-            },
-            {
-              score: 5,
-              des: "Irashaimaseee",
-            },
-          ],
-        },
-        {
-          maintainerId: 4,
-          fname: "01",
-          lname: "01",
-          phone: "0866262386",
-          // count: 6,
-          // avg: 2,
-          overview: [
-            {
-              score: 1,
-              des: "yae mak",
-            },
-            {
-              score: 1,
-              des: "yae mak",
-            },
-            {
-              score: 3,
-              des: "po chai",
-            },
-            {
-              score: 3,
-              des: "po chai",
-            },
-            {
-              score: 2,
-              des: "yae",
-            },
-            {
-              score: 2,
-              des: "yae",
-            },
-          ],
-        },
-        {
-          maintainerId: 5,
-          fname: "asd",
-          lname: "asd",
-          phone: "0123456789",
-          // count: 1,
-          // avg: 5,
-          overview: [
-            {
-              score: 5,
-              des: "Sugoi!!!",
-            },
-          ],
-        },
-        {
-          maintainerId: 8,
-          fname: "asd",
-          lname: "tesassdat",
-          phone: "0245683215",
-          // count: 4,
-          // avg: 3.75,
-          overview: [
-            {
-              score: 5,
-              des: "dee mak",
-            },
-            {
-              score: 4,
-              des: "dee",
-            },
-            {
-              score: 3,
-              des: "po chai",
-            },
-            {
-              score: 3,
-              des: "po chai",
-            },
-          ],
-        },
-      ],
+      maintainerList: [],
       addMaintainer: {
         fname: "",
         lname: "",
@@ -415,7 +305,6 @@ export default {
       if (this.filteredMaintainer) {
         this.loadingData = false;
       }
-      console.log(this.filteredMaintainer);
     },
     async getMaintainers() {
       const res = await fetch(
@@ -430,7 +319,6 @@ export default {
       );
       const data = res.json();
       return data.then((res) => {
-        console.log(res);
         return res;
       });
     },
@@ -474,7 +362,6 @@ export default {
               this.filteredMaintainer = this.maintainerList;
             }, 2500);
           }
-          console.log(res);
           return res;
         });
       } else {
@@ -487,7 +374,6 @@ export default {
     },
     searchMaintainerList(searchItem) {
       this.filteredMaintainer = this.maintainerList;
-      console.log(searchItem);
       this.filteredMaintainer = this.filteredMaintainer.filter((maintainer) => {
         return maintainer.fname.includes(searchItem.fname);
       });

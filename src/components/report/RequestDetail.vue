@@ -401,7 +401,6 @@
       </div>
     </div>
     <hr class="my-12 border-rangmod-purple" />
-    <!-- <RepairForm :report="reportById"/> -->
     <div class="ssm:mx-16 mx-0">
       <div class="flex lg:flex-row flex-col-reverse lg:justify-between mb-6">
         <div class="w-full flex lg:justify-start justify-center">
@@ -1011,7 +1010,7 @@
         <div
           class="w-[440px] h-[440px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
+          
           <div class="flex justify-end">
             <div
               @click="(showImage = !showImage), (modalbg = false)"
@@ -1049,7 +1048,7 @@
         <div
           class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white ssm:px-5 px-0 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
+          
           <div class="flex justify-end mr-5 ssm:mr-0">
             <div @click="closePostpone()" class="cursor-pointer">
               <svg
@@ -1225,7 +1224,7 @@
         <div
           class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
+          
           <div class="flex justify-end">
             <div
               @click="(saveModal = !saveModal), (modalbg = false)"
@@ -1624,7 +1623,7 @@
         <div
           class="max-w-md min-w-[320px] h-[600px] mx-auto my-10 bg-white px-5 py-8 rounded-xl shadow-xl overflow-y-scroll no-scrollbar"
         >
-          <!-- Closed -->
+          
           <div class="flex justify-end">
             <div
               @click="(cancelModal = !cancelModal), (modalbg = false)"
@@ -1988,15 +1987,10 @@ export default {
     async create() {
       this.reportDetail = await this.getReportById(this.$route.params.id);
       this.reportEngage = await this.getReportEngage(this.$route.params.id);
-      // console.log(this.reportDetail);
-      console.log(this.reportEngage);
       this.currentFixDate = this.getSelectedFixDate(
         this.reportEngage.selectedDate
       );
-      console.log(this.currentFixDate);
       await this.getAllReportStatus(this.$route.params.id);
-      console.log(this.statusIsPrepare);
-      console.log(this.allStatus);
       this.maintainerLists = await this.getMaintainer();
       this.selectedMaintainer =
         this.reportEngage.maintainerId == ""
@@ -2161,13 +2155,6 @@ export default {
       );
       const data = res.json();
       return data;
-      // return data.then((data) => {
-      //   if (data.message == "success") {
-      //     return "success";
-      //   } else {
-      //     return "fail";
-      //   }
-      // });
     },
     async actionButton(action) {
       if (action == "accept") {
@@ -2187,7 +2174,6 @@ export default {
               await this.reloadData();
             }, 2500);
           }
-          console.log(res3);
         }
         if (
           this.selectedMaintainer.id != this.currentMtn.maintainerId &&
@@ -2206,16 +2192,12 @@ export default {
               await this.reloadData();
             }, 2500);
           }
-          console.log(res2);
         }
         if (this.selectedMaintainer.id != 0 && this.selectedFixDate.id != 0) {
           const res1 = await this.selectPlanFixDate(this.selectedFixDate.id);
           const res2 = await this.assignMaintainer(this.selectedMaintainer);
-          console.log(res1.message);
-          console.log(res2.message);
           if (res1.message == "success" && res2.message == "success") {
             await this.updateStatus("S4", "").then(async (res) => {
-              console.log(res);
               if (res == "success") {
                 this.loading = false;
                 this.sentEngage = true;
@@ -2275,7 +2257,6 @@ export default {
         this.loading = true;
         const dates = this.filterNewEngage(this.postponeDetail);
         const res = await this.postponeEngage(dates);
-        console.log(res);
         if (res.message == "success") {
           const resStatus = await this.updateStatus(
             "R1",
@@ -2334,7 +2315,6 @@ export default {
           this.activateStatus[i].divider = true;
           this.activateStatus[0].divider = false;
         }
-        // console.log(this.activateStatus);
       });
     },
     async updateStatus(status, detail) {
@@ -2550,7 +2530,6 @@ export default {
             ],
           },
         });
-        console.log(this.postponeDetail.newEngageDate);
       } else {
         return "maxnewdate";
       }
@@ -2559,7 +2538,6 @@ export default {
       let length = this.postponeDetail.newEngageDate.length;
       if (length > 3) {
         this.postponeDetail.newEngageDate.pop();
-        console.log(this.postponeDetail.newEngageDate);
       } else {
         return "minnewdate";
       }
@@ -2593,7 +2571,6 @@ export default {
       return number < 10 ? "0" + number.toString() : number.toString();
     },
     filterNewEngage(detail) {
-      console.log(detail.newEngageDate);
       let dates = [];
       for (let i in detail.newEngageDate) {
         const tempdate = {
@@ -2602,7 +2579,6 @@ export default {
         };
         dates.push(tempdate);
       }
-      console.log(dates);
       return dates;
     },
     filterPeriod(period) {

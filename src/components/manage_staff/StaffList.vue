@@ -141,7 +141,6 @@
       "
       v-on:click="showModal = !showModal"
     ></div>
-    <!-- Add --------------------------------------------------------------------------------------- -->
     <div
       v-if="modalbg"
       class="bg-black fixed inset-0 opacity-60 visible z-[80]"
@@ -436,12 +435,10 @@
 
           <div class="mb-4">
             <div class="text-rangmod-black px-1">ที่อยู่</div>
-            <!-- <div class=""> -->
             <textarea
               v-model="addModal2.address"
               class="w-full px-3 border border-rangmod-gray rounded-xl text-rangmod-black outline-none leading-10 tracking-wider"
             ></textarea>
-            <!-- </div> -->
           </div>
 
           <div class="flex justify-end">
@@ -601,10 +598,6 @@
           <div class="mb-4 grid se:grid-cols-2 gap-2 grid-cols-1">
             <div class="text-rangmod-black px-1">
               เพศ
-              <!-- <div class="border border-rangmod-gray rounded-xl px-3"> -->
-              <!-- <div
-                class="flex flex-row justify-between space-x-4 px-3 mr-3 rounded-xl outline-none leading-10 tracking-wider"
-              > -->
 
               <div
                 class="border border-rangmod-gray rounded-xl px-3 bg-rangmod-light-gray"
@@ -925,7 +918,6 @@ export default {
         }),
       });
       const data = res.json();
-      console.log(data);
       return data.then(async (res) => {
         if (res == "this email can not use!!!") {
           this.loading = false;
@@ -998,11 +990,7 @@ export default {
       this.addModal2.address = "";
     },
     dateFormat(inputDate) {
-      // console.log(inputDate)
       const date = new Date(inputDate);
-      // console.log(date.getDate())
-      // console.log(date.getMonth())
-      // console.log(date.getFullSex())
       const formatedDate =
         date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullSex();
       return formatedDate;

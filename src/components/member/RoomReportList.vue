@@ -25,14 +25,6 @@
     </div>
 
     <hr class="my-4 border-rangmod-purple" />
-    <!-- <div class="flex flex-row space-x-2 items-center mb-4">
-      <div
-        @click="(showModal = true), (modalBg = true)"
-        class="px-8 py-3 rounded-xl shadow-md cursor-pointer transition-all hover:brightness-90 bg-rangmod-light-yellow"
-      >
-        <div class="text-rangmod-dark-yellow text-lg">แจ้งปัญหา</div>
-      </div>
-    </div> -->
     <div
       v-if="loadingData"
       class="w-full h-full inset-0 flex items-center justify-center z-[110]"
@@ -499,7 +491,6 @@
               </div>
             </div>
 
-            <!-- <img v-if="preview" :src="preview" /> -->
 
             <div v-for="(engage, i) in reportEngageDate" :key="i">
               <div class="mb-4">
@@ -604,8 +595,7 @@
                                 (reportForSend.dates[i].date = manageDatetime(
                                   engageForSend[i].date,
                                   engageForSend[i].time
-                                )),
-                                test()
+                                ))
                             "
                             :class="
                               engage.isActive
@@ -684,7 +674,6 @@ export default {
     return {
       preview: null,
       token: localStorage.getItem("token"),
-      // report -------------------
       createdBy: parseInt(localStorage.getItem("id")),
       isActivateCategory: false,
       modalBg: false,
@@ -1005,31 +994,7 @@ export default {
     this.create();
   },
   methods: {
-    test() {
-      // console.log(this.engageForSend);
-      // console.log(this.reportForSend.dates);
-
-      const date1 = new Date(this.reportForSend.dates[0].date);
-      const date2 = new Date(this.reportForSend.dates[1].date);
-      const date3 = new Date(this.reportForSend.dates[2].date);
-      const date4 = new Date(this.reportForSend.dates[3].date);
-      if (date2 - date1 >= 3600000) {
-        if (date3 - date2 >= 3600000) {
-          if (date4 - date3 >= 3600000) {
-            return true;
-          } else {
-            this.validate.date3 = true;
-            return false;
-          }
-        } else {
-          this.validate.date2 = true;
-          return false;
-        }
-      } else {
-        this.validate.date1 = true;
-        return false;
-      }
-    },
+    
     checkfixDate() {
       const date = new Date();
       const now = date.getDate();
@@ -1037,37 +1002,25 @@ export default {
       const date2 = new Date(this.reportForSend.dates[1].date);
       const date3 = new Date(this.reportForSend.dates[2].date);
       const date4 = new Date(this.reportForSend.dates[3].date);
-      console.log(date1.getDate());
-      console.log(now);
-      console.log(date1.getDate() - now);
       if (date1.getDate() - now >= 1) {
         if (date2 - date1 >= 3600000) {
           if (date3 - date2 >= 3600000) {
             if (date4 - date3 >= 3600000) {
-              console.log(true);
-              console.log(this.validateDate);
               return true;
             } else {
               this.validateDate[3].date = true;
-              console.log(false);
-              console.log(this.validateDate);
               return false;
             }
           } else {
             this.validateDate[2].date = true;
-            console.log(false);
-            console.log(this.validateDate);
             return false;
           }
         } else {
           this.validateDate[1].date = true;
-          console.log(false);
-          console.log(this.validateDate);
           return false;
         }
       } else {
         this.validateDate[0].date = true;
-        console.log(false);
         return false;
       }
     },
@@ -1100,10 +1053,6 @@ export default {
       }
     },
     async sendReport() {
-      const validForm = this.validation();
-      const validDate = this.checkfixDate();
-      console.log(validForm);
-      console.log(validDate);
       if (!this.validation() && this.checkfixDate()) {
         let formData = new FormData();
         this.reportForSend.buildingId = this.buildingId;
@@ -1262,11 +1211,6 @@ export default {
         month: "numeric",
         day: "numeric",
       });
-      // const formatedTime = date.toLocaleTimeString("th-TH", {
-      //   hour: "numeric",
-      //   minute: "numeric",
-      //   second: "numeric",
-      // });
       return formatedDate;
     },
     splitDate(datetime) {
@@ -1295,7 +1239,6 @@ export default {
       const dateRes = res[0].split("-");
       const showDate =
         dateRes[2] + "/" + dateRes[1] + "/" + (parseInt(dateRes[0]) + 543);
-      // const showTime = res[1].split('Z')
       return showDate;
     },
     manageDatetime(date, time) {
@@ -1324,7 +1267,7 @@ export default {
         this.filteredReport.sort(function (a, b) {
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return db - da; // -1
+          return db - da; 
         });
       }
       if (sort.eng == "date_a") {
@@ -1332,7 +1275,7 @@ export default {
           console.log(a);
           const da = new Date(a.createdAt);
           const db = new Date(b.createdAt);
-          return da - db; // 1
+          return da - db; 
         });
       }
       if (sort.eng == "fix_d") {
@@ -1345,7 +1288,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fb - fa; // -1
+          return fb - fa; 
         });
       }
       if (sort.eng == "fix_a") {
@@ -1358,7 +1301,7 @@ export default {
           if (isNaN(fb)) {
             return -1;
           }
-          return fa - fb; // 1
+          return fa - fb; 
         });
       }
     },

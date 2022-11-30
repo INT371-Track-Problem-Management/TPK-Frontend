@@ -195,7 +195,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="mt-16"> -->
     <transition>
       <div
         v-show="showProfileMenu"
@@ -255,16 +254,12 @@
         </div>
       </div>
     </transition>
-    <!-- </div> -->
   </div>
 </template>
 
 <script>
-// import SideMenu from "@/components/SideMenu.vue"
 
 export default {
-  // name: 'admin',
-  // components: { SideMenu },
 
   props: ["menuList"],
 
@@ -324,7 +319,6 @@ export default {
         });
       } else {
         this.menuList.forEach((menu, i) => {
-          // if(i == index) { menu.activeDropdown = true }
           menu.menuItems.forEach((item, j) => {
             if (i == index && j == listIndex) {
               item.isActive = true;
@@ -341,11 +335,8 @@ export default {
           Authorization: `Bearer ${this.token}`,
         },
       });
-      // const data = res.json();
       localStorage.clear();
       this.$router.push("/login");
-      // return res
-      // this.closeMenu()
     },
     toProfilePage(role) {
       this.closeMenu();
